@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-bg: #FFFFFF;
+  --color-brand-accent: #000000;
+  --color-brand-headings: #111111;
+  --color-brand-body: #555555;
+  --color-brand-label: #999999;
+  --color-brand-border: #E5E5E5;
+
+  --font-poppins: 'Poppins', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-brand-bg);
+    color: var(--color-brand-body);
+    font-family: var(--font-inter);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-poppins);
+    color: var(--color-brand-headings);
+  }
+}
+
+@layer components {
+  .driplens-card {
+    @apply bg-white border border-[#E5E5E5] rounded-[12px] shadow-sm;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .driplens-card:hover {
+    @apply shadow-xl -translate-y-[4px];
+  }
+
+  .btn-primary {
+    @apply bg-black text-white rounded-[8px] font-bold px-4 py-2;
+    transition: opacity 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    @apply opacity-90;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-black border border-black rounded-[8px] px-4 py-2;
+    transition: background-color 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    @apply bg-gray-50;
+  }
+}
