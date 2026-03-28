@@ -3,7 +3,8 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
-import ExplorePage from './pages/ExplorePage';
+import CreatorsPage from './pages/CreatorsPage';
+import BrandsPage from './pages/BrandsPage';
 import CreatorProfilePage from './pages/CreatorProfilePage';
 import CreatorDashboard from './pages/CreatorDashboard';
 import BrandDashboard from './pages/BrandDashboard';
@@ -20,7 +21,8 @@ function App() {
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/auth" element={<AuthPage />} />
-              <Route path="/explore" element={<ExplorePage />} />
+              <Route path="/creators" element={<CreatorsPage />} />
+              <Route path="/brands" element={<BrandsPage />} />
               <Route path="/profile/:id" element={<CreatorProfilePage />} />
               <Route path="/dashboard/creator" element={<CreatorDashboard />} />
               <Route path="/dashboard/brand" element={<BrandDashboard />} />
