@@ -6,7 +6,7 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="px-4 py-20 text-center max-w-5xl mx-auto flex flex-col items-center">
+      <section className="px-4 text-center max-w-5xl mx-auto flex flex-col items-center justify-center min-h-[90vh]">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
