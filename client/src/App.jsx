@@ -9,6 +9,8 @@ import CreatorProfilePage from './pages/CreatorProfilePage';
 import CreatorDashboard from './pages/CreatorDashboard';
 import BrandDashboard from './pages/BrandDashboard';
 import MessagingPage from './pages/MessagingPage';
+import ExplorePage from './pages/ExplorePage';
+import UploadPage from './pages/UploadPage';
 import ClickSpark from './components/ClickSpark';
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
               <Route path="/" element={<LandingPage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/creators" element={<CreatorsPage />} />
+              <Route path="/explore" element={<ExplorePage />} />
+              <Route path="/upload" element={<UploadPage />} />
               <Route path="/brands" element={<BrandsPage />} />
               <Route path="/profile/:id" element={<CreatorProfilePage />} />
               <Route path="/dashboard/creator" element={<CreatorDashboard />} />

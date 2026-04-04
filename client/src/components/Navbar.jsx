@@ -11,6 +11,9 @@ export default function Navbar() {
             </Link>
           </div>
           <div className="flex items-center space-x-8">
+            <Link to="/explore" className="text-sm font-bold uppercase tracking-widest text-[#999] hover:text-black transition-colors">
+              Explore
+            </Link>
             <Link to="/creators" className="text-sm font-bold uppercase tracking-widest text-[#999] hover:text-black transition-colors">
               Creators
             </Link>
