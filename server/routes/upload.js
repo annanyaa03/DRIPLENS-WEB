@@ -1,8 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import { requireAuth } from '../middleware/auth.js';
-import { uploadToCloudinary } from '../utils/cloudinary.js';
-import Content from '../models/Content.js';
+import { supabase } from '../utils/supabase.js';
 
 const router = express.Router();
 
@@ -23,36 +22,75 @@ router.post('/portfolio', requireAuth, upload.single('media'), async (req, res) 
       return res.status(400).json({ message: 'Title and Category are required' });
     }
 
-    const result = await uploadToCloudinary(req.file.buffer, 'auto');
-    
-    const newContent = new Content({
-      title,
-      description,
-      category,
-      mediaUrl: result.secure_url,
-      publicId: result.public_id,
-      mediaType: result.resource_type === 'video' ? 'video' : 'image',
-      author: req.user.userId // Corrected to match JWT payload
-    });
+    const fileExt = req.file.originalname.split('.').pop();
+    const fileName = `${req.user.id}/${Date.now()}.${fileExt}`;
+    const filePath = `portfolio/${fileName}`;
 
-    await newContent.save();
+    // 1. Upload to Supabase Storage
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('portfolio-media')
+      .upload(filePath, req.file.buffer, {
+        contentType: req.file.mimetype,
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (uploadError) {
+      console.error('Supabase Storage error:', uploadError);
+      return res.status(500).json({ message: 'Error uploading to storage' });
+    }
+
+    // 2. Get Public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('portfolio-media')
+      .getPublicUrl(filePath);
+
+    // 3. Save metadata to PostgreSQL
+    const { data: contentData, error: dbError } = await supabase
+      .from('portfolio_items')
+      .insert([
+        {
+          creator_id: req.user.id,
+          title,
+          description,
+          category,
+          media_url: publicUrl,
+          media_type: req.file.mimetype.startsWith('video') ? 'video' : 'image',
+          storage_path: filePath
+        }
+      ])
+      .select()
+      .single();
+
+    if (dbError) {
+      console.error('Supabase DB error:', dbError);
+      return res.status(500).json({ message: 'Error saving metadata' });
+    }
 
     res.status(200).json({
       message: 'Upload successful',
-      content: newContent
+      content: contentData
     });
   } catch (error) {
     console.error('Upload error:', error);
-    res.status(500).json({ message: 'Error uploading file' });
+    res.status(500).json({ message: 'Error processing upload' });
   }
 });
 
-// GET /api/upload - Fetch all content for Explore page
+// GET /api/upload - Fetch ALL content for Explore page
 router.get('/', async (req, res) => {
   try {
-    const contents = await Content.find()
-      .populate('author', 'username profile.avatarUrl')
-      .sort({ createdAt: -1 });
+    const { data: contents, error } = await supabase
+      .from('portfolio_items')
+      .select(`
+        *,
+        author:profiles(username, avatar_url)
+      `)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      throw error;
+    }
     
     res.status(200).json(contents);
   } catch (error) {
