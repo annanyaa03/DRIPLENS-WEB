@@ -75,7 +75,7 @@ export default function ExplorePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {content.map((item, i) => (
             <motion.div 
-              key={item._id}
+              key={item.id}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 * i }}

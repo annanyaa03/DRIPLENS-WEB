@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken';
+import { supabase } from '../utils/supabase.js';
 
-export const requireAuth = (req, res, next) => {
+export const requireAuth = async (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
 
   if (!token) {
@@ -8,11 +8,23 @@ export const requireAuth = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
-    req.user = decoded;
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    
+    if (error || !user) {
+      return res.status(401).json({ message: 'Invalid or expired token' });
+    }
+
+    // Attach user information to request
+    req.user = {
+      id: user.id,
+      email: user.email,
+      role: user.user_metadata?.role
+    };
+    
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Invalid or expired token' });
+    console.error('Auth middleware error:', error);
+    return res.status(500).json({ message: 'Internal server error during authentication' });
   }
 };
 

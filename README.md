@@ -10,7 +10,7 @@
 
 **The professional meritocracy for videographers and content creators.**
 
-Driplens is a full-stack MERN web platform that connects videographers and content creators with brands through merit-based discovery. Creators build portfolios, brands browse talent, and both parties communicate through a structured hiring system — all in one place.
+Driplens is a full-stack web platform that connects videographers and content creators with brands through merit-based discovery. Creators build portfolios, brands browse talent, and both parties communicate through a structured hiring system — all in one place.
 
 ---
 
@@ -23,6 +23,7 @@ Driplens is a full-stack MERN web platform that connects videographers and conte
 - [API Reference](#api-reference)
 - [Getting Started](#getting-started)
 - [Environment Variables](#environment-variables)
+- [Database Schema](#database-schema)
 - [Team](#team)
 
 ---
@@ -34,7 +35,7 @@ Driplens removes the noise from creator-brand partnerships. Instead of cold DMs 
 The platform is split into two independent apps:
 
 - `client/` — React frontend built with Vite, Tailwind CSS, and Framer Motion
-- `server/` — Express REST API backed by MongoDB Atlas and Cloudinary
+- `server/` — Express REST API backed by Supabase (PostgreSQL, Auth, and Storage)
 
 ---
 
@@ -50,21 +51,18 @@ The platform is split into two independent apps:
 | Framer Motion       | Page and component animations        |
 | GSAP                | Advanced scroll and timeline effects |
 | React Router DOM 7  | Client-side routing                  |
-| Lucide React        | Icon system                          |
-| Styled Components   | Component-level scoped styles        |
+| Supabase JS         | Client-side database and auth        |
 
 ### Backend
 
-| Technology   | Purpose                              |
-|--------------|--------------------------------------|
-| Node.js      | Runtime                              |
-| Express 5    | HTTP server and routing              |
-| MongoDB       | Primary database                     |
-| Mongoose     | ODM and schema validation            |
-| Cloudinary   | Media storage (images and video)     |
-| Multer       | Multipart file upload handling       |
-| JSON Web Token | Auth token issuance and verification |
-| bcrypt       | Password hashing                     |
+| Technology      | Purpose                               |
+|-----------------|---------------------------------------|
+| Node.js         | Runtime                               |
+| Express 5       | HTTP server and routing               |
+| Supabase (PG)   | Primary database (PostgreSQL)         |
+| Supabase Auth   | User authentication and security      |
+| Supabase Storage| Media storage (portfolio/avatars)     |
+| Multer          | Multipart file handling               |
 
 ---
 
@@ -76,40 +74,30 @@ DRIPLENS-WEB/
 +-- client/                         # React frontend
 |   +-- src/
 |   |   +-- components/
-|   |   |   +-- AnimatedButton.jsx  # Reusable CTA button with animation
-|   |   |   +-- ClickSpark.jsx      # Global canvas click-spark effect
 |   |   |   +-- Navbar.jsx          # Top navigation bar
 |   |   |   +-- Footer.jsx          # Site footer
 |   |   |
 |   |   +-- pages/
-|   |   |   +-- LandingPage.jsx     # Hero, stats, how-it-works, CTA
-|   |   |   +-- AuthPage.jsx        # Login / Register (creator & brand)
-|   |   |   +-- CreatorsPage.jsx    # Public creator discovery listing
-|   |   |   +-- BrandsPage.jsx      # Brand directory
-|   |   |   +-- CreatorProfilePage.jsx  # Individual creator portfolio view
-|   |   |   +-- CreatorDashboard.jsx    # Creator account management
-|   |   |   +-- BrandDashboard.jsx      # Brand hiring management
-|   |   |   +-- MessagingPage.jsx       # In-app messaging between parties
+|   |   |   +-- AuthPage.jsx        # Login / Register (Supabase Auth)
+|   |   |   +-- ExplorePage.jsx     # Fetching from Supabase
+|   |   |   +-- UploadPage.jsx      # Upload to Supabase Storage
+|   |   |
+|   |   +-- lib/
+|   |   |   +-- supabase.js         # Supabase Client (Anon)
 |   |   |
 |   |   +-- App.jsx                 # Root router and layout
-|   |   +-- main.jsx                # Entry point
 |   |
-|   +-- vite.config.js
 |   +-- package.json
 |
 +-- server/                         # Express REST API
-    +-- index.js                    # App bootstrap, DB connect, middleware
+    +-- index.js                    # App bootstrap
     +-- middleware/
-    |   +-- auth.js                 # JWT requireAuth + requireRole guards
-    +-- models/
-    |   +-- User.js                 # User schema (creator / brand roles)
-    |   +-- HiringRequest.js        # Brand-to-creator project requests
-    |   +-- Message.js              # Messages scoped to hiring requests
+    |   +-- auth.js                 # Supabase session verification
     +-- routes/
-    |   +-- auth.js                 # POST /register, POST /login
-    |   +-- upload.js               # POST /portfolio (Cloudinary upload)
+    |   +-- auth.js                 # Auth endpoints (proxied to Supabase)
+    |   +-- upload.js               # Portfolio upload to Supabase Storage
     +-- utils/
-    |   +-- cloudinary.js           # Cloudinary SDK wrapper
+    |   +-- supabase.js             # Supabase Admin Client (Service Role)
     +-- package.json
 ```
 
@@ -118,74 +106,21 @@ DRIPLENS-WEB/
 ## Features
 
 ### For Creators
-- Register with a creator role and build a public profile
-- Upload portfolio pieces (image and video) via Cloudinary
+- Register with a creator role; profile auto-created via database trigger
+- Upload portfolio pieces (image and video) directly to Supabase Storage
 - Get discovered by brands browsing the creator directory
 - Receive and respond to hiring requests
-- Chat with brands through the messaging system
 
 ### For Brands
 - Register with a brand role and access the brand dashboard
-- Browse and filter creators by category and location
-- Send hiring requests with project title, description, and budget
-- Manage request status (Pending, Accepted, Declined, Completed, Review)
-- Message creators directly within a request thread
+- Browse and filter creators through PostgreSQL-backed search
+- Send hiring requests with budget and project details
+- Message creators directly within a secure request thread
 
 ### Platform-wide
-- JWT-based authentication with 7-day token expiry
-- Role-based route protection (creator vs. brand middleware guards)
-- Click-spark canvas animation on every interaction
-- Framer Motion and GSAP powered transitions throughout
-- Fully white, clean UI with no dark elements
-- Responsive layout from mobile upward
-
----
-
-## API Reference
-
-**Base URL:** `http://localhost:5000/api`
-
-### Auth
-
-```
-POST   /auth/register     Register a new user (creator or brand)
-POST   /auth/login        Login and receive a JWT token
-GET    /api/health        Check server status
-```
-
-**Register body:**
-```json
-{
-  "username": "string",
-  "email": "string",
-  "password": "string",
-  "role": "creator | brand"
-}
-```
-
-**Login body:**
-```json
-{
-  "email": "string",
-  "password": "string"
-}
-```
-
-Both return:
-```json
-{
-  "token": "<JWT>",
-  "user": { "id", "username", "email", "role" }
-}
-```
-
-### Upload (protected)
-
-```
-POST   /upload/portfolio     Upload a portfolio media file to Cloudinary
-```
-
-Requires `Authorization: Bearer <token>` header. Accepts `multipart/form-data` with field `media`. Returns the Cloudinary `secure_url`, `public_id`, and `resource_type`.
+- Supabase Auth security with JWT verification
+- Row Level Security (RLS) protecting all data at the database level
+- Fully responsive, minimal UI with smooth animations
 
 ---
 
@@ -193,30 +128,68 @@ Requires `Authorization: Bearer <token>` header. Accepts `multipart/form-data` w
 
 ### Prerequisites
 
-- Node.js v18 or higher
-- MongoDB Atlas account (or local MongoDB instance)
-- Cloudinary account
+- Node.js v18+
+- A Supabase Project ([supabase.com](https://supabase.com))
 
-### 1. Clone the repository
+### 1. Set up the Database
 
-```bash
-git clone https://github.com/PRE-GENERATION/DRIPLENS-WEB.git
-cd DRIPLENS-WEB
-```
+Run the provided SQL script in your Supabase SQL Editor to create tables, triggers, and RLS policies.
 
-### 2. Set up the server
+### 2. Set up the Server
 
 ```bash
 cd server
 npm install
 ```
 
-Create a `.env` file inside `server/`:
-
+Create a `.env` file in `server/`:
 ```env
 PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
+SUPABASE_URL=your_project_url
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+```
+
+### 3. Set up the Client
+
+```bash
+cd ../client
+npm install
+```
+
+Create a `.env` file in `client/`:
+```env
+VITE_SUPABASE_URL=your_project_url
+VITE_SUPABASE_ANON_KEY=your_anon_public_key
+```
+
+---
+
+## Database Schema
+
+### Profiles
+- Extended user data linked to `auth.users`
+- Fields: `username`, `role`, `bio`, `avatar_url`, `banner_url`
+
+### Portfolio Items
+- Media uploads linked to creators
+- Fields: `title`, `media_url`, `media_type`, `category`
+
+### Hiring Requests
+- Transactions between brands and creators
+- Fields: `brand_id`, `creator_id`, `budget`, `status`
+
+---
+
+## Team
+
+- **Aayu** (Frontend + Architecture)
+- **Annanya Ukey** (Development)
+- **Atharv Gadekar** (Development)
+- **Aditi Janugade** (Development)
+- **Anandi Khandelwal** (Development)
+
+*Faculty Guide — Prof. N.D. Gaikwad, AISSMS College of Engineering*
+et_key
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
