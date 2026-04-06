@@ -270,11 +270,11 @@ isRead              Boolean   default false
 
 | Name               | Role                    |
 |--------------------|-------------------------|
-| Aayu               | Frontend + Architecture |
-| Annanya Ukey       | Development             |
-| Atharv Gadekar     | Development             |
-| Aditi Janugade     | Development             |
-| Anandi Khandelwal  | Development             |
+| Aayu               | Architecture            |
+| Annanya Ukey       | Frontend + UI?UX        |
+| Atharv Gadekar     | Main Idea Force         |
+| Aditi Janugade     | Reaseacher              |
+| Anandi Khandelwal  | AI/ML Lead              |
 
 Faculty Guide — Prof. N.D. Gaikwad, AISSMS College of Engineering
 
