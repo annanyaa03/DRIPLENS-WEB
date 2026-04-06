@@ -1,28 +1,46 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { getAllExploreContent } from '../services/externalMediaService';
 
 export default function ExplorePage() {
   const [content, setContent] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fetchingMore, setFetchingMore] = useState(false);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  const fetchContent = async (pageNum, isLoadMore = false) => {
+    try {
+      if (isLoadMore) setFetchingMore(true);
+      else setLoading(true);
+
+      const data = await getAllExploreContent('creative cinematography', pageNum);
+      
+      if (data.length === 0) {
+        setHasMore(false);
+      } else {
+        setContent(prev => isLoadMore ? [...prev, ...data] : data);
+        setHasMore(data.length >= 12); // rough estimate if we get enough items
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+      setFetchingMore(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchContent = async () => {
-      try {
-        const res = await fetch('http://localhost:5000/api/upload');
-        if (!res.ok) throw new Error('Failed to fetch content');
-        const data = await res.json();
-        setContent(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchContent();
+    fetchContent(1);
   }, []);
+
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchContent(nextPage, true);
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-20 min-h-screen">
@@ -72,55 +90,86 @@ export default function ExplorePage() {
           No content found. Be the first to upload!
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {content.map((item, i) => (
-            <motion.div 
-              key={item.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 * i }}
-              className="group cursor-pointer"
-            >
-              <div className="aspect-[16/9] overflow-hidden bg-gray-100 relative mb-6">
-                {item.mediaType === 'video' ? (
-                  <video 
-                    src={item.mediaUrl} 
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                    muted
-                    loop
-                    onMouseOver={e => e.target.play()}
-                    onMouseOut={e => e.target.pause()}
-                  />
-                ) : (
-                  <img 
-                    src={item.mediaUrl} 
-                    alt={item.title} 
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                  />
-                )}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500"></div>
-                <div className="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                  <span className="bg-white text-black px-6 py-3 text-[10px] font-bold uppercase tracking-widest shadow-xl">
-                    View Project
-                  </span>
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
+            {content.map((item, i) => (
+              <motion.div 
+                key={`${item.id}-${i}`} // Use index as part of key for duplicates across pages if any
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="group cursor-pointer"
+              >
+                <div className="aspect-[16/9] overflow-hidden bg-gray-100 relative mb-6">
+                  {item.mediaType === 'video' ? (
+                    <video 
+                      src={item.mediaUrl} 
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                      muted
+                      loop
+                      onMouseOver={e => e.target.play()}
+                      onMouseOut={e => e.target.pause()}
+                    />
+                  ) : (
+                    <img 
+                      src={item.mediaUrl} 
+                      alt={item.title} 
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500"></div>
+                  <div className="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                    <span className="bg-white text-black px-6 py-3 text-[10px] font-bold uppercase tracking-widest shadow-xl">
+                      View Project
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-bold text-2xl text-black mb-1 group-hover:translate-x-1 transition-transform">{item.title}</h3>
-                  <p className="text-xs uppercase tracking-widest font-semibold text-[#999999]">
-                    By {item.author?.username || 'Anonymous'} • {item.category}
-                  </p>
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-1">
+                      <h3 className="font-bold text-2xl text-black group-hover:translate-x-1 transition-transform">{item.title}</h3>
+                      {item.source && (
+                        <span className={`text-[10px] px-2 py-0.5 font-bold uppercase tracking-widest ${
+                          item.source === 'Local' ? 'bg-black text-white' : 
+                          item.source === 'Pexels' ? 'bg-[#05a081] text-white' : 
+                          'bg-[#2ece66] text-white'
+                        }`}>
+                          {item.source}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs uppercase tracking-widest font-semibold text-[#999999]">
+                      By {item.author?.username || 'Anonymous'} • {item.category}
+                    </p>
+                  </div>
+                  <div className="opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                  </div>
                 </div>
-                <div className="opacity-0 group-hover:opacity-100 transition-all duration-300">
-                  <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {hasMore && (
+            <div className="flex justify-center pb-20">
+              <button
+                onClick={handleLoadMore}
+                disabled={fetchingMore}
+                className="bg-black text-white px-12 py-5 font-bold text-sm uppercase tracking-[0.2em] hover:bg-black/80 transition-all disabled:bg-gray-400 min-w-[200px]"
+              >
+                {fetchingMore ? (
+                    <div className="flex items-center justify-center gap-3">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>Loading...</span>
+                    </div>
+                ) : 'Load More'}
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

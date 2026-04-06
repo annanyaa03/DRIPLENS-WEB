@@ -1,84 +1,191 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getCreatorById } from '../data/creatorsData';
 
 export default function CreatorProfilePage() {
+  const { id } = useParams();
+  const [creator, setCreator] = useState(null);
   const [selectedMedia, setSelectedMedia] = useState(null);
 
+  useEffect(() => {
+    if (id) {
+      setCreator(getCreatorById(id));
+    }
+    window.scrollTo(0, 0);
+  }, [id]);
+
+  if (!creator) return <div className="h-screen flex items-center justify-center">Loading...</div>;
+
   const portfolio = [
-    { id: 1, title: 'Commercial Edit', type: 'video' },
-    { id: 2, title: 'Product Shoot', type: 'image' },
-    { id: 3, title: 'Music Video', type: 'video' },
+    { id: 1, title: 'Project Alpha', type: 'video', img: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=800&q=80' },
+    { id: 2, title: 'Visual Narrative', type: 'image', img: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80' },
+    { id: 3, title: 'Commercial Edit', type: 'video', img: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80' },
+    { id: 4, title: 'Portrait Series', type: 'image', img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80' },
+    { id: 5, title: 'Brand Identity', type: 'design', img: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80' },
+    { id: 6, title: 'Motion Graphics', type: 'video', img: 'https://images.unsplash.com/photo-1614850523296-e8c041de2394?auto=format&fit=crop&w=800&q=80' },
   ];
 
   return (
-    <div className="bg-white">
-      {/* Banner */}
-      <div className="h-64 md:h-[400px] w-full bg-gray-200 relative">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+    <div className="bg-[#FAFAFA] min-h-screen pb-20 font-poppins">
+      {/* Hero Section */}
+      <div className="relative h-[40vh] md:h-[50vh] overflow-hidden">
+        <img 
+          src={creator.img} 
+          alt="Banner" 
+          className="w-full h-full object-cover brightness-50 scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-[#FAFAFA]"></div>
+        
+        <Link to="/explore" className="absolute top-8 left-8 z-20 flex items-center gap-2 text-white/80 hover:text-white transition-colors">
+          <span className="text-xl">←</span> Back to Explore
+        </Link>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 relative z-10">
-        <div className="flex flex-col md:flex-row gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-32 relative z-10">
+        <div className="flex flex-col lg:flex-row gap-12">
           
-          {/* Main Content */}
-          <div className="flex-1">
-            <div className="flex items-end gap-6 mb-8">
-              <div className="h-32 w-32 md:h-40 md:w-40 rounded-full bg-white p-2 border border-[#E5E5E5] shadow-sm">
-                <div className="w-full h-full bg-gray-300 rounded-full"></div>
+          {/* Left Wing: Profile & Quick Info */}
+          <div className="lg:w-1/3">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white"
+            >
+              <div className="relative -mt-20 mb-6 flex justify-center lg:justify-start">
+                <div className="h-32 w-32 md:h-40 md:w-40 rounded-3xl bg-white p-2 shadow-2xl overflow-hidden rotate-3 hover:rotate-0 transition-transform duration-500">
+                  <img src={creator.img} alt={creator.name} className="w-full h-full object-cover rounded-2xl" />
+                </div>
               </div>
-              <div className="pb-4">
-                <h1 className="text-3xl md:text-4xl font-poppins font-bold text-black flex items-center gap-2">
-                  Jane Doe
-                  <span className="bg-black text-white px-2 py-0.5 rounded-full text-xs font-bold align-middle">
-                    VERIFIED
-                  </span>
-                </h1>
-                <p className="text-lg text-[#555555]">Videographer & Editor • Los Angeles</p>
+
+              <div className="text-center lg:text-left mb-8">
+                <div className="flex items-center justify-center lg:justify-start gap-3 mb-1">
+                  <h1 className="text-3xl font-bold text-black tracking-tight">{creator.name}</h1>
+                  <span className="bg-black text-[10px] text-white px-2 py-1 rounded-full font-bold uppercase tracking-wider">Verified</span>
+                </div>
+                <p className="text-[#888] font-medium text-lg uppercase tracking-wide text-xs">{creator.role} • {creator.location}</p>
               </div>
-            </div>
 
-            <div className="mb-12">
-              <h2 className="text-2xl font-poppins font-semibold text-black mb-4">About</h2>
-              <p className="text-[#555555] max-w-3xl leading-relaxed">
-                Specializing in high-energy commercial edits and documentary-style storytelling. 
-                I have over 5 years of experience working with top lifestyle brands.
-              </p>
-            </div>
+              <div className="flex gap-4 mb-10">
+                <button className="flex-1 bg-black text-white py-4 rounded-2xl font-bold text-sm hover:bg-zinc-800 transition-all shadow-xl shadow-black/10">
+                  Hire Creator
+                </button>
+                <button className="p-4 rounded-2xl border border-zinc-200 hover:bg-zinc-50 transition-all">
+                  ★
+                </button>
+              </div>
 
-            <div>
-              <h2 className="text-2xl font-poppins font-semibold text-black mb-6">Portfolio</h2>
-              <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
-                {portfolio.map((item) => (
-                  <div 
-                    key={item.id}
-                    onClick={() => setSelectedMedia(item)}
-                    className="break-inside-avoid relative group cursor-pointer overflow-hidden rounded-[12px] bg-gray-100 driplens-card"
-                  >
-                    <div className="aspect-[4/5] bg-gray-200 w-full relative">
-                      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <p className="font-poppins font-semibold">{item.title}</p>
-                        <p className="text-sm opacity-80 uppercase tracking-widest">{item.type}</p>
-                      </div>
-                    </div>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-[11px] font-bold text-[#BBB] uppercase tracking-[0.2em] mb-4">Qualification</h3>
+                  <ul className="space-y-3">
+                    {creator.qualifications.map((q, i) => (
+                      <li key={i} className="flex items-center gap-3 text-sm text-zinc-600">
+                        <span className="h-1.5 w-1.5 bg-black rounded-full" />
+                        {q}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="pt-6 border-t border-zinc-100">
+                  <h3 className="text-[11px] font-bold text-[#BBB] uppercase tracking-[0.2em] mb-4">Past Work</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {creator.pastWork.map((pw, i) => (
+                      <span key={i} className="bg-zinc-100 text-zinc-600 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase">
+                        {pw}
+                      </span>
+                    ))}
                   </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Brand Deals Wing */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-zinc-900 rounded-3xl p-8 mt-8 text-white"
+            >
+               <h3 className="text-[11px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-6">Trusted By</h3>
+               <div className="grid grid-cols-2 gap-4">
+                  {creator.brandDeals.map((brand, i) => (
+                    <div key={i} className="bg-zinc-800/50 rounded-xl p-4 flex items-center justify-center text-sm font-bold text-zinc-400 hover:text-white transition-colors border border-zinc-800">
+                      {brand}
+                    </div>
+                  ))}
+               </div>
+            </motion.div>
+          </div>
+
+          {/* Right Wing: Main Content */}
+          <div className="lg:w-2/3 space-y-12">
+            
+            {/* Workflow Section */}
+            <section>
+              <h2 className="text-2xl font-bold text-black mb-8 flex items-center gap-4">
+                Stable Workflow 
+                <span className="h-[1px] flex-1 bg-zinc-200" />
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {creator.workflow.map((item, i) => (
+                  <motion.div 
+                    key={i}
+                    whileHover={{ y: -5 }}
+                    className="bg-white p-6 rounded-2xl border border-zinc-100 shadow-sm relative overflow-hidden"
+                  >
+                    <div className="absolute -right-4 -top-4 text-zinc-50 text-6xl font-black">{i + 1}</div>
+                    <div className="relative z-10">
+                      <p className="text-[10px] font-bold text-black uppercase tracking-widest mb-2">{item.step}</p>
+                      <p className="text-sm text-zinc-500 leading-relaxed">{item.description}</p>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </section>
+
+            {/* Portfolio Grid */}
+            <section>
+              <div className="flex justify-between items-end mb-8">
+                <h2 className="text-2xl font-bold text-black flex items-center gap-4 flex-1">
+                  Portfolio 
+                  <span className="h-[1px] flex-1 bg-zinc-200" />
+                </h2>
+                <div className="flex gap-4 ml-6">
+                   {['All', 'Video', 'Photos'].map(f => (
+                     <button key={f} className={`text-[10px] font-bold uppercase tracking-widest ${f === 'All' ? 'text-black border-b-2 border-black pb-1' : 'text-[#888]'}`}>
+                       {f}
+                     </button>
+                   ))}
+                </div>
+              </div>
+              
+              <div className="columns-1 md:columns-2 gap-6 space-y-6">
+                {portfolio.map((item, i) => (
+                  <motion.div 
+                    key={item.id}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.1 * i }}
+                    onClick={() => setSelectedMedia(item)}
+                    className="break-inside-avoid relative group cursor-pointer overflow-hidden rounded-3xl bg-zinc-100"
+                  >
+                    <img 
+                      src={item.img} 
+                      alt={item.title} 
+                      className="w-full grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 p-6 flex flex-col justify-end">
+                      <p className="text-white font-bold text-xl mb-1">{item.title}</p>
+                      <p className="text-white/60 text-xs uppercase tracking-widest">{item.type}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
           </div>
 
-          {/* Sidebar */}
-          <div className="w-full md:w-80 mt-8 md:mt-32 border border-[#E5E5E5] rounded-[12px] p-6 shadow-sm self-start sticky top-24 bg-white">
-            <h3 className="text-xl font-poppins font-bold text-black mb-2">Hire Jane</h3>
-            <p className="text-sm text-[#999999] mb-6">Typically responds in 2 hours.</p>
-            
-            <button className="w-full btn-primary mb-3 text-lg py-3">
-              Send Hiring Request
-            </button>
-            <button className="w-full btn-secondary text-base">
-              ★ Shortlist Creator
-            </button>
-          </div>
         </div>
       </div>
 
@@ -89,24 +196,31 @@ export default function CreatorProfilePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 backdrop-blur-xl"
             onClick={() => setSelectedMedia(null)}
           >
-            <div className="max-w-5xl w-full max-h-[90vh] bg-black border border-gray-800 rounded-lg overflow-hidden relative" onClick={e => e.stopPropagation()}>
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="max-w-6xl w-full aspect-video bg-zinc-900 rounded-[32px] overflow-hidden relative shadow-2xl border border-zinc-800" 
+              onClick={e => e.stopPropagation()}
+            >
               <button 
                 onClick={() => setSelectedMedia(null)}
-                className="absolute top-4 right-4 text-white p-2 z-10 bg-black/50 rounded-full hover:bg-black transition"
+                className="absolute top-8 right-8 text-white p-3 z-10 bg-black/50 backdrop-blur-md rounded-full hover:bg-black transition-all border border-white/10"
               >
                 ✕
               </button>
-              <div className="aspect-video w-full bg-gray-900 flex items-center justify-center text-gray-500">
-                Media Content: {selectedMedia.title}
+              <img src={selectedMedia.img} alt={selectedMedia.title} className="w-full h-full object-cover" />
+              <div className="absolute bottom-0 left-0 right-0 p-12 bg-gradient-to-t from-black via-transparent to-transparent">
+                  <h2 className="text-4xl font-bold text-white mb-2">{selectedMedia.title}</h2>
+                  <p className="text-white/60 uppercase tracking-widest text-sm">{selectedMedia.type}</p>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-
     </div>
   );
 }

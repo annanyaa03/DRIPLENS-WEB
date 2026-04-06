@@ -77,22 +77,36 @@ router.post('/portfolio', requireAuth, upload.single('media'), async (req, res) 
   }
 });
 
-// GET /api/upload - Fetch ALL content for Explore page
+// GET /api/upload - Fetch content for Explore page with pagination
 router.get('/', async (req, res) => {
   try {
-    const { data: contents, error } = await supabase
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    const { data: contents, error, count } = await supabase
       .from('portfolio_items')
       .select(`
         *,
         author:profiles(username, avatar_url)
-      `)
-      .order('created_at', { ascending: false });
+      `, { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range(from, to);
 
     if (error) {
       throw error;
     }
     
-    res.status(200).json(contents);
+    res.status(200).json({
+      items: contents,
+      pagination: {
+        page,
+        limit,
+        totalItems: count,
+        totalPages: Math.ceil(count / limit)
+      }
+    });
   } catch (error) {
     console.error('Fetch content error:', error);
     res.status(500).json({ message: 'Error fetching content' });
