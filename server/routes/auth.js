@@ -1,7 +1,28 @@
 import express from 'express';
-import { supabase } from '../utils/supabase.js';
+import fs from 'fs';
+import path from 'path';
 
 const router = express.Router();
+const USERS_FILE = path.join(process.cwd(), 'users.json');
+
+// Helper to read users
+const readUsers = () => {
+  if (fs.existsSync(USERS_FILE)) {
+    try {
+      const data = fs.readFileSync(USERS_FILE, 'utf8');
+      return JSON.parse(data);
+    } catch (e) {
+      console.error('Error reading users', e);
+      return [];
+    }
+  }
+  return [];
+};
+
+// Helper to write users
+const writeUsers = (users) => {
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
+};
 
 // Register new user
 router.post('/register', async (req, res) => {
@@ -12,32 +33,34 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          username,
-          role
-        }
-      }
-    });
-
-    if (error) {
-      if (error.status === 409) {
-        return res.status(409).json({ message: 'Email already exists' });
-      }
-      return res.status(400).json({ message: error.message });
+    const users = readUsers();
+    
+    // Check if email exists
+    if (users.find(u => u.email === email)) {
+      return res.status(409).json({ message: 'Email already exists' });
     }
+
+    const newUser = {
+      id: Date.now().toString() + Math.random().toString(36).substring(2, 7),
+      username,
+      email,
+      password, // In a real app, hash this!
+      role
+    };
+
+    users.push(newUser);
+    writeUsers(users);
+
+    const token = 'local-token-' + newUser.id;
 
     res.status(201).json({
       message: 'User created successfully',
-      session: data.session,
+      session: { access_token: token },
       user: {
-        id: data.user.id,
-        username: data.user.user_metadata.username,
-        email: data.user.email,
-        role: data.user.user_metadata.role
+        id: newUser.id,
+        username: newUser.username,
+        email: newUser.email,
+        role: newUser.role
       }
     });
   } catch (error) {
@@ -55,24 +78,24 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Email and password are required' });
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
+    const users = readUsers();
+    const user = users.find(u => u.email === email && u.password === password);
 
-    if (error) {
+    if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
+    const token = 'local-token-' + user.id;
+
     res.status(200).json({
       message: 'Logged in successfully',
-      session: data.session,
-      token: data.session.access_token, // Keeping token for legacy client support
+      session: { access_token: token },
+      token: token, // Keeping token for legacy client support
       user: {
-        id: data.user.id,
-        username: data.user.user_metadata.username,
-        email: data.user.email,
-        role: data.user.user_metadata.role
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role
       }
     });
   } catch (error) {
