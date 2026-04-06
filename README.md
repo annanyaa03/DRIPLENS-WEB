@@ -273,7 +273,7 @@ isRead              Boolean   default false
 | Aayu               | Architecture            |
 | Annanya Ukey       | Frontend + UI?UX        |
 | Atharv Gadekar     | Main Idea Force         |
-| Aditi Janugade     | Reaseacher              |
+| Aditi Janugade     |Researcher               |
 | Anandi Khandelwal  | AI/ML Lead              |
 
 Faculty Guide — Prof. N.D. Gaikwad, AISSMS College of Engineering
