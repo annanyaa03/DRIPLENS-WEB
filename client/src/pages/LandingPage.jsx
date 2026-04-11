@@ -1,41 +1,51 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import AnimatedButton from '../components/AnimatedButton';
+import Aurora from '../components/Aurora/Aurora';
 
 export default function LandingPage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="px-4 text-center max-w-5xl mx-auto flex flex-col items-center justify-center min-h-[90vh]">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight text-black mb-8"
-        >
-          The Professional <br /> Meritocracy for Creators
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-lg md:text-xl text-[#555555] max-w-2xl mb-10"
-        >
-          Showcase your portfolio, get discovered by top brands, and unlock zero-ambiguity creative partnerships.
-        </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
-        >
-          <AnimatedButton to="/auth?mode=register&role=creator">
-            Join as Creator
-          </AnimatedButton>
-          <AnimatedButton to="/auth?mode=register&role=brand">
-            Hire Talent
-          </AnimatedButton>
-        </motion.div>
+      <section className="relative w-full overflow-hidden bg-white">
+        <Aurora
+          colorStops={["#2A19FF", "#E619A3", "#5C00D6"]}
+          blend={0.8}
+          amplitude={1.5}
+        />
+        <div className="px-4 text-center max-w-5xl mx-auto flex flex-col items-center justify-center min-h-[90vh] relative z-10">
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-5xl md:text-8xl font-bold leading-[1.05] tracking-tight text-black mb-8"
+          >
+            The Professional <br /> Meritocracy for Creators
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="text-lg md:text-2xl text-black/70 max-w-2xl mb-12"
+          >
+            Showcase your portfolio, get discovered by top brands, and unlock zero-ambiguity creative partnerships.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+            className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto"
+          >
+            <AnimatedButton to="/auth?mode=register&role=creator" className="!bg-black !text-white border-none scale-110">
+              Join as Creator
+            </AnimatedButton>
+            <AnimatedButton to="/auth?mode=register&role=brand" className="!bg-transparent border-2 border-black/30 !text-black hover:border-black scale-110">
+              Hire Talent
+            </AnimatedButton>
+          </motion.div>
+        </div>
+        {/* Subtle bottom gradient for transition */}
+        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white to-transparent z-5 pointer-events-none"></div>
       </section>
 
       {/* Stats Section */}
