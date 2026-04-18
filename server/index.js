@@ -1,45 +1,57 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import authRoutes from './routes/auth.js';
-import uploadRoutes from './routes/upload.js';
-import creatorRoutes from './routes/creators.js';
-import hiringRoutes from './routes/hiring.js';
-import messageRoutes from './routes/messages.js';
+import 'dotenv/config';
+import './config/env.js';                     // Validate env vars before anything else
 
-dotenv.config();
+import express    from 'express';
+import helmet     from 'helmet';
+import cors       from 'cors';
+import v1Routes   from './routes/v1/index.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import { supabase }     from './utils/supabase.js';
+import logger           from './utils/logger.js';
+import { env }          from './config/env.js';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
+// ── Security headers ──────────────────────────────────────────
+app.use(helmet());
+
+// ── CORS — whitelist only your client URL ─────────────────────
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
-  credentials: true
+  origin:      env.CLIENT_URL,
+  credentials: true,
+  methods:     ['GET', 'POST', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
+// ── Body parsing ──────────────────────────────────────────────
+app.use(express.json({ limit: '1mb' }));     // 1mb for JSON — not 10mb
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
-app.use('/api/auth', authRoutes);
-app.use('/api/upload', uploadRoutes);
-app.use('/api/creators', creatorRoutes);
-app.use('/api/hiring', hiringRoutes);
-app.use('/api/messages', messageRoutes);
+// ── API routes ────────────────────────────────────────────────
+app.use('/api/v1', v1Routes);
 
-app.get('/api/health', (req, res) => {
-    res.json({ 
-        status: 'ok', 
-        platform: 'Supabase',
-        timestamp: new Date().toISOString()
-    });
+// ── Health check — actually tests Supabase connectivity ───────
+app.get('/api/health', async (req, res) => {
+  try {
+    await supabase.from('profiles').select('id').limit(1);
+    res.json({ status: 'ok', db: 'connected', timestamp: new Date().toISOString() });
+  } catch {
+    res.status(503).json({ status: 'degraded', db: 'unreachable', timestamp: new Date().toISOString() });
+  }
 });
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: err.message || 'Internal server error' });
+// ── 404 handler ───────────────────────────────────────────────
+app.use((req, res) => {
+  res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: `Route ${req.method} ${req.path} not found` } });
 });
 
+// ── Global error handler (must be last) ──────────────────────
+app.use(errorHandler);
+
+// ── Boot ──────────────────────────────────────────────────────
+const PORT = env.PORT;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log('Supabase integration active');
+  logger.info(`Server started`, { port: PORT, env: env.NODE_ENV });
 });
+
+export default app; // needed for supertest in tests
