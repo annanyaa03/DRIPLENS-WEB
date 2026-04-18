@@ -9,3 +9,6 @@ yarn-debug.log*
 yarn-error.log*
 .vscode/
 .idea/
+
+server/users.json
+server/.env
