@@ -1,0 +1,42 @@
+import { Router } from 'express';
+import multer from 'multer';
+import { requireAuth, requireRole } from '../../middleware/auth.js';
+import { uploadLimiter, apiLimiter } from '../../middleware/rateLimiter.js';
+import { validate } from '../../middleware/validate.js';
+import { uploadMetaSchema } from '../../schemas/uploadSchemas.js';
+import { listCreatorsSchema } from '../../schemas/creatorSchemas.js';
+import * as uploadService from '../../services/uploadService.js';
+
+const router = Router();
+
+// File size limit enforced at multer level — 50MB hard cap
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits:  { fileSize: 50 * 1024 * 1024 }
+});
+
+router.post(
+  '/portfolio',
+  requireAuth,
+  requireRole('creator'),
+  uploadLimiter,
+  upload.single('media'),
+  validate(uploadMetaSchema),
+  async (req, res, next) => {
+    try {
+      const item = await uploadService.uploadPortfolio(req.user.id, req.file, req.body);
+      res.status(201).json({ success: true, data: { item } });
+    } catch (err) { next(err); }
+  }
+);
+
+const paginationSchema = listCreatorsSchema.pick({ page: true, limit: true });
+
+router.get('/', apiLimiter, validate(paginationSchema, 'query'), async (req, res, next) => {
+  try {
+    const result = await uploadService.listPortfolio(req.query);
+    res.json({ success: true, data: result });
+  } catch (err) { next(err); }
+});
+
+export default router;
