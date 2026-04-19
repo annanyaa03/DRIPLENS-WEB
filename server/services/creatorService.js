@@ -7,7 +7,7 @@ export const listCreators = async ({ category, location, search, page, limit }) 
 
   let query = supabase
     .from('profiles')
-    .select('id, username, bio, location, category, avatar_url, banner_url', { count: 'exact' })
+    .select('id, username, bio, location, category, avatar_url, banner_url, instagram, twitter, website', { count: 'exact' })
     .eq('role', 'creator');
 
   if (category) query = query.eq('category', category);
@@ -30,11 +30,10 @@ export const getCreator = async (id) => {
   const { data, error } = await supabase
     .from('profiles')
     .select(`
-      id, username, bio, location, category, avatar_url, banner_url, created_at,
+      id, username, bio, location, category, avatar_url, banner_url, instagram, twitter, website, created_at,
       portfolio_items (id, title, media_url, media_type, created_at)
     `)
     .eq('id', id)
-    .eq('role', 'creator')
     .single();
 
   if (error || !data) throw notFound('Creator not found');

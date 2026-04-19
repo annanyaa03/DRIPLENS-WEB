@@ -18,6 +18,8 @@ import UploadPage        from './pages/UploadPage';
 import CreatorDashboard  from './pages/CreatorDashboard';
 import BrandDashboard    from './pages/BrandDashboard';
 import MessagingPage     from './pages/MessagingPage';
+import EditProfilePage   from './pages/EditProfilePage';
+import NotFoundPage      from './pages/NotFoundPage';
 
 function App() {
   return (
@@ -42,6 +44,9 @@ function App() {
                   <Route path="/messages" element={
                     <ProtectedRoute><MessagingPage /></ProtectedRoute>
                   } />
+                  <Route path="/profile/edit" element={
+                    <ProtectedRoute><EditProfilePage /></ProtectedRoute>
+                  } />
 
                   {/* Protected — role-specific */}
                   <Route path="/upload" element={
@@ -53,6 +58,9 @@ function App() {
                   <Route path="/dashboard/brand" element={
                     <ProtectedRoute requiredRole="brand"><BrandDashboard /></ProtectedRoute>
                   } />
+
+                  {/* 404 catch-all */}
+                  <Route path="*" element={<NotFoundPage />} />
                 </Routes>
               </main>
               <Footer />

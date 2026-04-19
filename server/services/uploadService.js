@@ -60,6 +60,30 @@ export const uploadPortfolio = async (userId, file, { title, description, catego
   return data;
 };
 
+export const uploadProfileImage = async (userId, file, type) => {
+  validateFile(file);
+
+  const ext      = file.originalname.split('.').pop().toLowerCase();
+  const safeName = `${userId}/${type}_${uuidv4()}.${ext}`;
+  const filePath = `images/${safeName}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from('profiles')
+    .upload(filePath, file.buffer, {
+      contentType:  file.mimetype,
+      cacheControl: '3600',  // 1 hour
+      upsert:       true
+    });
+
+  if (uploadError) throw uploadError;
+
+  const { data: { publicUrl } } = supabase.storage
+    .from('profiles')
+    .getPublicUrl(filePath);
+
+  return { publicUrl, storagePath: filePath };
+};
+
 export const listPortfolio = async ({ page, limit }) => {
   const from = (page - 1) * limit;
   const to   = from + limit - 1;

@@ -59,10 +59,17 @@ export default function CreatorDashboard() {
         <meta name="description" content="Creator Dashboard on Driplens" />
       </Helmet>
       <div className="max-w-7xl mx-auto px-4 py-10">
-        <h1 className="text-3xl font-bold text-black mb-1">
-          Welcome back, {user?.username} 👋
-        </h1>
-        <p className="text-[#555] mb-8 text-sm">Here's what's happening with your profile.</p>
+        <div className="flex justify-between items-end mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-black mb-1">
+              Welcome back, {user?.username} 👋
+            </h1>
+            <p className="text-[#555] text-sm">Here's what's happening with your profile.</p>
+          </div>
+          <Link to="/profile/edit" className="text-[10px] font-bold uppercase tracking-widest text-[#999] hover:text-black border-b border-[#DDD] hover:border-black pb-1 transition-all">
+            Edit Profile
+          </Link>
+        </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">

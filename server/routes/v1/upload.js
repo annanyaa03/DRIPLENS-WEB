@@ -30,6 +30,32 @@ router.post(
   }
 );
 
+router.post(
+  '/avatar',
+  requireAuth,
+  uploadLimiter,
+  upload.single('avatar'),
+  async (req, res, next) => {
+    try {
+      const { publicUrl } = await uploadService.uploadProfileImage(req.user.id, req.file, 'avatar');
+      res.json({ success: true, data: { publicUrl } });
+    } catch (err) { next(err); }
+  }
+);
+
+router.post(
+  '/banner',
+  requireAuth,
+  uploadLimiter,
+  upload.single('banner'),
+  async (req, res, next) => {
+    try {
+      const { publicUrl } = await uploadService.uploadProfileImage(req.user.id, req.file, 'banner');
+      res.json({ success: true, data: { publicUrl } });
+    } catch (err) { next(err); }
+  }
+);
+
 const paginationSchema = listCreatorsSchema.pick({ page: true, limit: true });
 
 router.get('/', apiLimiter, validate(paginationSchema, 'query'), async (req, res, next) => {

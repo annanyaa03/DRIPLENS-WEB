@@ -13,5 +13,8 @@ export const updateProfileSchema = z.object({
   location:   z.string().max(100).optional(),
   category:   z.string().max(50).optional(),
   avatar_url: z.string().url().optional(),
-  banner_url: z.string().url().optional()
+  banner_url: z.string().url().optional(),
+  instagram:  z.string().max(50).optional(),
+  twitter:    z.string().max(50).optional(),
+  website:    z.string().url().or(z.literal('')).optional()
 }).strict();

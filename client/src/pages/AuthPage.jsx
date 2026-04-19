@@ -54,9 +54,7 @@ export default function AuthPage() {
     setLoading(true);
     try {
       if (mode === 'register') {
-        await register(formData.username, formData.email, formData.password, role);
-        // After register, log them in automatically
-        const userData = await login(formData.email, formData.password);
+        const userData = await register(formData.username, formData.email, formData.password, role);
         navigate(`/dashboard/${userData.role}`, { replace: true });
       } else {
         const userData = await login(formData.email, formData.password);

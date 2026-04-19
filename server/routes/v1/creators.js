@@ -21,7 +21,7 @@ router.get('/:id', apiLimiter, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-router.patch('/profile', requireAuth, requireRole('creator'), validate(updateProfileSchema), async (req, res, next) => {
+router.patch('/profile', requireAuth, validate(updateProfileSchema), async (req, res, next) => {
   try {
     const profile = await creatorService.updateProfile(req.user.id, req.body);
     res.json({ success: true, data: { profile } });
