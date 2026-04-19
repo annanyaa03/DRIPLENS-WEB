@@ -1,30 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getCreatorById } from '../data/creatorsData';
-
+import { api } from '../lib/api';
 export default function CreatorProfilePage() {
   const { id } = useParams();
   const [creator, setCreator] = useState(null);
   const [selectedMedia, setSelectedMedia] = useState(null);
 
   useEffect(() => {
-    if (id) {
-      setCreator(getCreatorById(id));
-    }
+    const load = async () => {
+      try {
+        const data = await api.get(`/creators/${id}`);
+        setCreator(data.data.creator);
+      } catch {
+        setCreator(null); // show not found
+      }
+    };
+    load();
     window.scrollTo(0, 0);
   }, [id]);
 
   if (!creator) return <div className="h-screen flex items-center justify-center">Loading...</div>;
-
-  const portfolio = [
-    { id: 1, title: 'Project Alpha', type: 'video', img: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=800&q=80' },
-    { id: 2, title: 'Visual Narrative', type: 'image', img: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80' },
-    { id: 3, title: 'Commercial Edit', type: 'video', img: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80' },
-    { id: 4, title: 'Portrait Series', type: 'image', img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80' },
-    { id: 5, title: 'Brand Identity', type: 'design', img: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80' },
-    { id: 6, title: 'Motion Graphics', type: 'video', img: 'https://images.unsplash.com/photo-1614850523296-e8c041de2394?auto=format&fit=crop&w=800&q=80' },
-  ];
 
   return (
     <div className="bg-[#FAFAFA] min-h-screen pb-20 font-poppins">
@@ -162,7 +158,7 @@ export default function CreatorProfilePage() {
               </div>
               
               <div className="columns-1 md:columns-2 gap-6 space-y-6">
-                {portfolio.map((item, i) => (
+                {(creator.portfolio_items || []).map((item, i) => (
                   <motion.div 
                     key={item.id}
                     initial={{ opacity: 0, scale: 0.95 }}

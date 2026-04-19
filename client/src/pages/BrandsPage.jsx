@@ -1,10 +1,15 @@
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { brands } from '../data/brandsData';
 
 export default function BrandsPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-20 min-h-screen bg-white text-[#555555]">
+      <Helmet>
+        <title>Brand Opportunities — Driplens</title>
+        <meta name="description" content="Brand Opportunities on Driplens" />
+      </Helmet>
       <div className="mb-24 px-4 md:px-0">
         <motion.div
            initial={{ opacity: 0, x: -20 }}

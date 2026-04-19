@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { getAllExploreContent } from '../services/externalMediaService';
 
 export default function ExplorePage() {
@@ -44,6 +45,10 @@ export default function ExplorePage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-20 min-h-screen">
+      <Helmet>
+        <title>Explore Global Work — Driplens</title>
+        <meta name="description" content="Explore Global Work on Driplens" />
+      </Helmet>
       <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
         <div className="max-w-2xl">
           <motion.h1 

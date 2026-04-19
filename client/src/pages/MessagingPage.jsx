@@ -1,19 +1,19 @@
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
+import { useAuth } from '../context/AuthContext';
+import { Helmet } from 'react-helmet-async';
 
 export default function MessagingPage() {
   const [requests, setRequests] = useState([]);
   const [activeRequestId, setActiveRequestId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const [currentUser, setCurrentUser] = useState(null);
+  
+  const { user: currentUser } = useAuth();
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      setCurrentUser(JSON.parse(userStr));
-    }
     fetchRequests();
   }, []);
 
@@ -47,62 +47,35 @@ export default function MessagingPage() {
   }, [messages]);
 
   const fetchRequests = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
     try {
-      const res = await fetch('http://localhost:5000/api/hiring', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await res.json();
-      if (res.ok && data.requests) {
-        setRequests(data.requests);
-        if (data.requests.length > 0 && !activeRequestId) {
-          setActiveRequestId(data.requests[0].id);
-        }
-      }
+      const data = await api.get('/hiring');
+      const reqs = data.data.requests || [];
+      setRequests(reqs);
+      if (reqs.length > 0 && !activeRequestId) setActiveRequestId(reqs[0].id);
     } catch (err) {
-      console.error('Error fetching requests:', err);
+      console.error(err);
     }
   };
 
   const fetchMessages = async (reqId) => {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
     try {
-      const res = await fetch(`http://localhost:5000/api/messages/${reqId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setMessages(data.messages || []);
-      }
+      const data = await api.get(`/messages/${reqId}`);
+      setMessages(data.data.messages || []);
     } catch (err) {
-      console.error('Error fetching messages:', err);
+      console.error(err);
     }
   };
 
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() || !activeRequestId) return;
-
-    const token = localStorage.getItem('token');
     const content = newMessage;
-    setNewMessage(''); // optimistic clear
-
+    setNewMessage('');
     try {
-      const res = await fetch(`http://localhost:5000/api/messages/${activeRequestId}`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}` 
-        },
-        body: JSON.stringify({ content })
-      });
-      // The realtime subscription will pick up the new message
+      await api.post(`/messages/${activeRequestId}`, { content });
     } catch (err) {
-      console.error('Error sending message:', err);
+      console.error(err);
+      setNewMessage(content); // restore on failure
     }
   };
 
@@ -116,6 +89,10 @@ export default function MessagingPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 h-[calc(100vh-64px)] flex gap-6">
+      <Helmet>
+        <title>Messages — Driplens</title>
+        <meta name="description" content="Messages on Driplens" />
+      </Helmet>
       
       {/* Sidebar: Conversation List */}
       <div className="w-1/3 driplens-card flex flex-col hidden md:flex border border-gray-100 rounded-[8px] bg-white overflow-hidden">

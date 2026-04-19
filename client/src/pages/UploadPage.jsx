@@ -1,6 +1,9 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { api } from '../lib/api';
+import { useAuth } from '../context/AuthContext';
 
 export default function UploadPage() {
   const [dragActive, setDragActive] = useState(false);
@@ -40,54 +43,29 @@ export default function UploadPage() {
     }
   };
 
-  const handleFiles = (file) => {
-    setFile(file);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreview(reader.result);
-    };
-    reader.readAsDataURL(file);
+  const handleFiles = (selectedFile) => {
+    setFile(selectedFile);
+    const url = URL.createObjectURL(selectedFile);
+    setPreview({ url, type: selectedFile.type.startsWith('video') ? 'video' : 'image' });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file || !title || !category) {
-      setMessage({ type: 'error', text: 'Please fill in all required fields and select a file.' });
+      setMessage({ type: 'error', text: 'Please fill all required fields and select a file.' });
       return;
     }
-
     setLoading(true);
     setMessage({ type: '', text: '' });
-
     const formData = new FormData();
     formData.append('media', file);
     formData.append('title', title);
     formData.append('category', category);
-    formData.append('description', description);
-
+    if (description) formData.append('description', description);
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        navigate('/auth');
-        return;
-      }
-
-      const res = await fetch('http://localhost:5000/api/upload/portfolio', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: formData
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || 'Upload failed');
-      }
-
-      setMessage({ type: 'success', text: 'Content published successfully!' });
-      setTimeout(() => navigate('/explore'), 2000);
+      await api.post('/upload/portfolio', formData);
+      setMessage({ type: 'success', text: 'Published successfully!' });
+      setTimeout(() => navigate('/explore'), 1800);
     } catch (err) {
       setMessage({ type: 'error', text: err.message });
     } finally {
@@ -97,6 +75,10 @@ export default function UploadPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-20 min-h-screen">
+      <Helmet>
+        <title>Upload Your Work — Driplens</title>
+        <meta name="description" content="Upload Your Work on Driplens" />
+      </Helmet>
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -125,7 +107,9 @@ export default function UploadPage() {
             />
             
             {preview ? (
-              <img src={preview} alt="Preview" className="absolute inset-0 w-full h-full object-cover" />
+              preview.type === 'video'
+                ? <video src={preview.url} className="absolute inset-0 w-full h-full object-cover" controls={false} muted />
+                : <img src={preview.url} alt="Preview" className="absolute inset-0 w-full h-full object-cover" />
             ) : (
               <>
                 <svg className="w-12 h-12 text-[#CCC] mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
