@@ -116,7 +116,8 @@ export const fetchPixabayContent = async (query = 'creative', page = 1, perPage 
 export const getAllExploreContent = async (query = 'creative', page = 1) => {
   try {
     // Fetch local content first with pagination
-    const localRes = await fetch(`http://localhost:5000/api/upload?page=${page}&limit=6`);
+    const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const localRes = await fetch(`${API_BASE}/api/v1/upload?page=${page}&limit=6`);
     let localData = [];
     if (localRes.ok) {
       const data = await localRes.json();

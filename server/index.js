@@ -54,4 +54,23 @@ app.listen(PORT, () => {
   logger.info(`Server started`, { port: PORT, env: env.NODE_ENV });
 });
 
+
 export default app; // needed for supertest in tests
+
+process.on('exit', (code) => {
+  console.log(`Process exiting with code: ${code}`);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+});
+
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+// Workaround for mysterious exit with code 0
+setInterval(() => {}, 1000);
+
+
