@@ -1,6 +1,12 @@
+import { Helmet } from 'react-helmet-async';
+
 export default function BrandDashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      <Helmet>
+        <title>Brand Dashboard — Driplens</title>
+        <meta name="description" content="Brand Dashboard on Driplens" />
+      </Helmet>
       <h1 className="text-3xl font-poppins font-bold text-black mb-2">Brand Dashboard</h1>
       <p className="text-[#555555] mb-8">Manage your talent pool and active briefs.</p>
       

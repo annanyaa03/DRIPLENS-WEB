@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import AnimatedButton from '../components/AnimatedButton';
 import Aurora from '../components/Aurora/Aurora';
@@ -6,6 +7,10 @@ import Aurora from '../components/Aurora/Aurora';
 export default function LandingPage() {
   return (
     <div className="flex flex-col">
+      <Helmet>
+        <title>Driplens — The Professional Meritocracy for Creators</title>
+        <meta name="description" content="The Professional Meritocracy for Creators" />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative w-full overflow-hidden bg-white">
         <Aurora
@@ -48,25 +53,12 @@ export default function LandingPage() {
         <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white to-transparent z-5 pointer-events-none"></div>
       </section>
 
-      {/* Stats Section */}
+      {/* Early Access Section */}
       <section className="bg-gray-50 border-y border-[#E5E5E5] py-12">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div>
-            <h2 className="text-4xl font-bold text-black mb-1">10k+</h2>
-            <p className="text-xs uppercase tracking-widest font-semibold text-[#666]">Verified Creators</p>
-          </div>
-          <div>
-            <h2 className="text-4xl font-bold text-black mb-1">$5M+</h2>
-            <p className="text-xs uppercase tracking-widest font-semibold text-[#666]">Paid to Talent</p>
-          </div>
-          <div>
-            <h2 className="text-4xl font-bold text-black mb-1">500+</h2>
-            <p className="text-xs uppercase tracking-widest font-semibold text-[#666]">Top Brands</p>
-          </div>
-          <div>
-            <h2 className="text-4xl font-bold text-black mb-1">24h</h2>
-            <p className="text-xs uppercase tracking-widest font-semibold text-[#666]">Avg. Match Time</p>
-          </div>
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <p className="text-xs uppercase tracking-widest font-bold text-[#999] mb-4">Early Access</p>
+          <h2 className="text-2xl font-bold text-black">Be among the first creators on the platform.</h2>
+          <p className="text-[#555] mt-3 text-sm">Driplens is launching soon. Join the waitlist and get early access.</p>
         </div>
       </section>
 
