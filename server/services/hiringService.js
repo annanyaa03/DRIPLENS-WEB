@@ -4,14 +4,33 @@ import { forbidden, notFound } from '../utils/AppError.js';
 // Allowed status transitions by role
 const TRANSITIONS = {
   brand:   ['Completed'],
-  creator: ['Accepted', 'Declined', 'Review']
+  creator: ['Accepted', 'Declined', 'Review'],
 };
 
-export const createRequest = async ({ brandId, creator_id, project_title, project_description, budget }) => {
+export const createRequest = async ({
+  brandId,
+  creator_id,          // optional — undefined = open brief
+  project_title,
+  project_description,
+  budget,
+}) => {
+  const payload = {
+    brand_id:            brandId,
+    project_title,
+    project_description,
+    budget,
+    status:              'Pending',
+    ...(creator_id && { creator_id }),
+  };
+
   const { data, error } = await supabase
     .from('hiring_requests')
-    .insert({ brand_id: brandId, creator_id, project_title, project_description, budget })
-    .select()
+    .insert(payload)
+    .select(`
+      *,
+      brand:brand_id       (id, username, avatar_url),
+      creator:creator_id   (id, username, avatar_url)
+    `)
     .single();
 
   if (error) throw error;
@@ -30,7 +49,7 @@ export const listRequests = async (userId) => {
     .order('created_at', { ascending: false });
 
   if (error) throw error;
-  return data;
+  return data ?? [];
 };
 
 export const updateStatus = async (requestId, userId, role, newStatus) => {
@@ -47,7 +66,7 @@ export const updateStatus = async (requestId, userId, role, newStatus) => {
   if (!isParty) throw forbidden('You are not a party to this request');
 
   // Enforce role-based transition rules
-  const allowed = TRANSITIONS[role] || [];
+  const allowed = TRANSITIONS[role] ?? [];
   if (!allowed.includes(newStatus)) {
     throw forbidden(`Your role cannot set status to "${newStatus}"`);
   }
@@ -56,7 +75,11 @@ export const updateStatus = async (requestId, userId, role, newStatus) => {
     .from('hiring_requests')
     .update({ status: newStatus })
     .eq('id', requestId)
-    .select()
+    .select(`
+      *,
+      brand:brand_id       (id, username, avatar_url),
+      creator:creator_id   (id, username, avatar_url)
+    `)
     .single();
 
   if (error) throw error;

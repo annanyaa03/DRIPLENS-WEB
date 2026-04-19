@@ -22,7 +22,21 @@ export const register = async ({ username, email, password, role }) => {
     role
   });
 
-  return { userId: data.user.id, email: data.user.email };
+  // Issue a session immediately so the client doesn't need a second round-trip
+  const { data: sessionData, error: sessionError } = await supabase.auth.signInWithPassword({ email, password });
+  if (sessionError) throw sessionError;
+
+  return {
+    access_token:  sessionData.session.access_token,
+    refresh_token: sessionData.session.refresh_token,
+    expires_in:    sessionData.session.expires_in,
+    user: {
+      id:       sessionData.user.id,
+      email:    sessionData.user.email,
+      username: sessionData.user.user_metadata.username,
+      role:     sessionData.user.user_metadata.role
+    }
+  };
 };
 
 export const login = async ({ email, password }) => {
