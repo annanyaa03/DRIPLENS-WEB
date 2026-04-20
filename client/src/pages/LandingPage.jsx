@@ -62,63 +62,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">How Driplens Works</h2>
-            <p className="text-[#555555] max-w-2xl mx-auto">A seamless bridge between world-class creative talent and forward-thinking brands.</p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-            {/* For Creators */}
-            <div className="space-y-8">
-              <h3 className="text-2xl font-bold flex items-center gap-4">
-                <span className="w-10 h-10 bg-black text-white flex items-center justify-center text-sm font-bold">01</span>
-                For Creators
-              </h3>
-              <div className="space-y-6">
-                {[
-                  { title: "Build Your Identity", desc: "Create a stunning, data-backed portfolio that showcases your best work and professional history." },
-                  { title: "Get Discovered", desc: "Our algorithm matches your unique style and skills with brands looking for your exact expertise." },
-                  { title: "Work Seamlessly", desc: "Execute projects with zero ambiguity using our structured milestone and payment system." }
-                ].map((step, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="w-0.5 bg-black/10 shrink-0"></div>
-                    <div>
-                      <h4 className="font-bold text-lg text-black mb-1">{step.title}</h4>
-                      <p className="text-sm text-[#555555] leading-relaxed">{step.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* For Brands */}
-            <div className="space-y-8">
-              <h3 className="text-2xl font-bold flex items-center gap-4">
-                <span className="w-10 h-10 border-2 border-black text-black flex items-center justify-center text-sm font-bold">02</span>
-                For Brands
-              </h3>
-              <div className="space-y-6">
-                {[
-                  { title: "Define Your Vision", desc: "Post detailed briefs and set clear expectations for your creative projects." },
-                  { title: "Source Elite Talent", desc: "Access a curated pool of verified creators vetted for quality, reliability, and professionalism." },
-                  { title: "Scalable Creation", desc: "Manage multiple workstreams and creators from a single, unified dashboard." }
-                ].map((step, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="w-0.5 bg-black shrink-0"></div>
-                    <div>
-                      <h4 className="font-bold text-lg text-black mb-1">{step.title}</h4>
-                      <p className="text-sm text-[#555555] leading-relaxed">{step.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Features Grid */}
       <section className="py-24 bg-gray-50 border-y border-[#E5E5E5]">

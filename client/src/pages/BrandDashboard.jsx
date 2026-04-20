@@ -122,15 +122,18 @@ export default function BrandDashboard() {
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-4 py-10">
-        <div className="flex justify-between items-end mb-8">
+        <div className="flex justify-between items-start mb-8">
           <div>
-            <h1 className="text-3xl font-poppins font-bold text-black mb-1">
-              Welcome back, {user?.username} 👋
+            <h1 className="text-3xl font-bold text-black mb-1">
+              Welcome, {user?.username} 👋
             </h1>
-            <p className="text-[#555555] text-sm">Manage your talent pool and active briefs.</p>
+            <p className="text-[#555] mb-8 text-sm">Manage your hiring and brand presence.</p>
           </div>
-          <Link to="/profile/edit" className="text-[10px] font-bold uppercase tracking-widest text-[#999] hover:text-black border-b border-[#DDD] hover:border-black pb-1 transition-all">
-            Edit Profile
+          <Link 
+            to="/edit-profile" 
+            className="btn-primary text-xs py-2 px-4"
+          >
+            ✎ Edit Profile
           </Link>
         </div>
 

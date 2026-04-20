@@ -21,6 +21,27 @@ import MessagingPage     from './pages/MessagingPage';
 import EditProfilePage   from './pages/EditProfilePage';
 import NotFoundPage      from './pages/NotFoundPage';
 
+// Footer Pages - Product
+import FeaturesPage      from './pages/FeaturesPage';
+import PricingPage       from './pages/PricingPage';
+import IntegrationsPage  from './pages/IntegrationsPage';
+import ChangelogPage     from './pages/ChangelogPage';
+
+// Footer Pages - Resources
+import DocumentationPage from './pages/DocumentationPage';
+import TutorialsPage     from './pages/TutorialsPage';
+import BlogPage          from './pages/BlogPage';
+import SupportPage       from './pages/SupportPage';
+
+// Footer Pages - Company
+import AboutPage         from './pages/AboutPage';
+import CareersPage       from './pages/CareersPage';
+import ContactPage       from './pages/ContactPage';
+
+// Legal
+import PrivacyPage       from './pages/PrivacyPage';
+import TermsPage         from './pages/TermsPage';
+
 function App() {
   return (
     <HelmetProvider>
@@ -39,6 +60,27 @@ function App() {
                   <Route path="/explore"    element={<ExplorePage />} />
                   <Route path="/profile/:id" element={<CreatorProfilePage />} />
                   <Route path="/brand/:id"  element={<BrandProfilePage />} />
+
+                  {/* Footer Pages - Product */}
+                  <Route path="/features"     element={<FeaturesPage />} />
+                  <Route path="/pricing"      element={<PricingPage />} />
+                  <Route path="/integrations" element={<IntegrationsPage />} />
+                  <Route path="/changelog"    element={<ChangelogPage />} />
+
+                  {/* Footer Pages - Resources */}
+                  <Route path="/documentation" element={<DocumentationPage />} />
+                  <Route path="/tutorials"     element={<TutorialsPage />} />
+                  <Route path="/blog"          element={<BlogPage />} />
+                  <Route path="/support"       element={<SupportPage />} />
+
+                  {/* Footer Pages - Company */}
+                  <Route path="/about"    element={<AboutPage />} />
+                  <Route path="/careers"  element={<CareersPage />} />
+                  <Route path="/contact"  element={<ContactPage />} />
+
+                  {/* Legal */}
+                  <Route path="/privacy"  element={<PrivacyPage />} />
+                  <Route path="/terms"    element={<TermsPage />} />
 
                   {/* Protected — any logged-in user */}
                   <Route path="/messages" element={
