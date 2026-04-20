@@ -4,9 +4,10 @@ import { Menu, X, Upload, LayoutDashboard, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const navLinks = [
-  { to: '/explore',  label: 'Explore'  },
+  { to: '/explore', label: 'Explore' },
   { to: '/creators', label: 'Creators' },
-  { to: '/brands',   label: 'Brands'   },
+  { to: '/brands', label: 'Brands' },
+  { to: '/pricing', label: 'Pricing' },
 ];
 
 export default function Navbar() {
@@ -21,8 +22,7 @@ export default function Navbar() {
   };
 
   const linkClass = ({ isActive }) =>
-    `text-[11px] font-bold uppercase tracking-[0.2em] transition-colors ${
-      isActive ? 'text-black' : 'text-[#999] hover:text-black'
+    `text-[11px] font-bold uppercase tracking-[0.2em] transition-colors ${isActive ? 'text-black' : 'text-[#999] hover:text-black'
     }`;
 
   return (

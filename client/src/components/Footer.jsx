@@ -44,27 +44,27 @@ export default function Footer() {
               <div>
                 <h4 className="font-heading font-bold text-black mb-6 uppercase tracking-widest text-xs">Product</h4>
                 <ul className="space-y-3 text-sm text-[#555555]">
-                  <li><Link to="/explore" className="hover:text-black transition-colors">Features</Link></li>
-                  <li><a href="#" className="hover:text-black transition-colors">Pricing</a></li>
-                  <li><a href="#" className="hover:text-black transition-colors">Integrations</a></li>
-                  <li><a href="#" className="hover:text-black transition-colors">Changelog</a></li>
+                  <li><Link to="/features" className="hover:text-black transition-colors">Features</Link></li>
+                  <li><Link to="/pricing" className="hover:text-black transition-colors">Pricing</Link></li>
+                  <li><Link to="/integrations" className="hover:text-black transition-colors">Integrations</Link></li>
+                  <li><Link to="/changelog" className="hover:text-black transition-colors">Changelog</Link></li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-heading font-bold text-black mb-6 uppercase tracking-widest text-xs">Resources</h4>
                 <ul className="space-y-3 text-sm text-[#555555]">
-                  <li><a href="#" className="hover:text-black transition-colors">Documentation</a></li>
-                  <li><a href="#" className="hover:text-black transition-colors">Tutorials</a></li>
-                  <li><a href="#" className="hover:text-black transition-colors">Blog</a></li>
-                  <li><a href="#" className="hover:text-black transition-colors">Support</a></li>
+                  <li><Link to="/documentation" className="hover:text-black transition-colors">Documentation</Link></li>
+                  <li><Link to="/tutorials" className="hover:text-black transition-colors">Tutorials</Link></li>
+                  <li><Link to="/blog" className="hover:text-black transition-colors">Blog</Link></li>
+                  <li><Link to="/support" className="hover:text-black transition-colors">Support</Link></li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-heading font-bold text-black mb-6 uppercase tracking-widest text-xs">Company</h4>
                 <ul className="space-y-3 text-sm text-[#555555]">
-                  <li><a href="#" className="hover:text-black transition-colors">About</a></li>
-                  <li><a href="#" className="hover:text-black transition-colors">Careers</a></li>
-                  <li><a href="#" className="hover:text-black transition-colors">Contact</a></li>
+                  <li><Link to="/about" className="hover:text-black transition-colors">About</Link></li>
+                  <li><Link to="/careers" className="hover:text-black transition-colors">Careers</Link></li>
+                  <li><Link to="/contact" className="hover:text-black transition-colors">Contact</Link></li>
                   <li><a href="#" className="hover:text-black transition-colors">Partners</a></li>
                 </ul>
               </div>
@@ -77,8 +77,8 @@ export default function Footer() {
               &copy; {currentYear} Driplens. All rights reserved.
             </p>
             <div className="flex items-center gap-8 text-sm text-[#555555]">
-              <a href="#" className="hover:text-black transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-black transition-colors">Terms of Service</a>
+              <Link to="/privacy" className="hover:text-black transition-colors">Privacy Policy</Link>
+              <Link to="/terms" className="hover:text-black transition-colors">Terms of Service</Link>
               <a href="#" className="hover:text-black transition-colors">Cookies Settings</a>
             </div>
           </div>
