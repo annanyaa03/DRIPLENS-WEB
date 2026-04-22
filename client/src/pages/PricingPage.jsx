@@ -170,10 +170,10 @@ export default function PricingPage() {
 
           {/* Role Toggle */}
           <div className="flex flex-col items-center gap-8 mb-12">
-            <div className="flex p-1 bg-gray-100 rounded-full w-fit">
+            <div className="flex p-1 bg-gray-100 rounded-none w-fit">
               <button
                 onClick={() => setSelectedRole("creator")}
-                className={`px-8 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
+                className={`px-8 py-2.5 rounded-none text-sm font-bold transition-all duration-300 ${
                   selectedRole === "creator"
                     ? "bg-black text-white shadow-lg"
                     : "text-gray-500 hover:text-black"
@@ -183,7 +183,7 @@ export default function PricingPage() {
               </button>
               <button
                 onClick={() => setSelectedRole("brand")}
-                className={`px-8 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
+                className={`px-8 py-2.5 rounded-none text-sm font-bold transition-all duration-300 ${
                   selectedRole === "brand"
                     ? "bg-black text-white shadow-lg"
                     : "text-gray-500 hover:text-black"
@@ -198,16 +198,16 @@ export default function PricingPage() {
               <span className={`text-sm font-medium ${!isAnnual ? "text-black" : "text-gray-400"}`}>Monthly</span>
               <button
                 onClick={() => setIsAnnual(!isAnnual)}
-                className="relative w-14 h-7 bg-gray-200 rounded-full p-1 transition-colors duration-300 hover:bg-gray-300"
+                className="relative w-14 h-7 bg-gray-200 rounded-none p-1 transition-colors duration-300 hover:bg-gray-300"
               >
                 <motion.div
                   animate={{ x: isAnnual ? 28 : 0 }}
-                  className="w-5 h-5 bg-black rounded-full"
+                  className="w-5 h-5 bg-black rounded-none"
                 />
               </button>
               <div className="flex items-center gap-2">
                 <span className={`text-sm font-medium ${isAnnual ? "text-black" : "text-gray-400"}`}>Annual</span>
-                <span className="bg-black text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                <span className="bg-black text-white text-[10px] font-bold px-2 py-0.5 rounded-none uppercase tracking-wider">
                   Save 20%
                 </span>
               </div>
@@ -217,7 +217,7 @@ export default function PricingPage() {
       </section>
 
       {/* Pricing Grid */}
-      <section className="pb-32 px-4 sm:px-6 lg:px-8">
+      <section className="pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <AnimatePresence mode="wait">
@@ -228,9 +228,9 @@ export default function PricingPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className={`relative flex flex-col p-8 rounded-3xl border transition-all duration-500 ${
+                  className={`relative flex flex-col p-8 rounded-none border transition-all duration-500 ${
                     plan.highlighted
-                      ? "border-black bg-black text-white shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)] md:scale-105 z-10"
+                      ? "border-black bg-white text-black shadow-[0_32px_64px_-15px_rgba(0,0,0,0.1)] md:scale-105 z-10"
                       : "border-gray-200 bg-white hover:border-black hover:shadow-xl"
                   }`}
                 >
@@ -261,7 +261,7 @@ export default function PricingPage() {
                       )}
                     </div>
                     <div className="mt-2 h-5">
-                      <p className={`text-[11px] font-medium ${plan.highlighted ? "text-gray-300" : "text-black"}`}>
+                      <p className={`text-[11px] font-medium ${plan.highlighted ? "text-black/60" : "text-black"}`}>
                         {plan.trial}
                       </p>
                     </div>
@@ -269,9 +269,9 @@ export default function PricingPage() {
 
                   <Link
                     to="/auth"
-                    className={`group flex items-center justify-center gap-2 w-full py-4 rounded-xl font-bold text-sm transition-all duration-300 mb-10 ${
+                    className={`group flex items-center justify-center gap-2 w-full py-4 rounded-none font-bold text-sm transition-all duration-300 mb-10 ${
                       plan.highlighted
-                        ? "bg-white text-black hover:bg-gray-100"
+                        ? "bg-black text-white hover:bg-black/90"
                         : "bg-black text-white hover:opacity-90"
                     }`}
                   >
@@ -280,16 +280,16 @@ export default function PricingPage() {
                   </Link>
 
                   <div className="flex-grow">
-                    <p className={`text-xs font-bold uppercase tracking-widest mb-6 ${plan.highlighted ? "text-gray-500" : "text-gray-400"}`}>
+                    <p className={`text-xs font-bold uppercase tracking-widest mb-6 ${plan.highlighted ? "text-black/40" : "text-gray-400"}`}>
                       Includes:
                     </p>
                     <ul className="space-y-4">
                       {plan.features.map((feature, featureIndex) => (
                         <li key={featureIndex} className="flex items-start gap-3">
-                          <div className={`mt-0.5 p-0.5 rounded-full ${plan.highlighted ? "bg-white/10" : "bg-black/5"}`}>
-                            <Check className={`w-3.5 h-3.5 ${plan.highlighted ? "text-white" : "text-black"}`} />
+                          <div className={`mt-0.5 p-0.5 rounded-full ${plan.highlighted ? "bg-black/10" : "bg-black/5"}`}>
+                            <Check className={`w-3.5 h-3.5 ${plan.highlighted ? "text-black" : "text-black"}`} />
                           </div>
-                          <span className={`text-sm ${plan.highlighted ? "text-gray-300" : "text-gray-600"}`}>
+                          <span className={`text-sm ${plan.highlighted ? "text-black/70" : "text-gray-600"}`}>
                             {feature}
                           </span>
                         </li>
@@ -301,9 +301,9 @@ export default function PricingPage() {
             </AnimatePresence>
           </div>
 
-          <div className="mt-20 p-8 rounded-3xl bg-gray-50 border border-gray-100 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="mt-12 p-8 rounded-none bg-gray-50 border border-gray-100 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-start gap-4">
-              <div className="p-3 bg-white rounded-2xl shadow-sm">
+              <div className="p-3 bg-white rounded-none shadow-sm">
                 <Zap className="w-6 h-6 text-black" />
               </div>
               <div>
@@ -311,7 +311,7 @@ export default function PricingPage() {
                 <p className="text-sm text-gray-500">Contact our sales team for personalized integration and volume discounts.</p>
               </div>
             </div>
-            <Link to="/contact" className="px-8 py-3 bg-white border border-black text-black font-bold rounded-xl hover:bg-black hover:text-white transition-all whitespace-nowrap">
+            <Link to="/contact" className="px-8 py-3 bg-white border border-black text-black font-bold rounded-none hover:bg-black hover:text-white transition-all whitespace-nowrap">
               Talk to Sales
             </Link>
           </div>
@@ -319,17 +319,17 @@ export default function PricingPage() {
       </section>
 
       {/* Feature Comparison Link / CTA */}
-      <section className="py-24 bg-black text-white text-center">
+      <section className="py-16 bg-white text-black text-center border-y border-gray-100">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-3xl md:text-5xl font-bold mb-8">Ready to evolve?</h2>
-          <p className="text-gray-400 text-lg mb-12">
+          <p className="text-gray-500 text-lg mb-12">
             Join 10,000+ creators and brands who are already scaling their reach on DripLens.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <Link to="/auth" className="w-full sm:w-auto px-10 py-5 bg-white text-black font-bold rounded-full hover:scale-105 transition-transform">
+            <Link to="/auth" className="w-full sm:w-auto px-10 py-5 bg-black text-white font-bold rounded-none hover:scale-105 transition-transform">
               Get Started for Free
             </Link>
-            <Link to="/features" className="w-full sm:w-auto flex items-center justify-center gap-2 font-bold text-white hover:text-gray-400 transition-colors">
+            <Link to="/features" className="w-full sm:w-auto flex items-center justify-center gap-2 font-bold text-black hover:text-gray-600 transition-colors">
               Explore All Features <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -337,9 +337,9 @@ export default function PricingPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-32 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-20">
+          <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-black mb-4">Frequently Asked Questions</h2>
             <p className="text-gray-500">Everything you need to know about our plans and billing.</p>
           </div>
@@ -354,7 +354,7 @@ export default function PricingPage() {
                 className="space-y-3"
               >
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center mt-1">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-none bg-gray-100 flex items-center justify-center mt-1">
                     <Info className="w-4 h-4 text-black" />
                   </div>
                   <div>
