@@ -79,19 +79,28 @@ export default function AboutPage() {
       </div>
 
       {/* Mission Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-black text-white">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <h2 className="text-4xl font-bold mb-8">Our Mission</h2>
-            <p className="text-lg text-gray-300 mb-6 leading-relaxed">
+      <section className="py-32 px-4 sm:px-6 lg:px-8 bg-zinc-50 border-y border-[#E5E5E5] overflow-hidden relative">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-4xl sm:text-5xl font-bold mb-10 text-black tracking-tighter uppercase">Our Mission</h2>
+            <div className="w-24 h-1.5 bg-black mb-10" />
+            <p className="text-xl text-zinc-600 mb-8 leading-relaxed font-light">
               Driplens was founded on the belief that talented creators deserve better opportunities to connect with brands. We're building the infrastructure that allows creators to showcase their craft professionally and brands to discover authentic partnerships.
             </p>
-            <p className="text-lg text-gray-300 leading-relaxed">
+            <p className="text-xl text-zinc-600 leading-relaxed font-light">
               In the creator economy, success shouldn't be determined by follower count alone. We've built a merit-based platform that recognizes quality work, genuine engagement, and authentic audience connections.
             </p>
-          </div>
-          <div className="hidden lg:flex justify-center">
-            <div className="text-[12rem] opacity-20"></div>
+          </motion.div>
+          <div className="hidden lg:block relative">
+            <div className="aspect-square bg-white border border-[#E5E5E5] flex items-center justify-center p-20">
+               <div className="text-[12rem] font-bold text-black/5 select-none">DRIP</div>
+            </div>
+            <div className="absolute -bottom-8 -right-8 w-64 h-64 border border-black/10 -z-10" />
           </div>
         </div>
       </section>
@@ -217,10 +226,10 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-          <div className="text-center mt-20 p-12 bg-black rounded-none text-white">
-            <h3 className="text-2xl font-bold mb-4">We're always looking for talent</h3>
-            <p className="text-gray-400 mb-8 max-w-xl mx-auto">Interested in helping us build the future of the creator economy? Check out our open roles.</p>
-            <Link to="/careers" className="inline-block px-10 py-4 bg-white text-black font-bold rounded-none hover:bg-gray-200 transition-colors uppercase tracking-widest text-xs">
+          <div className="text-center mt-24 p-16 bg-white border border-black rounded-none text-black relative overflow-hidden group hover:bg-black hover:text-white transition-all duration-500">
+            <h3 className="text-3xl font-bold mb-6 tracking-tight uppercase">We're always looking for talent</h3>
+            <p className="text-zinc-500 group-hover:text-zinc-400 mb-10 max-w-xl mx-auto text-lg">Interested in helping us build the future of the creator economy? Check out our open roles.</p>
+            <Link to="/careers" className="inline-block px-12 py-5 bg-black text-white group-hover:bg-white group-hover:text-black font-bold rounded-none transition-all uppercase tracking-widest text-xs border border-transparent group-hover:border-white">
               View Careers
             </Link>
           </div>
@@ -228,26 +237,27 @@ export default function AboutPage() {
       </section>
 
       {/* Impact Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-black text-white">
+      <section className="py-32 px-4 sm:px-6 lg:px-8 bg-zinc-50 border-t border-[#E5E5E5]">
         <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-16">Our Impact</h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
-            <div>
-              <div className="text-5xl sm:text-6xl font-bold mb-3 tracking-tighter">5,000+</div>
-              <p className="text-gray-400 font-medium uppercase tracking-widest text-sm">Active Creators</p>
-            </div>
-            <div>
-              <div className="text-5xl sm:text-6xl font-bold mb-3 tracking-tighter">500+</div>
-              <p className="text-gray-400 font-medium uppercase tracking-widest text-sm">Brand Partners</p>
-            </div>
-            <div>
-              <div className="text-5xl sm:text-6xl font-bold mb-3 tracking-tighter">$10M+</div>
-              <p className="text-gray-400 font-medium uppercase tracking-widest text-sm">Collab Value</p>
-            </div>
-            <div>
-              <div className="text-5xl sm:text-6xl font-bold mb-3 tracking-tighter">50+</div>
-              <p className="text-gray-400 font-medium uppercase tracking-widest text-sm">Countries</p>
-            </div>
+          <h2 className="text-4xl font-bold mb-20 text-black tracking-tight uppercase">Our Impact</h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-16">
+            {[
+              { label: "Active Creators", value: "5,000+" },
+              { label: "Brand Partners", value: "500+" },
+              { label: "Collab Value", value: "$10M+" },
+              { label: "Countries", value: "50+" }
+            ].map((stat, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <div className="text-6xl sm:text-7xl font-bold mb-4 tracking-tighter text-black">{stat.value}</div>
+                <p className="text-zinc-400 font-bold uppercase tracking-[0.2em] text-xs">{stat.label}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
