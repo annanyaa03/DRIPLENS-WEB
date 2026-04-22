@@ -46,27 +46,27 @@ export default function CreatorProfilePage() {
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white"
+              className="bg-white rounded-none p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white"
             >
               <div className="relative -mt-20 mb-6 flex justify-center lg:justify-start">
-                <div className="h-32 w-32 md:h-40 md:w-40 rounded-3xl bg-white p-2 shadow-2xl overflow-hidden rotate-3 hover:rotate-0 transition-transform duration-500">
-                  <img src={creator.img} alt={creator.name} className="w-full h-full object-cover rounded-2xl" />
+                <div className="h-32 w-32 md:h-40 md:w-40 rounded-none bg-white p-2 shadow-2xl overflow-hidden rotate-3 hover:rotate-0 transition-transform duration-500">
+                  <img src={creator.img} alt={creator.name} className="w-full h-full object-cover rounded-none" />
                 </div>
               </div>
 
               <div className="text-center lg:text-left mb-8">
                 <div className="flex items-center justify-center lg:justify-start gap-3 mb-1">
                   <h1 className="text-3xl font-bold text-black tracking-tight">{creator.name}</h1>
-                  <span className="bg-black text-[10px] text-white px-2 py-1 rounded-full font-bold uppercase tracking-wider">Verified</span>
+                  <span className="bg-black text-[10px] text-white px-2 py-1 rounded-none font-bold uppercase tracking-wider">Verified</span>
                 </div>
                 <p className="text-[#888] font-medium text-lg uppercase tracking-wide text-xs">{creator.role} • {creator.location}</p>
               </div>
 
               <div className="flex gap-4 mb-10">
-                <button className="flex-1 bg-black text-white py-4 rounded-2xl font-bold text-sm hover:bg-zinc-800 transition-all shadow-xl shadow-black/10">
+                <button className="flex-1 bg-black text-white py-4 rounded-none font-bold text-sm hover:bg-zinc-800 transition-all shadow-xl shadow-black/10">
                   Hire Creator
                 </button>
-                <button className="p-4 rounded-2xl border border-zinc-200 hover:bg-zinc-50 transition-all">
+                <button className="p-4 rounded-none border border-zinc-200 hover:bg-zinc-50 transition-all">
                   ★
                 </button>
               </div>
@@ -77,7 +77,7 @@ export default function CreatorProfilePage() {
                   <ul className="space-y-3">
                     {creator.qualifications.map((q, i) => (
                       <li key={i} className="flex items-center gap-3 text-sm text-zinc-600">
-                        <span className="h-1.5 w-1.5 bg-black rounded-full" />
+                        <span className="h-1.5 w-1.5 bg-black rounded-none" />
                         {q}
                       </li>
                     ))}
@@ -88,7 +88,7 @@ export default function CreatorProfilePage() {
                   <h3 className="text-[11px] font-bold text-[#BBB] uppercase tracking-[0.2em] mb-4">Past Work</h3>
                   <div className="flex flex-wrap gap-2">
                     {creator.pastWork.map((pw, i) => (
-                      <span key={i} className="bg-zinc-100 text-zinc-600 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase">
+                      <span key={i} className="bg-zinc-100 text-zinc-600 px-3 py-1.5 rounded-none text-[10px] font-bold uppercase">
                         {pw}
                       </span>
                     ))}
@@ -102,12 +102,12 @@ export default function CreatorProfilePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-zinc-900 rounded-3xl p-8 mt-8 text-white"
+              className="bg-zinc-900 rounded-none p-8 mt-8 text-white"
             >
                <h3 className="text-[11px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-6">Trusted By</h3>
                <div className="grid grid-cols-2 gap-4">
                   {creator.brandDeals.map((brand, i) => (
-                    <div key={i} className="bg-zinc-800/50 rounded-xl p-4 flex items-center justify-center text-sm font-bold text-zinc-400 hover:text-white transition-colors border border-zinc-800">
+                    <div key={i} className="bg-zinc-800/50 rounded-none p-4 flex items-center justify-center text-sm font-bold text-zinc-400 hover:text-white transition-colors border border-zinc-800">
                       {brand}
                     </div>
                   ))}
@@ -129,7 +129,7 @@ export default function CreatorProfilePage() {
                   <motion.div 
                     key={i}
                     whileHover={{ y: -5 }}
-                    className="bg-white p-6 rounded-2xl border border-zinc-100 shadow-sm relative overflow-hidden"
+                    className="bg-white p-6 rounded-none border border-zinc-100 shadow-sm relative overflow-hidden"
                   >
                     <div className="absolute -right-4 -top-4 text-zinc-50 text-6xl font-black">{i + 1}</div>
                     <div className="relative z-10">
@@ -165,7 +165,7 @@ export default function CreatorProfilePage() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.1 * i }}
                     onClick={() => setSelectedMedia(item)}
-                    className="break-inside-avoid relative group cursor-pointer overflow-hidden rounded-3xl bg-zinc-100"
+                    className="break-inside-avoid relative group cursor-pointer overflow-hidden rounded-none bg-zinc-100"
                   >
                     <img 
                       src={item.img} 
@@ -199,12 +199,12 @@ export default function CreatorProfilePage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="max-w-6xl w-full aspect-video bg-zinc-900 rounded-[32px] overflow-hidden relative shadow-2xl border border-zinc-800" 
+              className="max-w-6xl w-full aspect-video bg-zinc-900 rounded-none overflow-hidden relative shadow-2xl border border-zinc-800" 
               onClick={e => e.stopPropagation()}
             >
               <button 
                 onClick={() => setSelectedMedia(null)}
-                className="absolute top-8 right-8 text-white p-3 z-10 bg-black/50 backdrop-blur-md rounded-full hover:bg-black transition-all border border-white/10"
+                className="absolute top-8 right-8 text-white p-3 z-10 bg-black/50 backdrop-blur-md rounded-none hover:bg-black transition-all border border-white/10"
               >
                 ✕
               </button>

@@ -122,8 +122,8 @@ export default function DocumentationPage() {
       <div className="relative bg-black py-20 px-4 overflow-hidden">
         {/* Background decorative elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-          <div className="absolute -top-1/2 -left-1/4 w-1/2 h-full bg-blue-600/10 blur-[120px] rounded-full"></div>
-          <div className="absolute -bottom-1/2 -right-1/4 w-1/2 h-full bg-purple-600/10 blur-[120px] rounded-full"></div>
+          <div className="absolute -top-1/2 -left-1/4 w-1/2 h-full bg-blue-600/10 blur-[120px] rounded-none"></div>
+          <div className="absolute -bottom-1/2 -right-1/4 w-1/2 h-full bg-purple-600/10 blur-[120px] rounded-none"></div>
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
@@ -148,7 +148,7 @@ export default function DocumentationPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search topics, features, or troubleshooting..."
-                className="w-full pl-12 pr-4 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 backdrop-blur-sm transition-all"
+                className="w-full pl-12 pr-4 py-4 bg-white/10 border border-white/20 rounded-none text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 backdrop-blur-sm transition-all"
               />
             </div>
           </motion.div>
@@ -171,7 +171,7 @@ export default function DocumentationPage() {
                     <button
                       key={section.id}
                       onClick={() => setExpandedSection(section.id)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-none text-sm font-semibold transition-all ${
                         expandedSection === section.id 
                           ? "bg-black text-white shadow-lg shadow-black/10" 
                           : "text-gray-600 hover:bg-gray-100"
@@ -187,7 +187,7 @@ export default function DocumentationPage() {
               </div>
 
               {/* Quick Links */}
-              <div className="p-6 bg-blue-50 rounded-2xl border border-blue-100">
+              <div className="p-6 bg-blue-50 rounded-none border border-blue-100">
                 <h4 className="font-bold text-blue-900 mb-2">Need API help?</h4>
                 <p className="text-sm text-blue-700/80 mb-4">Check our developer portal for advanced integrations.</p>
                 <Link to="/integrations" className="text-sm font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 group">
@@ -210,7 +210,7 @@ export default function DocumentationPage() {
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ delay: index * 0.05 }}
                       key={section.id}
-                      className={`group border rounded-2xl overflow-hidden transition-all duration-300 ${
+                      className={`group border rounded-none overflow-hidden transition-all duration-300 ${
                         expandedSection === section.id 
                           ? "border-black shadow-xl shadow-black/5" 
                           : "border-gray-200 hover:border-gray-300"
@@ -221,7 +221,7 @@ export default function DocumentationPage() {
                         className="w-full p-6 text-left flex items-start justify-between bg-white"
                       >
                         <div className="flex gap-4">
-                          <div className={`p-3 rounded-xl transition-colors ${
+                          <div className={`p-3 rounded-none transition-colors ${
                             expandedSection === section.id ? "bg-black text-white" : "bg-gray-100 text-gray-600 group-hover:bg-gray-200"
                           }`}>
                             {section.icon}
@@ -254,7 +254,7 @@ export default function DocumentationPage() {
                                       href={topic.link}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="group/item flex items-center justify-between p-4 bg-white border border-gray-100 rounded-xl hover:border-blue-200 hover:shadow-md transition-all"
+                                      className="group/item flex items-center justify-between p-4 bg-white border border-gray-100 rounded-none hover:border-blue-200 hover:shadow-md transition-all"
                                     >
                                       <span className="text-gray-700 font-medium group-hover/item:text-blue-600 transition-colors">
                                         {topic.title}
@@ -268,7 +268,7 @@ export default function DocumentationPage() {
                                     <Link
                                       key={topicIndex}
                                       to={topic.link}
-                                      className="group/item flex items-center justify-between p-4 bg-white border border-gray-100 rounded-xl hover:border-blue-200 hover:shadow-md transition-all"
+                                      className="group/item flex items-center justify-between p-4 bg-white border border-gray-100 rounded-none hover:border-blue-200 hover:shadow-md transition-all"
                                     >
                                       <span className="text-gray-700 font-medium group-hover/item:text-blue-600 transition-colors">
                                         {topic.title}
@@ -284,7 +284,7 @@ export default function DocumentationPage() {
                                 <div className="mt-8 pt-8 border-t border-gray-100 flex justify-end">
                                   <button
                                     onClick={() => setExpandedSection(filteredSections[index + 1].id)}
-                                    className="flex items-center gap-2 px-6 py-3 bg-black text-white rounded-xl font-bold hover:bg-gray-800 transition-all group"
+                                    className="flex items-center gap-2 px-6 py-3 bg-black text-white rounded-none font-bold hover:bg-gray-800 transition-all group"
                                   >
                                     Continue to {filteredSections[index + 1].title}
                                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -301,7 +301,7 @@ export default function DocumentationPage() {
                   <motion.div 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200"
+                    className="text-center py-20 bg-gray-50 rounded-none border-2 border-dashed border-gray-200"
                   >
                     <Search className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                     <h3 className="text-xl font-bold text-black mb-2">No results found</h3>
@@ -323,8 +323,8 @@ export default function DocumentationPage() {
       {/* Support Section */}
       <section className="py-24 px-4 bg-gray-950 relative overflow-hidden">
         {/* Abstract background blobs */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/5 blur-[100px] rounded-full"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-600/5 blur-[100px] rounded-full"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/5 blur-[100px] rounded-none"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-600/5 blur-[100px] rounded-none"></div>
 
         <div className="max-w-7xl mx-auto relative z-10 text-center">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Still need help?</h2>
@@ -362,9 +362,9 @@ export default function DocumentationPage() {
               <motion.div
                 key={i}
                 whileHover={{ y: -5 }}
-                className="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl group hover:bg-white/10 transition-all"
+                className="p-8 rounded-none bg-white/5 border border-white/10 backdrop-blur-xl group hover:bg-white/10 transition-all"
               >
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 bg-white/10 text-white group-hover:scale-110 transition-transform`}>
+                <div className={`w-12 h-12 rounded-none flex items-center justify-center mb-6 bg-white/10 text-white group-hover:scale-110 transition-transform`}>
                   {item.icon}
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>

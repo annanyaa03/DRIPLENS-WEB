@@ -3,7 +3,7 @@ export const brands = [
     id: 1,
     name: "Nike",
     domain: "nike.com",
-    logo: "https://logo.clearbit.com/nike.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg",
     sector: "Sportswear & Lifestyle",
     location: "Beaverton, Oregon",
     description: "Nike is the world's leading designer, marketer, and distributor of authentic athletic footwear, apparel, equipment, and accessories for a wide variety of sports and fitness activities.",
@@ -24,7 +24,7 @@ export const brands = [
     id: 2,
     name: "Apple",
     domain: "apple.com",
-    logo: "https://logo.clearbit.com/apple.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
     sector: "Consumer Electronics",
     location: "Cupertino, California",
     description: "Apple designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories, and sells a variety of related services.",
@@ -41,53 +41,13 @@ export const brands = [
       }
     ]
   },
-  {
-    id: 3,
-    name: "LVMH",
-    domain: "lvmh.com",
-    logo: "https://logo.clearbit.com/lvmh.com",
-    sector: "Luxury Goods",
-    location: "Paris, France",
-    description: "LVMH is a global leader in high-end luxury, representing iconic houses like Louis Vuitton, Moët & Chandon, and Hennessy.",
-    mission: "The LVMH group’s mission is to represent the most refined qualities of Western 'Art de Vivre' around the world.",
-    briefs: [
-      {
-        id: "l-01",
-        title: "Heritage Collection Photography",
-        type: "Photography",
-        budget: "$12,000 - $18,000",
-        description: "An editorial series focusing on the craftsmanship and legacy of our Maisons. We need a portrait photographer who can capture the soul of the artisans.",
-        tags: ["EDITORIAL", "CLASSICAL", "LUXURY"],
-        requirements: ["Master of natural lighting", "Experience with medium format", "Global travel flexibility"]
-      }
-    ]
-  },
-  {
-    id: 4,
-    name: "Red Bull",
-    domain: "redbull.com",
-    logo: "https://logo.clearbit.com/redbull.com",
-    sector: "Energy Drinks & Media",
-    location: "Fuschl, Austria",
-    description: "Red Bull is not just an energy drink company; it's a global media and sports powerhouse that pushes the boundaries of human achievement.",
-    mission: "Giving wings to people and ideas.",
-    briefs: [
-      {
-        id: "r-01",
-        title: "Extreme Sports Docuseries",
-        type: "Video Editing",
-        budget: "$10,000 - $15,000",
-        description: "Looking for an editor for a 6-part series on high-altitude mountain biking. Requires a fast-paced, high-octane editing style that aligns with Red Bull Media House standards.",
-        tags: ["ACTION", "DOCUMENTARY", "ADRENALINE"],
-        requirements: ["Proficiency in Adobe Premiere/FCP", "Strong storytelling skills", "Experience with action sports"]
-      }
-    ]
-  },
+
+
   {
     id: 5,
     name: "Spotify",
     domain: "spotify.com",
-    logo: "https://logo.clearbit.com/spotify.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
     sector: "Audio Streaming",
     location: "Stockholm, Sweden",
     description: "Spotify is the world’s most popular audio streaming subscription service with a community of more than 500 million users.",
@@ -108,7 +68,7 @@ export const brands = [
     id: 6,
     name: "Tesla",
     domain: "tesla.com",
-    logo: "https://logo.clearbit.com/tesla.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Tesla_Motors.svg",
     sector: "Automotive & Energy",
     location: "Austin, Texas",
     description: "Tesla's mission is to accelerate the world's transition to sustainable energy through electric vehicles and renewable energy solutions.",
@@ -125,48 +85,72 @@ export const brands = [
       }
     ]
   },
+
+
   {
-    id: 7,
-    name: "Sony",
-    domain: "sony.com",
-    logo: "https://logo.clearbit.com/sony.com",
-    sector: "Entertainment & Technology",
-    location: "Tokyo, Japan",
-    description: "Sony is a creative entertainment company with a solid foundation of technology.",
-    mission: "Fill the world with emotion, through the power of creativity and technology.",
+    id: 9,
+    name: "Google",
+    domain: "google.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+    sector: "Technology & AI",
+    location: "Mountain View, California",
+    description: "Google's mission is to organize the world's information and make it universally accessible and useful.",
+    mission: "To organize the world's information and make it universally accessible and useful.",
     briefs: [
       {
-        id: "sn-01",
-        title: "Alpha Series Camera Launch Film",
-        type: "Cinematography",
-        budget: "$30,000 - $50,000",
-        description: "Create a visual masterpiece showcasing the low-light capabilities of the upcoming Alpha sensor. Must be shot entirely with pre-production Sony equipment.",
-        tags: ["NEON", "LOW LIGHT", "CINEMATIC"],
-        requirements: ["Existing Sony Alpha user preferred", "Expertise in color science", "Stunning visual portfolio"]
+        id: "g-01",
+        title: "Gemini AI Interface Motion",
+        type: "Motion Design",
+        budget: "$25,000 - $40,000",
+        description: "Visualizing the fluidity and intelligence of our latest AI models through abstract motion graphics.",
+        tags: ["AI", "FLUID", "TECH"],
+        requirements: ["Proficiency in After Effects", "Experience with AI visuals", "Modern aesthetic"]
       }
     ]
   },
   {
-    id: 8,
-    name: "Adobe",
-    domain: "adobe.com",
-    logo: "https://logo.clearbit.com/adobe.com",
-    sector: "Software",
-    location: "San Jose, California",
-    description: "Adobe is the global leader in digital media and digital marketing solutions.",
-    mission: "Changing the world through digital experiences.",
+    id: 10,
+    name: "Microsoft",
+    domain: "microsoft.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
+    sector: "Software & Cloud",
+    location: "Redmond, Washington",
+    description: "Microsoft enables digital transformation for the era of an intelligent cloud and an intelligent edge.",
+    mission: "To empower every person and every organization on the planet to achieve more.",
     briefs: [
       {
-        id: "ad-01",
-        title: "Creative Cloud AI Tooling Campaign",
-        type: "Graphic Design",
-        budget: "$12,000 - $20,000",
-        description: "Design the key visuals for the 'Generative Fill' rollout. We need assets that look human-crafted but celebrate the power of AI assistance.",
-        tags: ["AI", "CREATIVE", "HYBRID"],
-        requirements: ["Expert knowledge of Firefly", "Strong composition skills", "Modern, vibrant style"]
+        id: "ms-01",
+        title: "Surface Pro Lifestyle Series",
+        type: "Photography",
+        budget: "$15,000 - $22,000",
+        description: "Capturing the versatility of Surface Pro in diverse professional environments.",
+        tags: ["LIFESTYLE", "WORK", "MINIMAL"],
+        requirements: ["Natural light expertise", "Professional gear", "Modern style"]
       }
     ]
-  }
+  },
+  {
+    id: 11,
+    name: "Amazon",
+    domain: "amazon.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+    sector: "E-commerce & Cloud",
+    location: "Seattle, Washington",
+    description: "Amazon is guided by four principles: customer obsession, passion for invention, commitment to operational excellence, and long-term thinking.",
+    mission: "To be Earth’s most customer-centric company.",
+    briefs: [
+      {
+        id: "am-01",
+        title: "AWS Infrastructure Doc",
+        type: "Videography",
+        budget: "$40,000 - $60,000",
+        description: "A cinematic look into the scale of our global data center network.",
+        tags: ["SCALE", "TECH", "CINEMATIC"],
+        requirements: ["Industrial filming experience", "Global travel", "Security clearance"]
+      }
+    ]
+  },
+
 ];
 
 export const getBrandById = (id) => brands.find(b => b.id === parseInt(id));

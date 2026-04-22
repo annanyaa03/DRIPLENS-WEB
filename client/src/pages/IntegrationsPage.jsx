@@ -159,22 +159,21 @@ export default function IntegrationsPage() {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden bg-black text-white">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-gray-900/50 to-transparent pointer-events-none" />
+      <section className="relative pt-32 pb-20 overflow-hidden bg-white text-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white/80 text-xs font-bold uppercase tracking-wider mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-gray-50 border border-gray-200 text-gray-500 text-xs font-bold uppercase tracking-wider mb-6">
               <Cpu className="w-3 h-3" />
               Power up your workflow
             </div>
             <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
-              Connect your <span className="text-gray-400">ecosystem.</span>
+              Connect your <span className="text-gray-500">ecosystem.</span>
             </h1>
-            <p className="text-xl text-gray-400 max-w-2xl mb-10 leading-relaxed">
+            <p className="text-xl text-gray-500 max-w-2xl mb-10 leading-relaxed">
               Seamlessly integrate DripLens with the tools you already use. 
               Sync portfolios, automate payouts, and track analytics in one place.
             </p>
@@ -190,7 +189,7 @@ export default function IntegrationsPage() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-5 py-2 rounded-full text-sm font-bold transition-all whitespace-nowrap ${
+                className={`px-5 py-2 rounded-none text-sm font-bold transition-all whitespace-nowrap ${
                   activeCategory === cat
                     ? "bg-black text-white shadow-lg"
                     : "bg-gray-50 text-gray-500 hover:bg-gray-100"
@@ -207,7 +206,7 @@ export default function IntegrationsPage() {
               placeholder="Search integrations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-2xl bg-gray-50 border border-gray-100 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
+              className="w-full pl-12 pr-4 py-3 rounded-none bg-gray-50 border border-gray-100 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
             />
           </div>
         </div>
@@ -238,16 +237,16 @@ export default function IntegrationsPage() {
                   animate="visible"
                   exit={{ opacity: 0, scale: 0.95 }}
                   layout
-                  className="group relative p-8 rounded-3xl border border-gray-100 bg-white hover:border-black transition-all duration-300 hover:shadow-[0_24px_48px_-15px_rgba(0,0,0,0.08)] flex flex-col"
+                  className="group relative p-8 rounded-none border border-gray-100 bg-white hover:border-black transition-all duration-300 hover:shadow-[0_24px_48px_-15px_rgba(0,0,0,0.08)] flex flex-col"
                 >
-                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${item.color} p-4 flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`w-16 h-16 rounded-none bg-gradient-to-br ${item.color} p-4 flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300`}>
                     {item.icon}
                   </div>
                   
                   <div className="flex-grow">
                     <div className="flex items-center gap-2 mb-2">
                       <h3 className="text-xl font-bold text-black">{item.name}</h3>
-                      <span className="px-2 py-0.5 rounded-full bg-green-50 text-green-600 text-[10px] font-bold uppercase tracking-wider">
+                      <span className="px-2 py-0.5 rounded-none bg-green-50 text-green-600 text-[10px] font-bold uppercase tracking-wider">
                         Active
                       </span>
                     </div>
@@ -258,7 +257,7 @@ export default function IntegrationsPage() {
                     <div className="space-y-3 mb-8">
                       {item.features.map((feature, fIndex) => (
                         <div key={fIndex} className="flex items-center gap-2">
-                          <div className="w-5 h-5 rounded-full bg-gray-50 flex items-center justify-center">
+                          <div className="w-5 h-5 rounded-none bg-gray-50 flex items-center justify-center">
                             <Check className="w-3 h-3 text-black" />
                           </div>
                           <span className="text-xs font-medium text-gray-600">{feature}</span>
@@ -267,7 +266,7 @@ export default function IntegrationsPage() {
                     </div>
                   </div>
 
-                  <button className="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-black text-white font-bold text-sm hover:opacity-90 transition-all">
+                  <button className="flex items-center justify-center gap-2 w-full py-4 rounded-none bg-black text-white font-bold text-sm hover:opacity-90 transition-all">
                     Connect {item.name}
                     <Plus className="w-4 h-4" />
                   </button>
@@ -278,7 +277,7 @@ export default function IntegrationsPage() {
 
           {filteredIntegrations.length === 0 && (
             <div className="text-center py-20">
-              <div className="inline-flex p-4 bg-gray-50 rounded-full mb-4">
+              <div className="inline-flex p-4 bg-gray-50 rounded-none mb-4">
                 <Search className="w-8 h-8 text-gray-300" />
               </div>
               <h3 className="text-xl font-bold text-black mb-2">No integrations found</h3>
@@ -304,9 +303,9 @@ export default function IntegrationsPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="p-8 rounded-3xl bg-white border border-gray-100 text-center flex flex-col items-center"
+                className="p-8 rounded-none bg-white border border-gray-100 text-center flex flex-col items-center"
               >
-                <div className="w-14 h-14 rounded-2xl bg-gray-50 text-gray-400 flex items-center justify-center mb-4">
+                <div className="w-14 h-14 rounded-none bg-gray-50 text-gray-400 flex items-center justify-center mb-4">
                   {item.icon}
                 </div>
                 <h3 className="font-bold text-black mb-1">{item.name}</h3>
@@ -323,17 +322,16 @@ export default function IntegrationsPage() {
       {/* Enterprise / API Section */}
       <section className="py-32 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="relative rounded-[40px] bg-black text-white p-12 md:p-20 overflow-hidden">
-            <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
+          <div className="relative rounded-none bg-gray-50 border border-gray-100 text-black p-12 md:p-20 overflow-hidden">
             <div className="relative z-10 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white/80 text-xs font-bold uppercase tracking-wider mb-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-black/5 text-gray-500 text-xs font-bold uppercase tracking-wider mb-8">
                 <Code2 className="w-3 h-3" />
                 For Developers
               </div>
               <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
                 Build your own integration.
               </h2>
-              <p className="text-xl text-gray-400 mb-12 leading-relaxed">
+              <p className="text-xl text-gray-500 mb-12 leading-relaxed">
                 Unlock the full power of DripLens with our robust API. 
                 Custom integrations are available for Enterprise teams to sync with internal tools.
               </p>
@@ -341,14 +339,14 @@ export default function IntegrationsPage() {
               <div className="flex flex-col sm:flex-row gap-6">
                 <Link 
                   to="/pricing" 
-                  className="px-10 py-5 bg-white text-black font-bold rounded-full hover:scale-105 transition-transform flex items-center justify-center gap-2"
+                  className="px-10 py-5 bg-black text-white font-bold rounded-none hover:scale-105 transition-transform flex items-center justify-center gap-2"
                 >
                   View Enterprise Plans
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <a 
                   href="#" 
-                  className="px-10 py-5 bg-white/10 border border-white/20 text-white font-bold rounded-full hover:bg-white/20 transition-all flex items-center justify-center gap-2"
+                  className="px-10 py-5 bg-white border border-gray-200 text-black font-bold rounded-none hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
                 >
                   API Documentation
                   <ExternalLink className="w-4 h-4" />
@@ -357,7 +355,7 @@ export default function IntegrationsPage() {
             </div>
             
             {/* Decorative element */}
-            <div className="absolute bottom-[-50px] right-[-50px] w-64 h-64 bg-white/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-[-50px] right-[-50px] w-64 h-64 bg-black/5 rounded-none blur-3xl" />
           </div>
         </div>
       </section>
@@ -367,7 +365,7 @@ export default function IntegrationsPage() {
         <div className="max-w-2xl mx-auto italic text-gray-500 text-lg">
           "Connecting Stripe and Instagram to DripLens changed our workflow. We went from manual invoicing to automated payouts in minutes."
           <div className="mt-4 not-italic flex items-center justify-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+            <div className="w-10 h-10 rounded-none bg-gray-200 overflow-hidden">
               <img src="https://ui-avatars.com/api/?name=Sarah+Chen&background=000&color=fff" alt="Sarah Chen" />
             </div>
             <div className="text-left">

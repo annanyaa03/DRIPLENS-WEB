@@ -158,7 +158,7 @@ export default function ChangelogPage() {
       {/* Header Section */}
       <header className="bg-white border-b border-[#EEEEEE] py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <div className="inline-block px-3 py-1 bg-black text-white text-[10px] font-bold uppercase tracking-widest rounded mb-6">
+          <div className="inline-block px-3 py-1 bg-black text-white text-[10px] font-bold uppercase tracking-widest rounded-none mb-6">
             Updates & Releases
           </div>
           <h1 className="text-5xl sm:text-6xl font-bold text-black mb-6 tracking-tight">
@@ -181,15 +181,15 @@ export default function ChangelogPage() {
               {releases.map((release, index) => (
                 <div key={release.version} className="relative">
                   {/* Version Circle */}
-                  <div className="absolute left-0 sm:left-1/2 top-0 w-4 h-4 rounded-full bg-white border-4 border-black transform sm:-translate-x-1/2 z-10 hidden sm:block"></div>
+                  <div className="absolute left-0 sm:left-1/2 top-0 w-3 h-3 rounded-none bg-white border-2 border-black transform sm:-translate-x-1/2 z-10 hidden sm:block"></div>
 
-                  <div className="flex flex-col gap-8">
+                  <div className="flex flex-col gap-8 pt-6">
                     {/* Date & Title */}
                     <div className="flex flex-col sm:items-center text-left sm:text-center mb-4">
                       <span className="text-sm font-medium text-[#999999] mb-2">{release.date}</span>
                       <h2 className="text-3xl font-bold text-black flex items-center justify-start sm:justify-center gap-3">
                         {release.version}
-                        <span className="px-2 py-0.5 bg-zinc-100 text-[#666666] text-[10px] font-bold uppercase tracking-wider rounded">
+                        <span className="px-2 py-0.5 bg-zinc-100 text-[#666666] text-[10px] font-bold uppercase tracking-wider rounded-none">
                           {release.tag}
                         </span>
                       </h2>
@@ -200,10 +200,10 @@ export default function ChangelogPage() {
                       {release.updates.map((update, idx) => (
                         <div 
                           key={idx} 
-                          className="group bg-white p-6 sm:p-8 rounded-2xl border border-[#EEEEEE] shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
+                          className="group bg-white p-6 sm:p-8 rounded-none border border-[#EEEEEE] shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
                         >
                           <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
-                            <span className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider whitespace-nowrap mt-1 ${getTagColor(update.type)}`}>
+                            <span className={`px-3 py-1 rounded-none text-[10px] font-bold uppercase tracking-wider whitespace-nowrap mt-1 ${getTagColor(update.type)}`}>
                               {update.type}
                             </span>
                             <div className="flex-1">
@@ -229,10 +229,10 @@ export default function ChangelogPage() {
       {/* Subscription CTA Section */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 border-t border-[#EEEEEE] bg-white">
         <div className="max-w-4xl mx-auto">
-          <div className="relative overflow-hidden bg-black rounded-3xl p-8 sm:p-16 text-center">
+          <div className="relative overflow-hidden bg-black rounded-none p-8 sm:p-16 text-center">
             {/* Background Decorative Elements */}
-            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-zinc-800 rounded-full blur-[80px] opacity-50"></div>
-            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-zinc-800 rounded-full blur-[80px] opacity-50"></div>
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-zinc-800 rounded-none blur-[80px] opacity-50"></div>
+            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-zinc-800 rounded-none blur-[80px] opacity-50"></div>
 
             <div className="relative z-10">
               <h3 className="text-3xl sm:text-4xl font-bold text-white mb-4">
@@ -247,11 +247,11 @@ export default function ChangelogPage() {
                   type="email"
                   placeholder="Enter your email"
                   required
-                  className="flex-1 px-6 py-4 rounded-xl bg-zinc-900 border border-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
+                  className="flex-1 px-6 py-4 rounded-none bg-zinc-900 border border-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
                 />
                 <button
                   type="submit"
-                  className="px-8 py-4 bg-white text-black font-bold rounded-xl hover:bg-zinc-100 transition-all duration-300 transform active:scale-95"
+                  className="px-8 py-4 bg-white text-black font-bold rounded-none hover:bg-zinc-100 transition-all duration-300 transform active:scale-95"
                 >
                   Subscribe
                 </button>

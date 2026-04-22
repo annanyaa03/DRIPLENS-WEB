@@ -69,21 +69,21 @@ export default function FeaturesPage() {
   return (
     <div className="min-h-screen bg-white pt-20">
       {/* Header */}
-      <div className="bg-white border-b border-[#E5E5E5] py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+      <div className="bg-white border-b border-[#E5E5E5] pt-16 pb-0 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
           <h1 className="text-4xl sm:text-5xl font-bold text-black mb-4">Features</h1>
-          <p className="text-xl text-[#555555] max-w-2xl">
+          <p className="text-xl text-[#555555] max-w-2xl pb-10">
             Driplens provides powerful tools designed specifically for creators and brands to build meaningful professional relationships.
           </p>
         </div>
       </div>
 
       {/* Features Grid */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature) => (
-              <div key={feature.id} className="p-8 rounded-lg border border-[#E5E5E5] hover:border-black transition-all duration-300 hover:shadow-xl group">
+              <div key={feature.id} className="p-8 rounded-none border border-[#E5E5E5] hover:border-black transition-all duration-300 hover:shadow-xl group">
                 <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300">
                   <feature.icon className="w-10 h-10 text-black" strokeWidth={1.5} />
                 </div>
