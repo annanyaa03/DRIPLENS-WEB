@@ -157,7 +157,7 @@ export default function TutorialsPage() {
 
       {/* Hero Header */}
       <div className="relative overflow-hidden bg-white border-b border-gray-100 pt-32 pb-24 px-4 sm:px-6 lg:px-8">
-        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[600px] h-[600px] bg-gray-50 rounded-full blur-3xl opacity-50" />
+        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[600px] h-[600px] bg-gray-50 rounded-none blur-3xl opacity-50" />
         <div className="max-w-7xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -183,10 +183,10 @@ export default function TutorialsPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="relative aspect-video rounded-3xl overflow-hidden bg-black shadow-2xl group cursor-pointer"
+              className="relative aspect-video rounded-none overflow-hidden bg-black shadow-2xl group cursor-pointer"
             >
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-black group-hover:scale-110 transition-transform duration-500">
+                <div className="w-20 h-20 bg-white rounded-none flex items-center justify-center text-black group-hover:scale-110 transition-transform duration-500">
                   <svg className="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M4.5 3a.5.5 0 00-.5.5v13a.5.5 0 00.757.429l11-6.5a.5.5 0 000-.858l-11-6.5a.5.5 0 00-.257-.071z" />
                   </svg>
@@ -196,7 +196,7 @@ export default function TutorialsPage() {
             </motion.div>
             
             <div>
-              <div className="inline-flex items-center px-3 py-1 rounded-full bg-black text-white text-[10px] font-bold uppercase tracking-widest mb-6">
+              <div className="inline-flex items-center px-3 py-1 rounded-none bg-black text-white text-[10px] font-bold uppercase tracking-widest mb-6">
                 Featured Tutorial
               </div>
               <h2 className="text-4xl font-bold text-black mb-6 tracking-tight">Getting Started with Driplens</h2>
@@ -204,10 +204,10 @@ export default function TutorialsPage() {
                 In this comprehensive 15-minute guide, we'll walk you through everything you need to know to get started on Driplens, from creating your account to your first collaboration.
               </p>
               <div className="flex flex-wrap gap-4">
-                <button className="px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-all active:scale-95">
+                <button className="px-8 py-4 bg-black text-white font-bold rounded-none hover:bg-gray-800 transition-all active:scale-95">
                   Watch Video
                 </button>
-                <button className="px-8 py-4 border border-black text-black font-bold rounded-full hover:bg-black hover:text-white transition-all active:scale-95">
+                <button className="px-8 py-4 border border-black text-black font-bold rounded-none hover:bg-black hover:text-white transition-all active:scale-95">
                   Read Transcript
                 </button>
               </div>
@@ -225,7 +225,7 @@ export default function TutorialsPage() {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+                  className={`px-6 py-2 rounded-none text-sm font-medium transition-all ${
                     activeCategory === cat 
                       ? "bg-black text-white" 
                       : "bg-gray-100 text-gray-500 hover:bg-gray-200"
@@ -239,7 +239,7 @@ export default function TutorialsPage() {
               <input 
                 type="text" 
                 placeholder="Search tutorials..." 
-                className="w-full pl-12 pr-6 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-black transition-all outline-none text-black"
+                className="w-full pl-12 pr-6 py-3 bg-gray-50 border-none rounded-none focus:ring-2 focus:ring-black transition-all outline-none text-black"
               />
               <svg className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -262,7 +262,7 @@ export default function TutorialsPage() {
                   transition={{ duration: 0.4 }}
                   className="group"
                 >
-                  <div className="relative aspect-video rounded-2xl overflow-hidden bg-gray-100 mb-6 group-hover:shadow-xl transition-all duration-500">
+                  <div className="relative aspect-video rounded-none overflow-hidden bg-gray-100 mb-6 group-hover:shadow-xl transition-all duration-500">
                     <div className="absolute inset-0 flex items-center justify-center text-5xl grayscale group-hover:grayscale-0 transition-all duration-500">
                       {tutorial.thumbnail}
                     </div>
@@ -270,7 +270,7 @@ export default function TutorialsPage() {
                   </div>
                   
                   <div className="flex items-center gap-3 mb-4">
-                    <span className={`px-3 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getLevelStyles(tutorial.level)}`}>
+                    <span className={`px-3 py-0.5 rounded-none text-[10px] font-bold uppercase tracking-wider border ${getLevelStyles(tutorial.level)}`}>
                       {tutorial.level}
                     </span>
                     <span className="text-[11px] font-medium text-gray-400 tracking-wide uppercase">{tutorial.duration}</span>
@@ -299,8 +299,8 @@ export default function TutorialsPage() {
       {/* CTA Section */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-black text-white overflow-hidden relative">
         <div className="absolute top-0 left-0 w-full h-full opacity-10">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-none blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white rounded-none blur-3xl translate-y-1/2 -translate-x-1/2" />
         </div>
         
         <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -309,10 +309,10 @@ export default function TutorialsPage() {
             Our support team is available 24/7 to help you with any issues you might encounter.
           </p>
           <div className="flex flex-wrap justify-center gap-6">
-            <Link to="/contact" className="px-10 py-4 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all">
+            <Link to="/contact" className="px-10 py-4 bg-white text-black font-bold rounded-none hover:bg-gray-200 transition-all">
               Contact Support
             </Link>
-            <Link to="/documentation" className="px-10 py-4 border border-white/20 text-white font-bold rounded-full hover:bg-white hover:text-black transition-all">
+            <Link to="/documentation" className="px-10 py-4 border border-white/20 text-white font-bold rounded-none hover:bg-white hover:text-black transition-all">
               Browse Docs
             </Link>
           </div>

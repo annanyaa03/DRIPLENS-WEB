@@ -153,7 +153,7 @@ export default function BlogPage() {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative rounded-3xl overflow-hidden bg-black aspect-[21/9] flex items-center group cursor-pointer"
+            className="relative rounded-none overflow-hidden bg-black aspect-[21/9] flex items-center group cursor-pointer"
           >
             <img 
               src={featuredPost.image} 
@@ -163,7 +163,7 @@ export default function BlogPage() {
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
             
             <div className="relative z-10 p-8 md:p-16 max-w-3xl">
-              <span className="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-xs font-bold text-white mb-6 uppercase tracking-widest leading-none">
+              <span className="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-none text-xs font-bold text-white mb-6 uppercase tracking-widest leading-none">
                 Featured Article
               </span>
               <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
@@ -173,7 +173,7 @@ export default function BlogPage() {
                 {featuredPost.excerpt}
               </p>
               <div className="flex items-center gap-4 text-sm text-gray-400">
-                <img src={featuredPost.authorImage} alt={featuredPost.author} className="w-10 h-10 rounded-full border border-white/20 bg-gray-800" />
+                <img src={featuredPost.authorImage} alt={featuredPost.author} className="w-10 h-10 rounded-none border border-white/20 bg-gray-800" />
                 <div>
                   <p className="text-white font-semibold">{featuredPost.author}</p>
                   <p>{featuredPost.date} • {featuredPost.readTime} read</p>
@@ -199,7 +199,7 @@ export default function BlogPage() {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
+                    className={`px-5 py-2.5 rounded-none text-sm font-bold transition-all duration-300 ${
                       selectedCategory === category
                         ? "bg-black text-white shadow-xl shadow-black/10 scale-105"
                         : "bg-white border border-gray-200 text-gray-600 hover:border-black hover:text-black"
@@ -228,14 +228,14 @@ export default function BlogPage() {
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                   className="group flex flex-col"
                 >
-                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-gray-100">
+                  <div className="relative aspect-[4/3] rounded-none overflow-hidden mb-6 bg-gray-100">
                     <img 
                       src={post.image} 
                       alt={post.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
                     <div className="absolute top-4 left-4">
-                      <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-bold text-black uppercase tracking-wider shadow-sm">
+                      <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-none text-[10px] font-bold text-black uppercase tracking-wider shadow-sm">
                         {post.category}
                       </span>
                     </div>
@@ -244,7 +244,7 @@ export default function BlogPage() {
                   <div className="flex-grow">
                     <div className="flex items-center gap-2 mb-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest">
                       <span>{post.date}</span>
-                      <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                      <span className="w-1 h-1 rounded-none bg-gray-300"></span>
                       <span>{post.readTime} Read</span>
                     </div>
                     <h3 className="text-xl font-bold text-black mb-3 leading-tight group-hover:text-blue-600 transition-colors">
@@ -257,7 +257,7 @@ export default function BlogPage() {
 
                   <div className="flex items-center justify-between pt-6 border-t border-gray-100">
                     <div className="flex items-center gap-3">
-                      <img src={post.authorImage} alt={post.author} className="w-8 h-8 rounded-full bg-gray-200" />
+                      <img src={post.authorImage} alt={post.author} className="w-8 h-8 rounded-none bg-gray-200" />
                       <span className="text-xs font-semibold text-black">{post.author}</span>
                     </div>
                     <Link to={`/blog/${post.id}`} className="text-xs font-bold text-black underline underline-offset-4 decoration-2 hover:text-gray-600 transition-colors">
@@ -272,17 +272,17 @@ export default function BlogPage() {
           {/* Pagination */}
           {otherPosts.length > 0 && (
             <div className="flex justify-center items-center gap-4 py-10 border-t border-gray-100">
-              <button className="p-3 border border-gray-200 text-black rounded-full hover:bg-black hover:text-white transition-all transform hover:-translate-x-1">
+              <button className="p-3 border border-gray-200 text-black rounded-none hover:bg-black hover:text-white transition-all transform hover:-translate-x-1">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
               <div className="flex gap-2">
-                <button className="w-10 h-10 bg-black text-white rounded-full font-bold">1</button>
-                <button className="w-10 h-10 border border-gray-200 text-black rounded-full font-bold hover:border-black transition-colors">2</button>
-                <button className="w-10 h-10 border border-gray-200 text-black rounded-full font-bold hover:border-black transition-colors">3</button>
+                <button className="w-10 h-10 bg-black text-white rounded-none font-bold">1</button>
+                <button className="w-10 h-10 border border-gray-200 text-black rounded-none font-bold hover:border-black transition-colors">2</button>
+                <button className="w-10 h-10 border border-gray-200 text-black rounded-none font-bold hover:border-black transition-colors">3</button>
               </div>
-              <button className="p-3 border border-gray-200 text-black rounded-full hover:bg-black hover:text-white transition-all transform hover:translate-x-1">
+              <button className="p-3 border border-gray-200 text-black rounded-none hover:bg-black hover:text-white transition-all transform hover:translate-x-1">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -320,11 +320,11 @@ export default function BlogPage() {
                 type="email"
                 placeholder="your@email.com"
                 required
-                className="flex-1 px-6 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-500 focus:outline-none focus:border-white/40 transition-all"
+                className="flex-1 px-6 py-4 rounded-none bg-white/5 border border-white/10 text-white placeholder:text-gray-500 focus:outline-none focus:border-white/40 transition-all"
               />
               <button
                 type="submit"
-                className="px-8 py-4 bg-white text-black font-bold rounded-xl hover:bg-gray-200 transition-all active:scale-95 whitespace-nowrap"
+                className="px-8 py-4 bg-white text-black font-bold rounded-none hover:bg-gray-200 transition-all active:scale-95 whitespace-nowrap"
               >
                 Join Newsletter
               </button>

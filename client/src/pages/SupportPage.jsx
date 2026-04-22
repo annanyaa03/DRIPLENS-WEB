@@ -148,8 +148,8 @@ export default function SupportPage() {
     <div className="min-h-screen bg-[#fafafa] text-black selection:bg-black selection:text-white pb-20">
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 overflow-hidden bg-white border-b border-zinc-100">
-        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] bg-zinc-50 rounded-full blur-3xl opacity-50" />
-        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-zinc-50 rounded-full blur-3xl opacity-50" />
+        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] bg-zinc-50 rounded-none blur-3xl opacity-50" />
+        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-zinc-50 rounded-none blur-3xl opacity-50" />
         
         <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
           <motion.div
@@ -165,8 +165,8 @@ export default function SupportPage() {
             </p>
 
             <div className="max-w-2xl mx-auto relative group">
-              <div className="absolute inset-0 bg-black/5 rounded-2xl blur-xl group-hover:bg-black/10 transition-all duration-500" />
-              <div className="relative flex items-center bg-white border border-zinc-200 rounded-2xl p-2 pl-6 focus-within:border-black transition-all shadow-sm">
+              <div className="absolute inset-0 bg-black/5 rounded-none blur-xl group-hover:bg-black/10 transition-all duration-500" />
+              <div className="relative flex items-center bg-white border border-zinc-200 rounded-none p-2 pl-6 focus-within:border-black transition-all shadow-sm">
                 <Search className="w-5 h-5 text-zinc-400 mr-3" />
                 <input
                   type="text"
@@ -175,7 +175,7 @@ export default function SupportPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <button className="bg-black text-white px-8 py-4 rounded-xl font-bold hover:bg-zinc-800 transition-colors">
+                <button className="bg-black text-white px-8 py-4 rounded-none font-bold hover:bg-zinc-800 transition-colors">
                   Search
                 </button>
               </div>
@@ -195,14 +195,14 @@ export default function SupportPage() {
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
               whileHover={{ y: -5 }}
-              className="group p-8 bg-white border border-zinc-100 rounded-3xl hover:border-black/10 hover:shadow-2xl hover:shadow-black/5 transition-all duration-300"
+              className="group p-8 bg-white border border-zinc-100 rounded-none hover:border-black/10 hover:shadow-2xl hover:shadow-black/5 transition-all duration-300"
             >
-              <div className={`w-12 h-12 rounded-2xl ${channel.color} flex items-center justify-center text-white mb-6 shadow-lg shadow-black/5`}>
+              <div className={`w-12 h-12 rounded-none ${channel.color} flex items-center justify-center text-white mb-6 shadow-lg shadow-black/5`}>
                 {channel.icon}
               </div>
               <h3 className="text-xl font-bold mb-3">{channel.title}</h3>
               <p className="text-zinc-500 text-sm mb-4 leading-relaxed">{channel.description}</p>
-              <div className="flex items-center gap-2 text-xs font-bold text-zinc-400 mb-6 bg-zinc-50 py-2 px-3 rounded-lg w-fit">
+              <div className="flex items-center gap-2 text-xs font-bold text-zinc-400 mb-6 bg-zinc-50 py-2 px-3 rounded-none w-fit">
                 <Clock className="w-3 h-3" />
                 {channel.availability}
               </div>
@@ -231,7 +231,7 @@ export default function SupportPage() {
               <button
                 key={cat.category}
                 onClick={() => setActiveTab(cat.category)}
-                className={`px-8 py-3 rounded-full font-bold transition-all ${
+                className={`px-8 py-3 rounded-none font-bold transition-all ${
                   activeTab === cat.category
                     ? "bg-black text-white shadow-xl shadow-black/20"
                     : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200"
@@ -256,10 +256,10 @@ export default function SupportPage() {
                 {filteredFaqs.map((faq, idx) => (
                   <div 
                     key={idx} 
-                    className="p-8 border border-zinc-100 rounded-3xl bg-[#fafafa] hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all"
+                    className="p-8 border border-zinc-100 rounded-none bg-[#fafafa] hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all"
                   >
                     <h4 className="text-lg font-bold mb-4 flex items-start gap-3">
-                      <span className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-[10px] shrink-0 mt-1">Q</span>
+                      <span className="w-6 h-6 rounded-none bg-black text-white flex items-center justify-center text-[10px] shrink-0 mt-1">Q</span>
                       {faq.q}
                     </h4>
                     <p className="text-zinc-600 leading-relaxed pl-9">
@@ -277,15 +277,15 @@ export default function SupportPage() {
       <section className="py-24 max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* System Status card */}
-          <div className="bg-white p-10 border border-zinc-100 rounded-[40px] relative overflow-hidden group">
+          <div className="bg-white p-10 border border-zinc-100 rounded-none relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-8">
-              <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center animate-pulse">
-                <div className="w-4 h-4 bg-green-500 rounded-full" />
+              <div className="w-16 h-16 bg-green-50 rounded-none flex items-center justify-center animate-pulse">
+                <div className="w-4 h-4 bg-green-500 rounded-none" />
               </div>
             </div>
             <h3 className="text-2xl font-bold mb-8">System Status</h3>
             <div className="space-y-6">
-              <div className="flex items-center gap-4 p-4 bg-green-50 border border-green-100 rounded-2xl">
+              <div className="flex items-center gap-4 p-4 bg-green-50 border border-green-100 rounded-none">
                 <CheckCircle2 className="w-6 h-6 text-green-500" />
                 <div>
                   <div className="font-bold text-green-900">All Systems Operational</div>
@@ -300,7 +300,7 @@ export default function SupportPage() {
 
           {/* Contact Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-8 bg-zinc-900 text-white rounded-[32px] flex flex-col justify-between group">
+            <div className="p-8 bg-zinc-900 text-white rounded-none flex flex-col justify-between group">
               <Globe className="w-8 h-8 text-zinc-500 group-hover:text-white transition-colors mb-8" />
               <div>
                 <span className="text-zinc-500 text-xs font-bold uppercase tracking-widest block mb-2">Our Office</span>
@@ -310,13 +310,13 @@ export default function SupportPage() {
                 </p>
               </div>
             </div>
-            <div className="p-8 bg-white border border-zinc-100 rounded-[32px] flex flex-col justify-between">
+            <div className="p-8 bg-white border border-zinc-100 rounded-none flex flex-col justify-between">
               <MapPin className="w-8 h-8 text-black mb-8" />
               <div>
                 <span className="text-zinc-500 text-xs font-bold uppercase tracking-widest block mb-2">Connect</span>
                 <p className="text-lg font-bold">support@driplens.com</p>
                 <div className="mt-4 flex items-center gap-2 text-zinc-400 text-sm">
-                  <div className="w-2 h-2 bg-green-500 rounded-full" />
+                  <div className="w-2 h-2 bg-green-500 rounded-none" />
                   Avg response: 4h
                 </div>
               </div>

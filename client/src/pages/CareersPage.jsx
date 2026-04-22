@@ -171,10 +171,10 @@ export default function CareersPage() {
               every creator to build a sustainable business.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
-              <a href="#open-positions" className="px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-zinc-800 transition-all flex items-center gap-2">
+              <a href="#open-positions" className="px-8 py-4 bg-black text-white font-bold rounded-none hover:bg-zinc-800 transition-all flex items-center gap-2">
                 View Openings <ChevronRight className="w-4 h-4" />
               </a>
-              <Link to="/about" className="px-8 py-4 border border-black text-black font-bold rounded-full hover:bg-gray-50 transition-all">
+              <Link to="/about" className="px-8 py-4 border border-black text-black font-bold rounded-none hover:bg-gray-50 transition-all">
                 Learn About Us
               </Link>
             </div>
@@ -220,7 +220,7 @@ export default function CareersPage() {
               <motion.div 
                 key={index} 
                 variants={itemVariants}
-                className="p-8 rounded-2xl border border-[#E5E5E5] hover:border-black transition-colors group"
+                className="p-8 rounded-none border border-[#E5E5E5] hover:border-black transition-colors group"
               >
                 <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300">
                   {benefit.icon}
@@ -247,9 +247,9 @@ export default function CareersPage() {
                 initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="bg-white p-10 rounded-2xl border border-[#E5E5E5] flex gap-6 items-start"
+                className="bg-white p-10 rounded-none border border-[#E5E5E5] flex gap-6 items-start"
               >
-                <div className="p-3 bg-gray-50 rounded-lg">
+                <div className="p-3 bg-gray-50 rounded-none">
                   {item.icon}
                 </div>
                 <div>
@@ -276,7 +276,7 @@ export default function CareersPage() {
                 <button
                   key={dept}
                   onClick={() => setActiveDepartment(dept)}
-                  className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
+                  className={`px-6 py-2 rounded-none text-sm font-bold transition-all ${
                     activeDepartment === dept 
                     ? "bg-black text-white" 
                     : "bg-gray-100 text-[#555555] hover:bg-gray-200"
@@ -297,15 +297,15 @@ export default function CareersPage() {
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
-                  className="p-8 rounded-2xl border border-[#E5E5E5] hover:shadow-xl transition-all hover:border-black group"
+                  className="p-8 rounded-none border border-[#E5E5E5] hover:shadow-xl transition-all hover:border-black group"
                 >
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
                     <div className="flex-1">
                       <div className="flex flex-wrap gap-3 mb-4">
-                        <span className="px-3 py-1 bg-gray-100 text-[#555555] text-xs font-bold rounded-full uppercase tracking-wider">
+                        <span className="px-3 py-1 bg-gray-100 text-[#555555] text-xs font-bold rounded-none uppercase tracking-wider">
                           {job.department}
                         </span>
-                        <span className="px-3 py-1 bg-black/5 text-black text-xs font-bold rounded-full uppercase tracking-wider">
+                        <span className="px-3 py-1 bg-black/5 text-black text-xs font-bold rounded-none uppercase tracking-wider">
                           {job.level}
                         </span>
                       </div>
@@ -327,7 +327,7 @@ export default function CareersPage() {
                       </div>
                     </div>
                     <div className="flex flex-col sm:flex-row lg:flex-col gap-4">
-                      <button className="px-8 py-4 bg-black text-white font-bold rounded-full hover:bg-zinc-800 transition-colors whitespace-nowrap">
+                      <button className="px-8 py-4 bg-black text-white font-bold rounded-none hover:bg-zinc-800 transition-colors whitespace-nowrap">
                         Apply Now
                       </button>
                     </div>
@@ -337,7 +337,7 @@ export default function CareersPage() {
             </AnimatePresence>
             
             {filteredJobs.length === 0 && (
-              <div className="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
+              <div className="text-center py-20 bg-gray-50 rounded-none border border-dashed border-gray-300">
                 <p className="text-xl text-[#555555]">No open positions in this department at the moment.</p>
               </div>
             )}
@@ -360,7 +360,7 @@ export default function CareersPage() {
               { step: "04", title: "Offer", desc: "Welcome to the Driplens family" }
             ].map((item) => (
               <div key={item.step} className="text-center relative z-10">
-                <div className="w-20 h-20 rounded-full bg-white border-2 border-black flex items-center justify-center font-bold text-xl mx-auto mb-6 shadow-lg group-hover:bg-black group-hover:text-white transition-all">
+                <div className="w-20 h-20 rounded-none bg-white border-2 border-black flex items-center justify-center font-bold text-xl mx-auto mb-6 shadow-lg group-hover:bg-black group-hover:text-white transition-all">
                   {item.step}
                 </div>
                 <h3 className="font-bold text-black text-xl mb-3">{item.title}</h3>
@@ -373,16 +373,15 @@ export default function CareersPage() {
 
       {/* CTA Section */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 border-t border-[#E5E5E5]">
-        <div className="max-w-4xl mx-auto text-center bg-black rounded-[2rem] p-12 sm:p-20 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(255,255,255,0.05)_100%)]" />
-          <h2 className="text-3xl sm:text-5xl font-bold text-white mb-8 relative z-10">Don't see your role?</h2>
-          <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto relative z-10 leading-relaxed">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl sm:text-5xl font-bold text-black mb-8 relative z-10">Don't see your role?</h2>
+          <p className="text-xl text-[#555555] mb-12 max-w-2xl mx-auto relative z-10 leading-relaxed">
             We're always looking for talented people who are passionate about creators. 
             Send us your resume and let us know what you'd like to work on.
           </p>
           <a 
             href="mailto:careers@driplens.com" 
-            className="inline-flex items-center gap-2 px-10 py-5 bg-white text-black font-bold rounded-full hover:bg-gray-100 transition-all relative z-10 scale-110"
+            className="inline-flex items-center gap-2 px-10 py-5 bg-black text-white font-bold rounded-none hover:bg-zinc-800 transition-all relative z-10"
           >
             Send Your Resume <ChevronRight className="w-5 h-5" />
           </a>

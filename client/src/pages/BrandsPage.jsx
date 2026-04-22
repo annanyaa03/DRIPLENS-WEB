@@ -37,31 +37,31 @@ export default function BrandsPage() {
         </motion.p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {brands.map((brand, i) => (
           <motion.div 
             key={brand.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 * i }}
-            className="driplens-card p-12 group hover:border-black transition-all duration-500 overflow-hidden relative"
+            className="driplens-card p-8 group hover:border-black transition-all duration-500 overflow-hidden relative"
           >
             {/* Logo and Type */}
-            <div className="flex flex-col sm:flex-row justify-between items-start mb-12 gap-6 relative z-10">
-              <div className="flex items-center gap-6">
-                <div className="w-16 h-16 flex items-center justify-center bg-gray-50 border border-[#F5F5F5] grayscale group-hover:grayscale-0 transition-all duration-500 shrink-0">
+            <div className="flex flex-col justify-between items-start mb-8 gap-6 relative z-10">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 flex items-center justify-center bg-gray-50 border border-[#F5F5F5] grayscale group-hover:grayscale-0 transition-all duration-500 shrink-0">
                   <img src={brand.logo} alt={brand.name} className="w-10 h-10 object-contain" />
                 </div>
                 <div>
                     <div className="flex items-center gap-2 mb-1">
                         <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#AAAAAA]">{brand.name}</p>
-                        <div className="p-0.5 bg-blue-500 rounded-full">
+                        <div className="p-0.5 bg-blue-500 rounded-none">
                             <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
                         </div>
                     </div>
-                  <h3 className="text-3xl font-bold text-black group-hover:translate-x-1 transition-transform tracking-tight">
+                  <h3 className="text-xl font-bold text-black group-hover:translate-x-1 transition-transform tracking-tight">
                     {brand.briefs[0].title}
                   </h3>
                 </div>
@@ -71,11 +71,11 @@ export default function BrandsPage() {
               </span>
             </div>
             
-            <p className="text-[#666666] text-lg leading-relaxed mb-12 max-w-lg font-light relative z-10">
+            <p className="text-[#666666] text-sm leading-relaxed mb-8 max-w-lg font-light relative z-10">
               {brand.briefs[0].description}
             </p>
 
-            <div className="flex flex-wrap gap-2 mb-12 relative z-10">
+            <div className="flex flex-wrap gap-2 mb-8 relative z-10">
               {brand.briefs[0].tags.map((tag, j) => (
                 <span key={j} className="text-[9px] uppercase tracking-widest font-bold text-[#999999] border border-[#F0F0F0] px-3 py-1 bg-gray-50/50">
                   {tag}
@@ -83,20 +83,16 @@ export default function BrandsPage() {
               ))}
             </div>
 
-            <div className="flex justify-between items-center pt-10 border-t border-[#F5F5F5] relative z-10">
+            <div className="flex justify-between items-center pt-8 border-t border-[#F5F5F5] relative z-10">
               <div>
                 <p className="text-[9px] uppercase tracking-widest font-bold text-[#AAAAAA] mb-1">Budget Allocation</p>
-                <p className="text-2xl font-bold text-black">{brand.briefs[0].budget}</p>
+                <p className="text-xl font-bold text-black">{brand.briefs[0].budget}</p>
               </div>
-              <Link to={`/brand/${brand.id}`} className="btn-primary flex items-center hover:scale-[1.02] active:scale-[0.98] transition-transform">
-                SUBMIT PROPOSAL <span className="ml-2 font-light opacity-50">→</span>
+              <Link to={`/brand/${brand.id}`} className="flex items-center text-[10px] font-bold tracking-widest hover:translate-x-1 transition-transform">
+                SUBMIT <span className="ml-2">→</span>
               </Link>
             </div>
             
-            {/* Background Accent */}
-            <div className="absolute -bottom-10 -right-10 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700 pointer-events-none">
-                <img src={brand.logo} className="w-64 h-64 object-contain grayscale" alt="" />
-            </div>
           </motion.div>
         ))}
       </div>

@@ -151,24 +151,24 @@ export default function PricingPage() {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="relative pt-20 pb-16 overflow-hidden">
+      <section className="relative pt-20 pb-0 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-gray-50 to-transparent -z-10" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left">
+        <div className="max-w-6xl mx-auto px-6 text-left">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-7xl md:text-8xl font-bold text-black mb-6 tracking-tighter uppercase">
+            <h1 className="text-6xl md:text-7xl font-bold text-black mb-6 tracking-tighter uppercase">
               Pricing Model
             </h1>
-            <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-400 mb-8">
+            <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-400 mb-12">
               Corporate Minimalist / Professional SaaS
             </p>
           </motion.div>
 
           {/* Role Toggle */}
-          <div className="flex flex-col items-start gap-8 mb-16">
+          <div className="flex flex-col items-start gap-8 mb-4">
             <div className="flex p-0 bg-transparent border border-black">
               <button
                 onClick={() => setSelectedRole("creator")}
@@ -217,9 +217,9 @@ export default function PricingPage() {
       </section>
 
       {/* Pricing Grid */}
-      <section className="pb-32 px-4 sm:px-6 lg:px-8 border-t border-black">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 border-x border-black">
+      <section className="pb-16 px-6 border-t border-black">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 border-x border-b border-black">
             <AnimatePresence mode="wait">
               {plans.map((plan, index) => (
                 <motion.div
@@ -228,15 +228,15 @@ export default function PricingPage() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className={`group relative flex flex-col p-12 border-black ${
+                  className={`group relative flex flex-col pt-6 px-8 pb-8 border-black ${
                     index !== 0 ? "md:border-l" : ""
                   } ${
                     plan.highlighted ? "bg-zinc-50" : "bg-white"
                   } hover:bg-[#fcfcfc] transition-all duration-500`}
                 >
-                  <div className="mb-12 border-b border-zinc-200 pb-8 transition-colors">
+                  <div className="mb-8 border-b border-zinc-200 pb-6 transition-colors">
                     <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-3xl font-bold tracking-tighter uppercase">{plan.name}</h3>
+                      <h3 className="text-2xl font-bold tracking-tighter uppercase">{plan.name}</h3>
                       {plan.highlighted && (
                         <span className="bg-black text-white text-[10px] font-bold px-3 py-1 uppercase tracking-widest transition-colors">
                           Popular
@@ -248,9 +248,9 @@ export default function PricingPage() {
                     </p>
                   </div>
 
-                  <div className="mb-16">
+                  <div className="mb-10">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-8xl font-bold tracking-tighter leading-none transition-transform duration-500 group-hover:scale-105 origin-left">
+                      <span className="text-6xl font-bold tracking-tighter leading-none transition-transform duration-500 group-hover:scale-105 origin-left">
                         {typeof plan.price[isAnnual ? "annual" : "monthly"] === "number" ? "$" : ""}
                         {plan.price[isAnnual ? "annual" : "monthly"]}
                       </span>
@@ -260,14 +260,14 @@ export default function PricingPage() {
                         </span>
                       )}
                     </div>
-                    <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.4em] opacity-60">
+                    <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.4em] opacity-60">
                       {plan.trial}
                     </p>
                   </div>
 
                   <Link
                     to="/auth"
-                    className={`flex items-center justify-center gap-3 w-full py-6 font-bold text-xs uppercase tracking-[0.3em] transition-all duration-300 mb-16 border border-black ${
+                    className={`flex items-center justify-center gap-3 w-full py-4 font-bold text-xs uppercase tracking-[0.3em] transition-all duration-300 mb-10 border border-black ${
                       plan.highlighted
                         ? "bg-black text-white hover:bg-zinc-800"
                         : "bg-white text-black hover:bg-zinc-50"
@@ -277,10 +277,10 @@ export default function PricingPage() {
                   </Link>
 
                   <div className="flex-grow">
-                    <h4 className="text-[10px] font-bold uppercase tracking-[0.5em] mb-10 opacity-40">
+                    <h4 className="text-[10px] font-bold uppercase tracking-[0.5em] mb-6 opacity-40">
                       Specifications
                     </h4>
-                    <ul className="space-y-6">
+                    <ul className="space-y-4">
                       {plan.features.map((feature, featureIndex) => (
                         <motion.li
                           key={featureIndex}
@@ -310,7 +310,7 @@ export default function PricingPage() {
 
 
       {/* FAQ Section */}
-      <section className="pt-24 pb-40 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="pt-16 pb-40 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-end gap-10 mb-16 border-b border-zinc-100 pb-8">
             <h2 className="text-[36px] font-medium text-black tracking-tight">FAQ</h2>

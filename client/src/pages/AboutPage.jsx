@@ -11,56 +11,56 @@ export default function AboutPage() {
       name: "Sarah Chen",
       role: "Co-Founder & CEO",
       bio: "Former influencer marketing director with 10+ years in the creator economy.",
-      image: "👩💼"
+      image: ""
     },
     {
       name: "Marcus Johnson",
       role: "Co-Founder & CTO",
       bio: "Tech entrepreneur who built platforms serving millions of creators.",
-      image: "👨💻"
+      image: ""
     },
     {
       name: "Jessica Williams",
       role: "Head of Creator Relations",
       bio: "Creator advocate with deep relationships across all major platforms.",
-      image: "👩🎨"
+      image: ""
     },
     {
       name: "David Park",
       role: "VP of Brand Partnerships",
       bio: "Marketing strategist with experience at Fortune 500 brands.",
-      image: "👨💼"
+      image: ""
     }
   ];
 
   const values = [
     {
-      icon: "🎯",
+      icon: "",
       title: "Creator-First",
       description: "We prioritize creators' needs and empower them to build sustainable careers."
     },
     {
-      icon: "🤝",
+      icon: "",
       title: "Trust & Transparency",
       description: "Building genuine relationships between creators and brands through honest communication."
     },
     {
-      icon: "🚀",
+      icon: "",
       title: "Innovation",
       description: "Continuously improving our technology to provide the best platform experience."
     },
     {
-      icon: "💼",
+      icon: "",
       title: "Professionalism",
       description: "Treating creator partnerships with the same respect as traditional talent management."
     },
     {
-      icon: "🌱",
+      icon: "",
       title: "Sustainability",
       description: "Building a business model that supports long-term growth for creators and brands alike."
     },
     {
-      icon: "🌍",
+      icon: "",
       title: "Community",
       description: "Creating a supportive ecosystem where creators help each other succeed."
     }
@@ -91,7 +91,7 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="hidden lg:flex justify-center">
-            <div className="text-[12rem] opacity-20">🎬</div>
+            <div className="text-[12rem] opacity-20"></div>
           </div>
         </div>
       </section>
@@ -129,7 +129,7 @@ export default function AboutPage() {
             {/* For Creators */}
             <div className="space-y-10">
               <h3 className="text-2xl font-bold flex items-center gap-4">
-                <span className="w-12 h-12 bg-black text-white flex items-center justify-center text-sm font-bold rounded-lg">01</span>
+                <span className="w-12 h-12 bg-black text-white flex items-center justify-center text-sm font-bold rounded-none">01</span>
                 For Creators
               </h3>
               <div className="space-y-8">
@@ -139,7 +139,7 @@ export default function AboutPage() {
                   { title: "Work Seamlessly", desc: "Execute projects with zero ambiguity using our structured milestone and payment system." }
                 ].map((step, i) => (
                   <div key={i} className="flex gap-6 group">
-                    <div className="w-1 bg-black/5 group-hover:bg-black transition-colors shrink-0 rounded-full h-auto"></div>
+                    <div className="w-1 bg-black/5 group-hover:bg-black transition-colors shrink-0 rounded-none h-auto"></div>
                     <div>
                       <h4 className="font-bold text-xl text-black mb-2">{step.title}</h4>
                       <p className="text-[#555555] leading-relaxed">{step.desc}</p>
@@ -152,7 +152,7 @@ export default function AboutPage() {
             {/* For Brands */}
             <div className="space-y-10">
               <h3 className="text-2xl font-bold flex items-center gap-4">
-                <span className="w-12 h-12 border-2 border-black text-black flex items-center justify-center text-sm font-bold rounded-lg">02</span>
+                <span className="w-12 h-12 border-2 border-black text-black flex items-center justify-center text-sm font-bold rounded-none">02</span>
                 For Brands
               </h3>
               <div className="space-y-8">
@@ -162,7 +162,7 @@ export default function AboutPage() {
                   { title: "Scalable Creation", desc: "Manage multiple workstreams and creators from a single, unified dashboard." }
                 ].map((step, i) => (
                   <div key={i} className="flex gap-6 group">
-                    <div className="w-1 bg-black/5 group-hover:bg-black transition-colors shrink-0 rounded-full h-auto"></div>
+                    <div className="w-1 bg-black/5 group-hover:bg-black transition-colors shrink-0 rounded-none h-auto"></div>
                     <div>
                       <h4 className="font-bold text-xl text-black mb-2">{step.title}</h4>
                       <p className="text-[#555555] leading-relaxed">{step.desc}</p>
@@ -186,7 +186,7 @@ export default function AboutPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {values.map((value, index) => (
-              <div key={index} className="bg-white p-10 rounded-2xl border border-[#EEEEEE] hover:border-black transition-colors group">
+              <div key={index} className="bg-white p-10 rounded-none border border-[#EEEEEE] hover:border-black transition-colors group">
                 <div className="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300 inline-block">{value.icon}</div>
                 <h3 className="font-bold text-black text-xl mb-3">{value.title}</h3>
                 <p className="text-[#555555] leading-relaxed">{value.description}</p>
@@ -208,7 +208,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {teamMembers.map((member, index) => (
               <div key={index} className="group">
-                <div className="bg-[#F3F3F3] aspect-square rounded-2xl mb-6 flex items-center justify-center text-8xl grayscale group-hover:grayscale-0 transition-all duration-500">
+                <div className="bg-[#F3F3F3] aspect-square rounded-none mb-6 flex items-center justify-center text-8xl grayscale group-hover:grayscale-0 transition-all duration-500">
                   {member.image}
                 </div>
                 <h3 className="font-bold text-black text-xl mb-1">{member.name}</h3>
@@ -217,10 +217,10 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-          <div className="text-center mt-20 p-12 bg-black rounded-3xl text-white">
+          <div className="text-center mt-20 p-12 bg-black rounded-none text-white">
             <h3 className="text-2xl font-bold mb-4">We're always looking for talent</h3>
             <p className="text-gray-400 mb-8 max-w-xl mx-auto">Interested in helping us build the future of the creator economy? Check out our open roles.</p>
-            <Link to="/careers" className="inline-block px-10 py-4 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-colors uppercase tracking-widest text-xs">
+            <Link to="/careers" className="inline-block px-10 py-4 bg-white text-black font-bold rounded-none hover:bg-gray-200 transition-colors uppercase tracking-widest text-xs">
               View Careers
             </Link>
           </div>
@@ -260,10 +260,10 @@ export default function AboutPage() {
             Whether you're a creator looking for opportunities or a brand seeking authentic partnerships, Driplens is here for you.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link to="/auth" className="w-full sm:w-auto px-12 py-5 bg-black text-white font-bold rounded-full hover:bg-zinc-800 transition-all transform hover:scale-105 uppercase tracking-widest text-xs">
+            <Link to="/auth" className="w-full sm:w-auto px-12 py-5 bg-black text-white font-bold rounded-none hover:bg-zinc-800 transition-all transform hover:scale-105 uppercase tracking-widest text-xs">
               Get Started
             </Link>
-            <a href="#learn-more" className="w-full sm:w-auto px-12 py-5 border-2 border-black text-black font-bold rounded-full hover:bg-black hover:text-white transition-all transform hover:scale-105 uppercase tracking-widest text-xs">
+            <a href="#learn-more" className="w-full sm:w-auto px-12 py-5 border-2 border-black text-black font-bold rounded-none hover:bg-black hover:text-white transition-all transform hover:scale-105 uppercase tracking-widest text-xs">
               Learn More
             </a>
           </div>
