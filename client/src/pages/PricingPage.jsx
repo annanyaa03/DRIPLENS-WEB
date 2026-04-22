@@ -151,42 +151,41 @@ export default function PricingPage() {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-gradient-to-b from-gray-50 to-transparent -z-10" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="relative pt-20 pb-16 overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-gray-50 to-transparent -z-10" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-5xl md:text-7xl font-bold text-black mb-6 tracking-tight">
-              Scale your <span className="text-gray-400">vision.</span>
+            <h1 className="text-7xl md:text-8xl font-bold text-black mb-6 tracking-tighter uppercase">
+              Pricing Model
             </h1>
-            <p className="text-xl text-brand-body max-w-2xl mx-auto mb-10">
-              Transparent pricing designed for creators and brands of all sizes. 
-              Find the plan that matches your ambition.
+            <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-400 mb-8">
+              Corporate Minimalist / Professional SaaS
             </p>
           </motion.div>
 
           {/* Role Toggle */}
-          <div className="flex flex-col items-center gap-8 mb-12">
-            <div className="flex p-1 bg-gray-100 rounded-none w-fit">
+          <div className="flex flex-col items-start gap-8 mb-16">
+            <div className="flex p-0 bg-transparent border border-black">
               <button
                 onClick={() => setSelectedRole("creator")}
-                className={`px-8 py-2.5 rounded-none text-sm font-bold transition-all duration-300 ${
+                className={`relative px-8 py-2.5 text-[13px] font-medium uppercase tracking-[0.1em] transition-all duration-300 ${
                   selectedRole === "creator"
-                    ? "bg-black text-white shadow-lg"
-                    : "text-gray-500 hover:text-black"
+                    ? "bg-black text-white"
+                    : "text-zinc-500 hover:text-black bg-white"
                 }`}
               >
                 For Creators
               </button>
               <button
                 onClick={() => setSelectedRole("brand")}
-                className={`px-8 py-2.5 rounded-none text-sm font-bold transition-all duration-300 ${
+                className={`relative px-8 py-2.5 text-[13px] font-medium uppercase tracking-[0.1em] transition-all duration-300 ${
                   selectedRole === "brand"
-                    ? "bg-black text-white shadow-lg"
-                    : "text-gray-500 hover:text-black"
+                    ? "bg-black text-white"
+                    : "text-zinc-500 hover:text-black bg-white"
                 }`}
               >
                 For Brands
@@ -194,21 +193,22 @@ export default function PricingPage() {
             </div>
 
             {/* Annual Toggle */}
-            <div className="flex items-center gap-4">
-              <span className={`text-sm font-medium ${!isAnnual ? "text-black" : "text-gray-400"}`}>Monthly</span>
+            <div className="flex items-center gap-6">
+              <span className={`text-[11px] font-medium uppercase tracking-widest transition-colors duration-300 ${!isAnnual ? "text-black" : "text-[#999999]"}`}>Monthly</span>
               <button
                 onClick={() => setIsAnnual(!isAnnual)}
-                className="relative w-14 h-7 bg-gray-200 rounded-none p-1 transition-colors duration-300 hover:bg-gray-300"
+                className="group relative w-12 h-6 bg-white border border-[#D1D1D1] p-[2px] transition-all duration-300"
               >
                 <motion.div
-                  animate={{ x: isAnnual ? 28 : 0 }}
-                  className="w-5 h-5 bg-black rounded-none"
+                  animate={{ x: isAnnual ? 24 : 0 }}
+                  transition={{ type: "tween", duration: 0.15, ease: "easeOut" }}
+                  className="w-5 h-full bg-black"
                 />
               </button>
-              <div className="flex items-center gap-2">
-                <span className={`text-sm font-medium ${isAnnual ? "text-black" : "text-gray-400"}`}>Annual</span>
-                <span className="bg-black text-white text-[10px] font-bold px-2 py-0.5 rounded-none uppercase tracking-wider">
-                  Save 20%
+              <div className="flex items-center gap-4">
+                <span className={`text-[11px] font-medium uppercase tracking-widest transition-colors duration-300 ${isAnnual ? "text-black" : "text-[#999999]"}`}>Annual</span>
+                <span className="border border-zinc-200 text-zinc-500 text-[9px] font-medium px-2 py-0.5 uppercase tracking-wider">
+                  -20%
                 </span>
               </div>
             </div>
@@ -217,82 +217,84 @@ export default function PricingPage() {
       </section>
 
       {/* Pricing Grid */}
-      <section className="pb-16 px-4 sm:px-6 lg:px-8">
+      <section className="pb-32 px-4 sm:px-6 lg:px-8 border-t border-black">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 border-x border-black">
             <AnimatePresence mode="wait">
               {plans.map((plan, index) => (
                 <motion.div
                   key={`${selectedRole}-${plan.name}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className={`relative flex flex-col p-8 rounded-none border transition-all duration-500 ${
-                    plan.highlighted
-                      ? "border-black bg-white text-black shadow-[0_32px_64px_-15px_rgba(0,0,0,0.1)] md:scale-105 z-10"
-                      : "border-gray-200 bg-white hover:border-black hover:shadow-xl"
-                  }`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className={`group relative flex flex-col p-12 border-black ${
+                    index !== 0 ? "md:border-l" : ""
+                  } ${
+                    plan.highlighted ? "bg-zinc-50" : "bg-white"
+                  } hover:bg-[#fcfcfc] transition-all duration-500`}
                 >
-                  {plan.highlighted && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-black border border-white/20 text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] shadow-xl">
-                      <Star className="w-3 h-3 fill-white" />
-                      Most Popular
+                  <div className="mb-12 border-b border-zinc-200 pb-8 transition-colors">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-3xl font-bold tracking-tighter uppercase">{plan.name}</h3>
+                      {plan.highlighted && (
+                        <span className="bg-black text-white text-[10px] font-bold px-3 py-1 uppercase tracking-widest transition-colors">
+                          Popular
+                        </span>
+                      )}
                     </div>
-                  )}
-
-                  <div className="mb-8">
-                    <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                    <p className={`text-sm ${plan.highlighted ? "text-gray-400" : "text-gray-500"}`}>
+                    <p className="text-xs uppercase tracking-widest font-medium opacity-60">
                       {plan.description}
                     </p>
                   </div>
 
-                  <div className="mb-8">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-5xl font-bold">
+                  <div className="mb-16">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-8xl font-bold tracking-tighter leading-none transition-transform duration-500 group-hover:scale-105 origin-left">
                         {typeof plan.price[isAnnual ? "annual" : "monthly"] === "number" ? "$" : ""}
                         {plan.price[isAnnual ? "annual" : "monthly"]}
                       </span>
                       {typeof plan.price[isAnnual ? "annual" : "monthly"] === "number" && (
-                        <span className={`text-sm ${plan.highlighted ? "text-gray-400" : "text-gray-500"}`}>
-                          /mo
+                        <span className="text-sm font-bold uppercase tracking-[0.2em] opacity-40">
+                          / mo
                         </span>
                       )}
                     </div>
-                    <div className="mt-2 h-5">
-                      <p className={`text-[11px] font-medium ${plan.highlighted ? "text-black/60" : "text-black"}`}>
-                        {plan.trial}
-                      </p>
-                    </div>
+                    <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.4em] opacity-60">
+                      {plan.trial}
+                    </p>
                   </div>
 
                   <Link
                     to="/auth"
-                    className={`group flex items-center justify-center gap-2 w-full py-4 rounded-none font-bold text-sm transition-all duration-300 mb-10 ${
+                    className={`flex items-center justify-center gap-3 w-full py-6 font-bold text-xs uppercase tracking-[0.3em] transition-all duration-300 mb-16 border border-black ${
                       plan.highlighted
-                        ? "bg-black text-white hover:bg-black/90"
-                        : "bg-black text-white hover:opacity-90"
+                        ? "bg-black text-white hover:bg-zinc-800"
+                        : "bg-white text-black hover:bg-zinc-50"
                     }`}
                   >
                     {plan.cta}
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </Link>
 
                   <div className="flex-grow">
-                    <p className={`text-xs font-bold uppercase tracking-widest mb-6 ${plan.highlighted ? "text-black/40" : "text-gray-400"}`}>
-                      Includes:
-                    </p>
-                    <ul className="space-y-4">
+                    <h4 className="text-[10px] font-bold uppercase tracking-[0.5em] mb-10 opacity-40">
+                      Specifications
+                    </h4>
+                    <ul className="space-y-6">
                       {plan.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-start gap-3">
-                          <div className={`mt-0.5 p-0.5 rounded-full ${plan.highlighted ? "bg-black/10" : "bg-black/5"}`}>
-                            <Check className={`w-3.5 h-3.5 ${plan.highlighted ? "text-black" : "text-black"}`} />
-                          </div>
-                          <span className={`text-sm ${plan.highlighted ? "text-black/70" : "text-gray-600"}`}>
+                        <motion.li
+                          key={featureIndex}
+                          initial={{ opacity: 0, x: -10 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: 0.1 + featureIndex * 0.05 }}
+                          className="flex items-start gap-4 border-b border-zinc-100 group-hover:border-white/10 pb-4 last:border-0 transition-colors"
+                        >
+                          <div className="w-1 h-1 bg-black mt-2 shrink-0 transition-colors" />
+                          <span className="text-xs font-medium tracking-wide uppercase transition-colors">
                             {feature}
                           </span>
-                        </li>
+                        </motion.li>
                       ))}
                     </ul>
                   </div>
@@ -301,67 +303,37 @@ export default function PricingPage() {
             </AnimatePresence>
           </div>
 
-          <div className="mt-12 p-8 rounded-none bg-gray-50 border border-gray-100 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-white rounded-none shadow-sm">
-                <Zap className="w-6 h-6 text-black" />
-              </div>
-              <div>
-                <h4 className="font-bold text-black">Need a custom enterprise solution?</h4>
-                <p className="text-sm text-gray-500">Contact our sales team for personalized integration and volume discounts.</p>
-              </div>
-            </div>
-            <Link to="/contact" className="px-8 py-3 bg-white border border-black text-black font-bold rounded-none hover:bg-black hover:text-white transition-all whitespace-nowrap">
-              Talk to Sales
-            </Link>
-          </div>
+
         </div>
       </section>
 
-      {/* Feature Comparison Link / CTA */}
-      <section className="py-16 bg-white text-black text-center border-y border-gray-100">
-        <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl md:text-5xl font-bold mb-8">Ready to evolve?</h2>
-          <p className="text-gray-500 text-lg mb-12">
-            Join 10,000+ creators and brands who are already scaling their reach on DripLens.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <Link to="/auth" className="w-full sm:w-auto px-10 py-5 bg-black text-white font-bold rounded-none hover:scale-105 transition-transform">
-              Get Started for Free
-            </Link>
-            <Link to="/features" className="w-full sm:w-auto flex items-center justify-center gap-2 font-bold text-black hover:text-gray-600 transition-colors">
-              Explore All Features <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
+
 
       {/* FAQ Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-black mb-4">Frequently Asked Questions</h2>
-            <p className="text-gray-500">Everything you need to know about our plans and billing.</p>
+      <section className="pt-24 pb-40 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-end gap-10 mb-16 border-b border-zinc-100 pb-8">
+            <h2 className="text-[36px] font-medium text-black tracking-tight">FAQ</h2>
+            <p className="text-[11px] font-medium text-[#999999] uppercase tracking-widest max-w-xs md:text-right mb-1">
+              Protocol & Billing Information
+            </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-12">
             {faqs.map((faq, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="space-y-3"
+                className="space-y-3 group"
               >
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-none bg-gray-100 flex items-center justify-center mt-1">
-                    <Info className="w-4 h-4 text-black" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-black">{faq.q}</h3>
-                    <p className="text-gray-600 mt-2 leading-relaxed">{faq.a}</p>
-                  </div>
-                </div>
+                <h3 className="text-[14px] font-medium text-black border-l border-zinc-200 pl-6 transition-all">
+                  {faq.q}
+                </h3>
+                <p className="text-[#666666] leading-relaxed text-[13px] font-normal pl-6">
+                  {faq.a}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -369,9 +341,9 @@ export default function PricingPage() {
       </section>
 
       {/* Footer Support */}
-      <div className="bg-gray-50 py-12 border-t border-gray-100 text-center">
-        <p className="text-sm text-gray-500">
-          Have more questions? <Link to="/support" className="text-black font-bold underline underline-offset-4">Visit our help center</Link> or <Link to="/contact" className="text-black font-bold underline underline-offset-4">contact support</Link>.
+      <div className="bg-black py-20 text-center">
+        <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.5em]">
+          Support Protocol: <Link to="/support" className="text-white hover:underline transition-all">HELP CENTER</Link> // <Link to="/contact" className="text-white hover:underline transition-all">CONTACT</Link>
         </p>
       </div>
     </div>
