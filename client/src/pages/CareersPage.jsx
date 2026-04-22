@@ -183,22 +183,45 @@ export default function CareersPage() {
       </div>
 
       {/* Mission Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-black text-white overflow-hidden relative">
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold mb-8">Why Work at Driplens?</h2>
-            <p className="text-xl text-gray-300 mb-10 leading-relaxed">
-              We're not just building a platform—we're transforming the creator economy. Every team member plays a crucial role in empowering millions of creators to build sustainable careers.
-            </p>
-            <p className="text-xl text-gray-300 leading-relaxed italic">
-              "Our mission is to bridge the gap between creative passion and professional prosperity."
-            </p>
-          </motion.div>
+      <section className="py-32 px-4 sm:px-6 lg:px-8 bg-white border-y border-[#E5E5E5] overflow-hidden relative">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <h2 className="text-4xl sm:text-5xl font-bold mb-8 text-black tracking-tighter uppercase">
+                Why Work <br />
+                <span className="text-zinc-300">at Driplens?</span>
+              </h2>
+              <div className="w-20 h-1 bg-black mb-8" />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative"
+            >
+              <p className="text-xl text-zinc-600 mb-10 leading-relaxed font-light">
+                We're not just building a platform—we're transforming the creator economy. 
+                Every team member plays a crucial role in empowering millions of creators 
+                to build sustainable careers.
+              </p>
+              
+              <div className="relative p-8 bg-zinc-50 border-l-4 border-black">
+                <p className="text-lg text-black leading-relaxed italic font-medium">
+                  "Our mission is to bridge the gap between creative passion and professional prosperity."
+                </p>
+                <div className="absolute -top-4 -right-4 w-12 h-12 bg-black/5 flex items-center justify-center -z-0">
+                  <span className="text-4xl font-serif text-black/10">"</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -234,27 +257,33 @@ export default function CareersPage() {
       </section>
 
       {/* Culture Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 border-y border-[#E5E5E5]">
+      <section className="py-32 px-4 sm:px-6 lg:px-8 bg-white border-b border-[#E5E5E5]">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-16 text-center">
-            <h2 className="text-4xl font-bold text-black mb-4">Our Culture Pillars</h2>
-            <p className="text-xl text-[#555555] max-w-2xl mx-auto">How we work, lead, and grow together as a team.</p>
+          <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div className="max-w-2xl">
+              <h2 className="text-4xl sm:text-5xl font-bold text-black mb-6 tracking-tighter uppercase">Our Culture <br /><span className="text-zinc-300">Pillars</span></h2>
+              <p className="text-xl text-zinc-500 font-light leading-relaxed">How we work, lead, and grow together as a team.</p>
+            </div>
+            <div className="text-[10px] font-bold text-zinc-300 uppercase tracking-[0.5em] mb-2">DRIPLENS / INTERNAL</div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border-t border-l border-zinc-100">
             {culture.map((item, index) => (
               <motion.div 
                 key={index} 
-                initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                className="bg-white p-10 rounded-none border border-[#E5E5E5] flex gap-6 items-start"
+                transition={{ delay: index * 0.1 }}
+                className="group p-10 border-r border-b border-zinc-100 bg-white hover:bg-zinc-50 transition-all duration-500 relative overflow-hidden"
               >
-                <div className="p-3 bg-gray-50 rounded-none">
+                <div className="absolute top-0 left-0 w-1 h-0 bg-black group-hover:h-full transition-all duration-500" />
+                <div className="mb-8 p-0 text-black group-hover:scale-110 transition-transform duration-500 origin-left">
                   {item.icon}
                 </div>
-                <div>
-                  <h3 className="font-bold text-black text-2xl mb-4">{item.title}</h3>
-                  <p className="text-[#555555] text-lg leading-relaxed">{item.description}</p>
+                <h3 className="font-bold text-black text-xl mb-4 tracking-tight uppercase group-hover:translate-x-2 transition-transform duration-500">{item.title}</h3>
+                <p className="text-zinc-500 text-sm leading-relaxed group-hover:text-zinc-800 transition-colors duration-500">{item.description}</p>
+                <div className="mt-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                   <div className="w-8 h-px bg-black" />
                 </div>
               </motion.div>
             ))}
@@ -263,82 +292,101 @@ export default function CareersPage() {
       </section>
 
       {/* Job Listings */}
-      <section id="open-positions" className="py-24 px-4 sm:px-6 lg:px-8">
+      <section id="open-positions" className="pt-32 pb-16 px-4 sm:px-6 lg:px-8 bg-zinc-50/30">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-            <div>
-              <h2 className="text-4xl font-bold text-black mb-4">Open Positions</h2>
-              <p className="text-xl text-[#555555]">Find your next challenge at Driplens.</p>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 mb-20 border-b border-zinc-200 pb-12">
+            <div className="max-w-xl">
+              <h2 className="text-4xl sm:text-5xl font-bold text-black mb-6 tracking-tighter uppercase">Open <span className="text-zinc-300">Positions</span></h2>
+              <p className="text-xl text-zinc-500 font-light leading-relaxed">Find your next challenge at Driplens. We're always looking for exceptional talent to join our mission.</p>
             </div>
+            
             {/* Department Filter */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-6">
               {departments.map((dept) => (
                 <button
                   key={dept}
                   onClick={() => setActiveDepartment(dept)}
-                  className={`px-6 py-2 rounded-none text-sm font-bold transition-all ${
+                  className={`group relative py-2 text-[10px] font-bold uppercase tracking-[0.1em] transition-all ${
                     activeDepartment === dept 
-                    ? "bg-black text-white" 
-                    : "bg-gray-100 text-[#555555] hover:bg-gray-200"
+                    ? "text-black" 
+                    : "text-zinc-400 hover:text-black"
                   }`}
                 >
                   {dept}
+                  <motion.div 
+                    initial={false}
+                    animate={{ 
+                      width: activeDepartment === dept ? "100%" : "0%",
+                      opacity: activeDepartment === dept ? 1 : 0
+                    }}
+                    className="absolute bottom-0 left-0 h-0.5 bg-black"
+                  />
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-0 border-t border-zinc-200">
             <AnimatePresence mode="popLayout">
               {filteredJobs.map((job) => (
                 <motion.div
                   layout
                   key={job.id}
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  className="p-8 rounded-none border border-[#E5E5E5] hover:shadow-xl transition-all hover:border-black group"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="group relative border-b border-zinc-200 transition-all duration-500 bg-white hover:bg-zinc-50"
                 >
-                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+                  <div className="p-8 sm:p-12 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
                     <div className="flex-1">
-                      <div className="flex flex-wrap gap-3 mb-4">
-                        <span className="px-3 py-1 bg-gray-100 text-[#555555] text-xs font-bold rounded-none uppercase tracking-wider">
+                      <div className="flex flex-wrap gap-4 mb-6">
+                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.3em] group-hover:text-zinc-600">
                           {job.department}
                         </span>
-                        <span className="px-3 py-1 bg-black/5 text-black text-xs font-bold rounded-none uppercase tracking-wider">
-                          {job.level}
+                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.3em] group-hover:text-zinc-600">
+                          // {job.level}
                         </span>
                       </div>
-                      <h3 className="text-2xl font-bold text-black mb-4 group-hover:text-zinc-600 transition-colors uppercase tracking-tight">
+                      
+                      <h3 className="text-2xl sm:text-3xl font-bold text-black mb-4 transition-colors duration-500 tracking-tight uppercase">
                         {job.title}
                       </h3>
-                      <p className="text-[#555555] text-lg mb-6 max-w-3xl">{job.description}</p>
                       
-                      <div className="flex flex-wrap gap-6 text-sm font-medium text-[#777777]">
+                      <p className="text-zinc-500 text-lg mb-8 max-w-3xl transition-colors duration-500 font-light">
+                        {job.description}
+                      </p>
+                      
+                      <div className="flex flex-wrap gap-8 text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400 group-hover:text-zinc-600">
                         <div className="flex items-center gap-2">
                           <MapPin className="w-4 h-4" /> {job.location}
                         </div>
                         <div className="flex items-center gap-2">
                           <Clock className="w-4 h-4" /> {job.type}
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 font-black text-black">
                           <DollarSign className="w-4 h-4" /> {job.salary}
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-col sm:flex-row lg:flex-col gap-4">
-                      <button className="px-8 py-4 bg-black text-white font-bold rounded-none hover:bg-zinc-800 transition-colors whitespace-nowrap">
+                    
+                    <div className="relative overflow-hidden">
+                      <button className="relative z-10 px-10 py-5 bg-white text-black font-bold text-xs uppercase tracking-[0.3em] border border-black hover:bg-black hover:text-white transition-all duration-500">
                         Apply Now
                       </button>
                     </div>
+                  </div>
+                  
+                  {/* Interactive indicator on hover */}
+                  <div className="absolute right-12 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-8 group-hover:translate-x-0 hidden lg:block">
+                     <ChevronRight className="w-8 h-8 text-black/10" />
                   </div>
                 </motion.div>
               ))}
             </AnimatePresence>
             
             {filteredJobs.length === 0 && (
-              <div className="text-center py-20 bg-gray-50 rounded-none border border-dashed border-gray-300">
-                <p className="text-xl text-[#555555]">No open positions in this department at the moment.</p>
+              <div className="text-center py-32 bg-white border-b border-zinc-200">
+                <p className="text-xl text-zinc-400 font-light uppercase tracking-widest">No open positions in this department at the moment.</p>
               </div>
             )}
           </div>
@@ -346,44 +394,60 @@ export default function CareersPage() {
       </section>
 
       {/* Application Process */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 border-t border-[#E5E5E5]">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-4xl font-bold text-black mb-16 text-center">Our Hiring Flow</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+      <section className="pt-16 pb-32 px-4 sm:px-6 lg:px-8 bg-white border-t border-zinc-100">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-20 text-center">
+            <h2 className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.5em] mb-4">The Process</h2>
+            <h3 className="text-3xl sm:text-4xl font-bold text-black tracking-tight uppercase">Our Hiring Flow</h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-0 relative">
             {/* Connector Line (Hidden on Mobile) */}
-            <div className="hidden md:block absolute top-10 left-0 w-full h-[2px] bg-gray-200 -z-1" />
+            <div className="hidden md:block absolute top-[25px] left-0 w-full h-px bg-zinc-100 -z-0" />
             
             {[
               { step: "01", title: "Apply", desc: "Submit your resume and portfolio" },
               { step: "02", title: "Screen", desc: "Initial talk with our recruiting team" },
               { step: "03", title: "Interview", desc: "Deep dive with the hiring team" },
               { step: "04", title: "Offer", desc: "Welcome to the Driplens family" }
-            ].map((item) => (
-              <div key={item.step} className="text-center relative z-10">
-                <div className="w-20 h-20 rounded-none bg-white border-2 border-black flex items-center justify-center font-bold text-xl mx-auto mb-6 shadow-lg group-hover:bg-black group-hover:text-white transition-all">
+            ].map((item, index) => (
+              <motion.div 
+                key={item.step} 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="group text-center relative z-10 px-6"
+              >
+                <div className="w-12 h-12 bg-white border border-zinc-200 flex items-center justify-center font-bold text-xs mx-auto mb-10 transition-all duration-500 group-hover:bg-black group-hover:text-white group-hover:border-black group-hover:scale-110">
                   {item.step}
                 </div>
-                <h3 className="font-bold text-black text-xl mb-3">{item.title}</h3>
-                <p className="text-[#555555] leading-relaxed">{item.desc}</p>
-              </div>
+                <h4 className="font-bold text-black text-lg mb-4 tracking-tight uppercase group-hover:translate-y-[-4px] transition-transform duration-500">{item.title}</h4>
+                <p className="text-zinc-500 text-sm leading-relaxed font-light group-hover:text-zinc-800 transition-colors duration-500">{item.desc}</p>
+                
+                {/* Visual accent */}
+                <div className="mt-8 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                   <div className="w-4 h-0.5 bg-black" />
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 border-t border-[#E5E5E5]">
+      <section className="pt-12 pb-32 px-4 sm:px-6 lg:px-8 border-t border-zinc-100 bg-white">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-5xl font-bold text-black mb-8 relative z-10">Don't see your role?</h2>
-          <p className="text-xl text-[#555555] mb-12 max-w-2xl mx-auto relative z-10 leading-relaxed">
+          <h2 className="text-3xl sm:text-4xl font-bold text-black mb-6 tracking-tighter uppercase">Don't see your role?</h2>
+          <p className="text-lg text-zinc-500 mb-10 max-w-xl mx-auto leading-relaxed font-light">
             We're always looking for talented people who are passionate about creators. 
             Send us your resume and let us know what you'd like to work on.
           </p>
           <a 
             href="mailto:careers@driplens.com" 
-            className="inline-flex items-center gap-2 px-10 py-5 bg-black text-white font-bold rounded-none hover:bg-zinc-800 transition-all relative z-10"
+            className="inline-flex items-center gap-3 px-12 py-5 bg-white text-black border border-black font-bold text-xs uppercase tracking-[0.3em] hover:bg-black hover:text-white transition-all duration-500"
           >
-            Send Your Resume <ChevronRight className="w-5 h-5" />
+            Send Your Resume <ChevronRight className="w-4 h-4" />
           </a>
         </div>
       </section>

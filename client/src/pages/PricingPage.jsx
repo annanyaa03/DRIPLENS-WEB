@@ -340,12 +340,7 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* Footer Support */}
-      <div className="bg-black py-20 text-center">
-        <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.5em]">
-          Support Protocol: <Link to="/support" className="text-white hover:underline transition-all">HELP CENTER</Link> // <Link to="/contact" className="text-white hover:underline transition-all">CONTACT</Link>
-        </p>
-      </div>
+
     </div>
   );
 }
