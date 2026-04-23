@@ -33,9 +33,24 @@ export default function AuthPage() {
 
   const validate = () => {
     const e = {};
-    if (mode === 'register' && !formData.username.trim()) e.username = 'Username is required';
-    if (mode === 'register' && formData.username.length < 3) e.username = 'Minimum 3 characters';
-    if (!formData.email.match(/^\S+@\S+\.\S+$/)) e.email = 'Enter a valid email';
+    if (mode === 'register') {
+      if (!formData.username.trim()) {
+        e.username = 'Username is required';
+      } else if (formData.username.length < 3) {
+        e.username = 'Minimum 3 characters';
+      } else if (!/^[a-zA-Z0-9_.]+$/.test(formData.username)) {
+        e.username = 'Alphanumeric, underscores, and dots only';
+      }
+    }
+    
+    // Support both email and username formats. 
+    // We let the server do the heavy lifting for email format validation.
+    if (!formData.email.trim()) {
+      e.email = mode === 'register' ? 'Email is required' : 'Email or username is required';
+    } else if (mode === 'register' && !formData.email.includes('@')) {
+      e.email = 'Please enter a valid email';
+    }
+    
     if (formData.password.length < 8) e.password = 'Password must be at least 8 characters';
     return e;
   };
@@ -63,7 +78,10 @@ export default function AuthPage() {
         navigate(from, { replace: true });
       }
     } catch (err) {
-      setApiError(err instanceof ApiError ? err.message : 'Something went wrong. Please try again.');
+      console.error('Auth action failed:', err);
+      // Fallback to error message from server if available, even if instanceof check fails
+      const message = err.message || (err.error?.message) || 'Something went wrong. Please try again.';
+      setApiError(message);
     } finally {
       setLoading(false);
     }
@@ -152,15 +170,15 @@ export default function AuthPage() {
 
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-widest text-[#999] mb-2">
-                Email
+                {mode === 'register' ? 'Email' : 'Email or Username'}
               </label>
               <input
                 name="email"
-                type="email"
+                type={mode === 'register' ? 'email' : 'text'}
                 autoComplete="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="you@example.com"
+                placeholder={mode === 'register' ? 'you@example.com' : 'you@example.com or your_handle'}
                 className={inputClass('email')}
               />
               {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
