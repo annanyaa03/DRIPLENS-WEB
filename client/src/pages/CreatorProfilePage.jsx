@@ -5,20 +5,34 @@ import { api } from '../lib/api';
 export default function CreatorProfilePage() {
   const { id } = useParams();
   const [creator, setCreator] = useState(null);
+  const [error, setError] = useState(null);
   const [selectedMedia, setSelectedMedia] = useState(null);
 
   useEffect(() => {
     const load = async () => {
       try {
         const data = await api.get(`/creators/${id}`);
-        setCreator(data.data.creator);
-      } catch {
-        setCreator(null); // show not found
+        if (data?.data?.creator) {
+          setCreator(data.data.creator);
+        } else {
+          setError('Creator not found');
+        }
+      } catch (err) {
+        setError(err.message || 'Failed to load creator profile');
       }
     };
     load();
     window.scrollTo(0, 0);
   }, [id]);
+
+  if (error) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center gap-6">
+        <h2 className="text-3xl font-bold">{error}</h2>
+        <Link to="/creators" className="btn-primary py-3 px-8">Back to Creators</Link>
+      </div>
+    );
+  }
 
   if (!creator) return <div className="h-screen flex items-center justify-center">Loading...</div>;
 
