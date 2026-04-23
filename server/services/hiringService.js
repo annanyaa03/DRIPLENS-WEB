@@ -1,5 +1,6 @@
 import { supabase } from '../utils/supabase.js';
 import { forbidden, notFound } from '../utils/AppError.js';
+import { emitToUser } from '../utils/socket.js';
 
 // Allowed status transitions by role
 const TRANSITIONS = {
@@ -34,6 +35,12 @@ export const createRequest = async ({
     .single();
 
   if (error) throw error;
+
+  // Emit to creator if assigned
+  if (data.creator_id) {
+    emitToUser(data.creator_id, 'hiring_update', data);
+  }
+
   return data;
 };
 
@@ -83,5 +90,12 @@ export const updateStatus = async (requestId, userId, role, newStatus) => {
     .single();
 
   if (error) throw error;
+
+  // Emit update to the other party
+  const recipientId = data.brand_id === userId ? data.creator_id : data.brand_id;
+  if (recipientId) {
+    emitToUser(recipientId, 'hiring_update', data);
+  }
+
   return data;
 };

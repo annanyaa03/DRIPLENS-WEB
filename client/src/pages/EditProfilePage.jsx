@@ -44,7 +44,13 @@ export default function EditProfilePage() {
     banner_url: '',
     instagram: '',
     twitter: '',
-    website: ''
+    website: '',
+    min_budget: 0,
+    max_budget: 10000,
+    follower_count: 0,
+    platforms: [],
+    is_available: true,
+    tags: []
   });
 
   const [avatarFile, setAvatarFile] = useState(null);
@@ -72,7 +78,13 @@ export default function EditProfilePage() {
           banner_url: creator.banner_url || '',
           instagram: creator.instagram || '',
           twitter: creator.twitter || '',
-          website: creator.website || ''
+          website: creator.website || '',
+          min_budget: creator.min_budget || 0,
+          max_budget: creator.max_budget || 10000,
+          follower_count: creator.follower_count || 0,
+          platforms: creator.platforms || [],
+          is_available: creator.is_available ?? true,
+          tags: creator.tags || []
         });
         if (creator.avatar_url) setAvatarPreview(creator.avatar_url);
         if (creator.banner_url) setBannerPreview(creator.banner_url);
@@ -174,9 +186,24 @@ export default function EditProfilePage() {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(p => ({ ...p, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    const val = type === 'checkbox' ? checked : value;
+    setFormData(p => ({ ...p, [name]: val }));
     if (errors[name]) setErrors(p => ({ ...p, [name]: '' }));
+  };
+
+  const handlePlatformToggle = (platform) => {
+    setFormData(p => ({
+      ...p,
+      platforms: p.platforms.includes(platform)
+        ? p.platforms.filter(pl => pl !== platform)
+        : [...p.platforms, platform]
+    }));
+  };
+
+  const handleTagsChange = (e) => {
+    const tags = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
+    setFormData(p => ({ ...p, tags }));
   };
 
   const validateForm = () => {
@@ -190,10 +217,16 @@ export default function EditProfilePage() {
     if (formData.website && !isValidUrl(formData.website)) {
       newErrors.website = 'Enter a valid website URL';
     }
+    if (isCreator) {
+      if (formData.min_budget < 0) newErrors.min_budget = 'Min budget cannot be negative';
+      if (formData.max_budget < formData.min_budget) newErrors.max_budget = 'Max budget must be >= min budget';
+      if (formData.follower_count < 0) newErrors.follower_count = 'Follower count cannot be negative';
+    }
     return newErrors;
   };
 
   const isValidUrl = (string) => {
+    if (!string) return true;
     try {
       new URL(string);
       return true;
@@ -234,14 +267,22 @@ export default function EditProfilePage() {
 
       // 2. Prepare payload
       const payload = {
-        bio:       formData.bio,
-        category:  formData.category,
-        location:  formData.location,
-        instagram: formData.instagram,
-        twitter:   formData.twitter,
-        website:   formData.website,
-        avatar_url: avatarUrl,
-        banner_url: bannerUrl
+        bio:           formData.bio,
+        category:      formData.category,
+        location:      formData.location,
+        instagram:     formData.instagram,
+        twitter:       formData.twitter,
+        website:       formData.website,
+        avatar_url:    avatarUrl,
+        banner_url:    bannerUrl,
+        ...(isCreator && {
+          min_budget:     Number(formData.min_budget),
+          max_budget:     Number(formData.max_budget),
+          follower_count: Number(formData.follower_count),
+          platforms:      formData.platforms,
+          is_available:   formData.is_available,
+          tags:           formData.tags
+        })
       };
 
       // 3. Update profile
@@ -488,6 +529,105 @@ export default function EditProfilePage() {
                 </div>
               </div>
             </div>
+
+            {/* Creator Specific Settings */}
+            {isCreator && (
+              <div className="pt-4 border-t border-[#EEE] space-y-8">
+                <h3 className="text-sm font-bold text-black">Creator Discovery Settings</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-[#999] mb-3">
+                      Min Budget ($)
+                    </label>
+                    <input
+                      type="number"
+                      name="min_budget"
+                      value={formData.min_budget}
+                      onChange={handleInputChange}
+                      className={inputClass('min_budget')}
+                    />
+                    {errors.min_budget && <p className="text-red-500 text-xs mt-2">{errors.min_budget}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-[#999] mb-3">
+                      Max Budget ($)
+                    </label>
+                    <input
+                      type="number"
+                      name="max_budget"
+                      value={formData.max_budget}
+                      onChange={handleInputChange}
+                      className={inputClass('max_budget')}
+                    />
+                    {errors.max_budget && <p className="text-red-500 text-xs mt-2">{errors.max_budget}</p>}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-widest text-[#999] mb-3">
+                    Follower Count
+                  </label>
+                  <input
+                    type="number"
+                    name="follower_count"
+                    value={formData.follower_count}
+                    onChange={handleInputChange}
+                    className={inputClass('follower_count')}
+                  />
+                  {errors.follower_count && <p className="text-red-500 text-xs mt-2">{errors.follower_count}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-widest text-[#999] mb-4">
+                    Platforms
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {['Instagram', 'TikTok', 'YouTube', 'Twitter', 'Twitch', 'LinkedIn'].map(plt => (
+                      <button
+                        key={plt}
+                        type="button"
+                        onClick={() => handlePlatformToggle(plt)}
+                        className={`px-4 py-2 rounded-full text-xs font-bold transition-all border ${
+                          formData.platforms.includes(plt)
+                            ? 'bg-black border-black text-white shadow-lg'
+                            : 'bg-white border-gray-100 text-gray-400 hover:border-black hover:text-black'
+                        }`}
+                      >
+                        {plt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-widest text-[#999] mb-3">
+                    Tags (Comma separated)
+                  </label>
+                  <input
+                    type="text"
+                    defaultValue={formData.tags.join(', ')}
+                    onBlur={handleTagsChange}
+                    placeholder="cinematic, storytelling, minimal"
+                    className="w-full border-b py-3 border-[#DDD] focus:border-black focus:outline-none transition-colors bg-transparent text-black"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                  <div>
+                    <p className="text-xs font-bold text-black">Available for Hire</p>
+                    <p className="text-[10px] text-[#999]">Show "Available Now" badge on your profile</p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    name="is_available"
+                    checked={formData.is_available}
+                    onChange={handleInputChange}
+                    className="w-5 h-5 accent-black cursor-pointer"
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Submit Button */}
             <div className="flex gap-4 pt-8">

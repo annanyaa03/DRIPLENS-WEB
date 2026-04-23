@@ -8,9 +8,15 @@ import v1Routes   from './routes/v1/index.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { supabase }     from './utils/supabase.js';
 import logger           from './utils/logger.js';
+import { createServer } from 'http';
+import { initSocket }  from './utils/socket.js';
 import { env }          from './config/env.js';
 
 const app = express();
+const httpServer = createServer(app);
+
+// Initialize Socket.io
+initSocket(httpServer, env.CLIENT_URL);
 
 // ── Security headers ──────────────────────────────────────────
 app.use(helmet());
@@ -50,7 +56,7 @@ app.use(errorHandler);
 
 // ── Boot ──────────────────────────────────────────────────────
 const PORT = env.PORT;
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   logger.info(`Server started`, { port: PORT, env: env.NODE_ENV });
 });
 
