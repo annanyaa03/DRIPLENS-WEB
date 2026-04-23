@@ -1,20 +1,64 @@
 import { supabase } from '../utils/supabase.js';
 import { notFound } from '../utils/AppError.js';
 
-export const listCreators = async ({ category, location, search, page, limit }) => {
+const FOLLOWER_TIERS = {
+  Nano:  [0, 10000],
+  Micro: [10000, 50000],
+  Mid:   [50000, 500000],
+  Macro: [500000, 1000000],
+  Mega:  [1000000, 1000000000],
+};
+
+export const listCreators = async ({ 
+  category, location, search, minBudget, maxBudget, 
+  followerTier, platforms, isAvailable, minRating, tags, 
+  page, limit 
+}) => {
   const from = (page - 1) * limit;
   const to   = from + limit - 1;
 
   let query = supabase
     .from('profiles')
-    .select('id, username, bio, location, category, avatar_url, banner_url, instagram, twitter, website', { count: 'exact' })
+    .select('id, username, bio, location, category, avatar_url, min_budget, max_budget, follower_count, platforms, is_available, rating, tags', { count: 'exact' })
     .eq('role', 'creator');
 
-  if (category) query = query.eq('category', category);
+  if (category) {
+    const cats = category.split(',');
+    query = query.in('category', cats);
+  }
+  
   if (location) query = query.ilike('location', `%${location}%`);
-  if (search)   query = query.ilike('username', `%${search}%`);
+  
+  if (search) {
+    // Multi-field search using OR
+    query = query.or(`username.ilike.%${search}%,bio.ilike.%${search}%,location.ilike.%${search}%,category.ilike.%${search}%`);
+  }
+
+  if (minBudget !== undefined) query = query.gte('max_budget', minBudget);
+  if (maxBudget !== undefined) query = query.lte('min_budget', maxBudget);
+  
+  if (followerTier && followerTier !== 'Any') {
+    const range = FOLLOWER_TIERS[followerTier];
+    if (range) {
+      query = query.gte('follower_count', range[0]).lte('follower_count', range[1]);
+    }
+  }
+
+  if (platforms) {
+    const pList = platforms.split(',');
+    query = query.contains('platforms', pList);
+  }
+
+  if (isAvailable !== undefined) query = query.eq('is_available', isAvailable);
+  if (minRating !== undefined) query = query.gte('rating', minRating);
+  
+  if (tags) {
+    const tagList = tags.split(',');
+    query = query.overlaps('tags', tagList);
+  }
 
   const { data, error, count } = await query
+    .order('rating', { ascending: false })
     .order('created_at', { ascending: false })
     .range(from, to);
 

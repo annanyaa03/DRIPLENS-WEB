@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
+import { useSocket } from '../context/SocketContext';
 
 // ─── StatCard (mirrors CreatorDashboard pattern) ─────────────────────────────
 function StatCard({ label, value, loading }) {
@@ -62,6 +63,19 @@ export default function BrandDashboard() {
     };
     if (user?.id) load();
   }, [user?.id]);
+ 
+   const socket = useSocket();
+ 
+   useEffect(() => {
+     if (!socket) return;
+ 
+     const handleHiringUpdate = (updatedReq) => {
+       setRequests(prev => prev.map(r => r.id === updatedReq.id ? updatedReq : r));
+     };
+ 
+     socket.on('hiring_update', handleHiringUpdate);
+     return () => socket.off('hiring_update', handleHiringUpdate);
+   }, [socket]);
 
   // ── Derived stats ─────────────────────────────────────────────────────────
   const totalBriefs  = requests.length;

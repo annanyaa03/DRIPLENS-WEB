@@ -1,5 +1,6 @@
 import { supabase } from '../utils/supabase.js';
 import { forbidden, notFound } from '../utils/AppError.js';
+import { emitToUser } from '../utils/socket.js';
 
 // Verify caller is a party to the hiring request before any message operation
 const assertParty = async (requestId, userId) => {
@@ -38,6 +39,15 @@ export const sendMessage = async (requestId, userId, content) => {
     .single();
 
   if (error) throw error;
+
+  // Emit to recipient room
+  const { data: request } = await supabase.from('hiring_requests').select('brand_id, creator_id').eq('id', requestId).single();
+  const recipientId = request.brand_id === userId ? request.creator_id : request.brand_id;
+  
+  if (recipientId) {
+    emitToUser(recipientId, 'receive_message', data);
+  }
+
   return data;
 };
 
@@ -51,4 +61,12 @@ export const markRead = async (requestId, userId) => {
     .neq('sender_id', userId);
 
   if (error) throw error;
+
+  // Emit read receipt to the other party
+  const { data: request } = await supabase.from('hiring_requests').select('brand_id, creator_id').eq('id', requestId).single();
+  const recipientId = request.brand_id === userId ? request.creator_id : request.brand_id;
+
+  if (recipientId) {
+    emitToUser(recipientId, 'read_receipt', { requestId, readerId: userId });
+  }
 };

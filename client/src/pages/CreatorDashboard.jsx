@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
+import { useSocket } from '../context/SocketContext';
 
 function StatCard({ label, value, loading }) {
   return (
@@ -39,6 +40,25 @@ export default function CreatorDashboard() {
     };
     load();
   }, []);
+ 
+   const socket = useSocket();
+ 
+   useEffect(() => {
+     if (!socket) return;
+ 
+     const handleHiringUpdate = (updatedReq) => {
+       setRequests(prev => {
+         const exists = prev.find(r => r.id === updatedReq.id);
+         if (exists) {
+           return prev.map(r => r.id === updatedReq.id ? updatedReq : r);
+         }
+         return [updatedReq, ...prev];
+       });
+     };
+ 
+     socket.on('hiring_update', handleHiringUpdate);
+     return () => socket.off('hiring_update', handleHiringUpdate);
+   }, [socket]);
 
   const pendingRequests = requests.filter(r => r.status === 'Pending');
   const accepted = requests.filter(r => r.status === 'Accepted' || r.status === 'Completed');
