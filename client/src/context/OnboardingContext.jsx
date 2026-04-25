@@ -7,6 +7,9 @@ const STORAGE_KEY = 'driplens_onboarding_draft';
 const defaultData = {
   // Step 1
   display_name: '',
+const defaultData = {
+  // Step 1
+  display_name: '',
   categories: [],
   tagline: '',
   // Step 2
@@ -14,6 +17,7 @@ const defaultData = {
   platform_urls: {},
   primary_platform: '',
   follower_count: '',
+}
   // Step 3
   tags: [],
   qualifications: ['', '', ''],

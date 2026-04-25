@@ -22,8 +22,16 @@ const CATEGORIES = [
 const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'Twitter', 'Twitch', 'LinkedIn'];
 
 const PLATFORM_ICONS = {
-  Instagram: '', TikTok: '', YouTube: '',
-  Twitter: '', Twitch: '', LinkedIn: '',
+
+const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'Twitter', 'Twitch', 'LinkedIn'];
+
+const PLATFORM_ICONS = {
+  Instagram: '',
+  TikTok: '',
+  YouTube: '',
+  Twitter: '',
+  Twitch: '',
+  LinkedIn: '',
 };
 
 const WORK_TYPES = [
@@ -32,6 +40,7 @@ const WORK_TYPES = [
 ];
 
 const CATEGORY_TAGS = {
+
   Cinematography:  ['Cinematic','Storytelling','Documentary','Music Video','Commercial','Short Film','Colour Grading'],
   Photography:     ['Editorial','Lifestyle','Portrait','Product','Fashion','Street','Event','Food'],
   '3D Motion':     ['Abstract','Product Viz','Character Animation','NFT','VFX','Motion Graphics','Loop Art'],
@@ -40,6 +49,7 @@ const CATEGORY_TAGS = {
   Animation:       ['2D','Frame-by-Frame','Explainer','Character','Logo Animation','Whiteboard','Kinetic Type'],
   'Graphic Design':['Social Media','Ads','Infographic','Presentation','Print','Campaign','Web Banners'],
   VFX:             ['Compositing','Green Screen','Simulation','Titles','Particle FX','Environment Build'],
+
 };
 
 const TIER_COLORS = {
