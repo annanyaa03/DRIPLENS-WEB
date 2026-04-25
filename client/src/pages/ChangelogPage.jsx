@@ -8,6 +8,62 @@ export default function ChangelogPage() {
 
   const releases = [
     {
+      version: "v2.8.0",
+      date: "April 25, 2026",
+      tag: "Feature Release",
+      updates: [
+        {
+          type: "feature",
+          title: "Creator Onboarding & Dashboards",
+          description: "Added a new creator onboarding flow, messaging buttons, and major dashboard updates for an enhanced user experience."
+        },
+        {
+          type: "improvement",
+          title: "UI Redesign & Landing Page",
+          description: "Updated LandingPage, AuthPage, and introduced a unified agency design system for improved aesthetics."
+        }
+      ]
+    },
+    {
+      version: "v2.7.0",
+      date: "April 24, 2026",
+      tag: "Security Phase",
+      updates: [
+        {
+          type: "security",
+          title: "Auth & Server Overhaul",
+          description: "Updated authentication schemas, services, and server middlewares to bolster security and stability."
+        },
+        {
+          type: "improvement",
+          title: "API & Client Optimizations",
+          description: "Refined client pages, creator portals, API routing, and environment configurations."
+        },
+        {
+          type: "integration",
+          title: "Documentation Revamp",
+          description: "Comprehensive updates to the README with in-depth documentation and security details."
+        }
+      ]
+    },
+    {
+      version: "v2.6.0",
+      date: "April 23, 2026",
+      tag: "Major Release",
+      updates: [
+        {
+          type: "feature",
+          title: "Real-time Messaging & Discovery",
+          description: "Implemented real-time messaging capabilities and advanced creator discovery with comprehensive filtering."
+        },
+        {
+          type: "improvement",
+          title: "Redesigned Pricing Page",
+          description: "A fresh new look and functionality for the platform's pricing tier selections."
+        }
+      ]
+    },
+    {
       version: "v2.5.0",
       date: "April 15, 2024",
       tag: "Major Release",

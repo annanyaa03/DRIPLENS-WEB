@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Instagram, 
@@ -33,6 +33,7 @@ import { Helmet } from "react-helmet-async";
 export default function IntegrationsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -138,6 +139,28 @@ export default function IntegrationsPage() {
     return matchesSearch && matchesCategory;
   });
 
+  const [connectingItem, setConnectingItem] = useState(null);
+  const [loginStep, setLoginStep] = useState('input'); // 'input', 'loading', 'success'
+  const [credentials, setCredentials] = useState({ username: '', password: '' });
+
+  const handleConnect = (item) => {
+    setConnectingItem(item);
+    setLoginStep('input');
+    setCredentials({ username: '', password: '' });
+  };
+
+  const submitLogin = (e) => {
+    e.preventDefault();
+    setLoginStep('loading');
+    setTimeout(() => {
+      setLoginStep('success');
+      setTimeout(() => {
+        setConnectingItem(null);
+        navigate('/dashboard/creator');
+      }, 1500);
+    }, 2000);
+  };
+
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: i => ({
@@ -157,6 +180,92 @@ export default function IntegrationsPage() {
         <title>Integrations | DripLens - Connect Your Toolkit</title>
         <meta name="description" content="Enhance your DripLens experience by connecting with Instagram, TikTok, Stripe, Slack, and more." />
       </Helmet>
+
+      {/* Connection Modal */}
+      <AnimatePresence>
+        {connectingItem && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setConnectingItem(null)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-md bg-white p-10 rounded-none border border-black shadow-2xl"
+            >
+              {loginStep === 'input' && (
+                <>
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className={`w-10 h-10 bg-gradient-to-br ${connectingItem.color} flex items-center justify-center text-white`}>
+                      {connectingItem.icon}
+                    </div>
+                    <h3 className="text-2xl font-bold">Connect {connectingItem.name}</h3>
+                  </div>
+                  <p className="text-gray-500 text-sm mb-8">Log in to your {connectingItem.name} account to sync your data with Driplens.</p>
+                  
+                  <form onSubmit={submitLogin} className="space-y-5">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Username or Email</label>
+                      <input 
+                        required
+                        type="text" 
+                        value={credentials.username}
+                        onChange={e => setCredentials({...credentials, username: e.target.value})}
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-none focus:outline-none focus:border-black transition-all text-sm"
+                        placeholder="john@example.com"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Password</label>
+                      <input 
+                        required
+                        type="password" 
+                        value={credentials.password}
+                        onChange={e => setCredentials({...credentials, password: e.target.value})}
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-none focus:outline-none focus:border-black transition-all text-sm"
+                        placeholder="••••••••"
+                      />
+                    </div>
+                    <button type="submit" className="w-full py-4 bg-black text-white font-bold text-sm hover:opacity-90 transition-all mt-4">
+                      LOG IN AND AUTHORIZE
+                    </button>
+                    <button 
+                      type="button"
+                      onClick={() => setConnectingItem(null)}
+                      className="w-full py-2 text-gray-400 text-xs font-bold hover:text-black transition-all"
+                    >
+                      CANCEL
+                    </button>
+                  </form>
+                </>
+              )}
+
+              {loginStep === 'loading' && (
+                <div className="py-20 flex flex-col items-center">
+                  <div className="w-12 h-12 border-4 border-gray-100 border-t-black rounded-full animate-spin mb-6" />
+                  <p className="text-black font-bold text-lg mb-2">Authenticating...</p>
+                  <p className="text-gray-400 text-sm">Securely connecting to {connectingItem.name}</p>
+                </div>
+              )}
+
+              {loginStep === 'success' && (
+                <div className="py-20 flex flex-col items-center text-center">
+                  <div className="w-16 h-16 bg-green-500 text-white flex items-center justify-center rounded-none mb-6">
+                    <Check className="w-8 h-8" />
+                  </div>
+                  <p className="text-black font-bold text-2xl mb-2">Connected!</p>
+                  <p className="text-gray-400 text-sm">Your {connectingItem.name} profile is now synced.</p>
+                </div>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden bg-white text-black">
@@ -266,7 +375,10 @@ export default function IntegrationsPage() {
                     </div>
                   </div>
 
-                  <button className="flex items-center justify-center gap-2 w-full py-4 rounded-none bg-black text-white font-bold text-sm hover:opacity-90 transition-all">
+                  <button 
+                    onClick={() => handleConnect(item)}
+                    className="flex items-center justify-center gap-2 w-full py-4 rounded-none bg-black text-white font-bold text-sm hover:opacity-90 transition-all"
+                  >
                     Connect {item.name}
                     <Plus className="w-4 h-4" />
                   </button>

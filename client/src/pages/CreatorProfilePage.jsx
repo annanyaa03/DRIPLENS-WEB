@@ -5,20 +5,34 @@ import { api } from '../lib/api';
 export default function CreatorProfilePage() {
   const { id } = useParams();
   const [creator, setCreator] = useState(null);
+  const [error, setError] = useState(null);
   const [selectedMedia, setSelectedMedia] = useState(null);
 
   useEffect(() => {
     const load = async () => {
       try {
         const data = await api.get(`/creators/${id}`);
-        setCreator(data.data.creator);
-      } catch {
-        setCreator(null); // show not found
+        if (data?.data?.creator) {
+          setCreator(data.data.creator);
+        } else {
+          setError('Creator not found');
+        }
+      } catch (err) {
+        setError(err.message || 'Failed to load creator profile');
       }
     };
     load();
     window.scrollTo(0, 0);
   }, [id]);
+
+  if (error) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center gap-6">
+        <h2 className="text-3xl font-bold">{error}</h2>
+        <Link to="/creators" className="btn-primary py-3 px-8">Back to Creators</Link>
+      </div>
+    );
+  }
 
   if (!creator) return <div className="h-screen flex items-center justify-center">Loading...</div>;
 
@@ -62,11 +76,14 @@ export default function CreatorProfilePage() {
                 <p className="text-[#888] font-medium text-lg uppercase tracking-wide text-xs">{creator.role} • {creator.location}</p>
               </div>
 
-              <div className="flex gap-4 mb-10">
-                <button className="flex-1 bg-black text-white py-4 rounded-none font-bold text-sm hover:bg-zinc-800 transition-all shadow-xl shadow-black/10">
-                  Hire Creator
+              <div className="flex gap-3 mb-10">
+                <Link to="/messages" className="flex-1 border border-zinc-200 text-black py-4 rounded-none font-bold text-sm text-center hover:bg-zinc-50 transition-all flex items-center justify-center">
+                  Message
+                </Link>
+                <button className="flex-1 bg-black text-white py-4 rounded-none font-bold text-sm hover:bg-zinc-800 transition-all shadow-[0_4px_14px_rgba(0,0,0,0.1)]">
+                  Hire
                 </button>
-                <button className="p-4 rounded-none border border-zinc-200 hover:bg-zinc-50 transition-all">
+                <button className="px-5 py-4 rounded-none border border-zinc-200 hover:bg-zinc-50 transition-all text-lg flex items-center justify-center">
                   ★
                 </button>
               </div>

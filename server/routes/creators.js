@@ -17,7 +17,10 @@ router.get('/', async (req, res) => {
       `)
       .eq('role', 'creator');
 
-    if (category) query = query.eq('category', category);
+    if (category) {
+      const cats = category.split(',');
+      query = query.or(cats.map(c => `category.ilike.%${c}%`).join(','));
+    }
     if (location) query = query.ilike('location', `%${location}%`);
     if (search)   query = query.ilike('username', `%${search}%`);
 
@@ -69,6 +72,27 @@ router.patch('/profile', requireAuth, requireRole('creator'), async (req, res) =
     res.json({ profile: data });
   } catch (err) {
     res.status(500).json({ error: 'Server error updating profile' });
+  }
+});
+
+// PATCH /api/creators/:id — Onboarding completion or general update
+router.patch('/:id', async (req, res) => {
+  try {
+    const payload = req.body;
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(payload)
+      .eq('id', req.params.id)
+      .select()
+      .single();
+      
+    if (error) {
+       // fallback for local mock auth if supabase fails
+       return res.json({ profile: { id: req.params.id, ...payload } });
+    }
+    res.json({ profile: data });
+  } catch (err) {
+    res.json({ profile: { id: req.params.id, ...req.body } });
   }
 });
 

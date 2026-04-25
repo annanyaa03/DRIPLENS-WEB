@@ -537,7 +537,3 @@ export default function CreatorsPage() {
     </>
   );
 }
-      </div>
-    </>
-  );
-}

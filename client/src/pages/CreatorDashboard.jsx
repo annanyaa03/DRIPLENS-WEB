@@ -82,16 +82,24 @@ export default function CreatorDashboard() {
         <div className="flex justify-between items-start mb-8">
           <div>
             <h1 className="text-3xl font-bold text-black mb-1">
-              Welcome back, {user?.username} 👋
+              Welcome back, {user?.username}
             </h1>
             <p className="text-[#555] mb-8 text-sm">Here's what's happening with your profile.</p>
           </div>
-          <Link 
-            to="/edit-profile" 
-            className="btn-primary text-xs py-2 px-4"
-          >
-            ✎ Edit Profile
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link 
+              to="/messages" 
+              className="btn-secondary text-xs py-2 px-4 border border-black rounded-[8px] hover:bg-gray-50 font-bold"
+            >
+              ✉ Messages
+            </Link>
+            <Link 
+              to="/edit-profile" 
+              className="btn-primary text-xs py-2 px-4"
+            >
+              ✎ Edit Profile
+            </Link>
+          </div>
         </div>
 
         {/* Stats */}

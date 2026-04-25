@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 class ApiError extends Error {
   constructor(message, status, code) {
@@ -31,8 +31,12 @@ const request = async (path, options = {}) => {
   if (res.status === 401) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.href = '/auth';
-    return;
+    
+    // Only redirect if NOT on the auth page already and NOT a login request
+    if (!window.location.pathname.includes('/auth') && !path.includes('/auth/login')) {
+      window.location.href = '/auth';
+      return;
+    }
   }
 
   const data = await res.json();

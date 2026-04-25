@@ -1,12 +1,42 @@
 import { supabase } from '../utils/supabase.js';
 import { unauthorized, forbidden } from '../utils/AppError.js';
+import { env } from '../config/env.js';
 import logger from '../utils/logger.js';
+import fs from 'fs';
+import path from 'path';
+
+const isLocalAuth = env.SUPABASE_URL.includes('dummy');
+const USERS_FILE = path.join(process.cwd(), 'users.json');
+
+const readUsers = () => {
+  if (fs.existsSync(USERS_FILE)) {
+    try {
+      return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+    } catch { return []; }
+  }
+  return [];
+};
 
 export const requireAuth = async (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return next(unauthorized('Authentication token required'));
 
   try {
+    if (isLocalAuth && token.startsWith('local-token-')) {
+      const userId = token.replace('local-token-', '');
+      const users = readUsers();
+      const user = users.find(u => u.id === userId);
+      
+      if (!user) return next(unauthorized('Invalid local token'));
+      
+      req.user = {
+        id:    user.id,
+        email: user.email,
+        role:  user.role
+      };
+      return next();
+    }
+
     const { data: { user }, error } = await supabase.auth.getUser(token);
     if (error || !user) return next(unauthorized('Invalid or expired token'));
 

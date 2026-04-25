@@ -2,14 +2,17 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/AuthContext';
 import { SocketProvider } from './context/SocketContext';
+import { OnboardingProvider } from './context/OnboardingContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ClickSpark from './components/ClickSpark';
+import ScrollToTop from './components/ScrollToTop';
 
 // Pages
 import LandingPage       from './pages/LandingPage';
 import AuthPage          from './pages/AuthPage';
+import OnboardingPage    from './pages/OnboardingPage';
 import CreatorsPage      from './pages/CreatorsPage';
 import BrandsPage        from './pages/BrandsPage';
 import CreatorProfilePage from './pages/CreatorProfilePage';
@@ -49,14 +52,19 @@ function App() {
       <AuthProvider>
         <SocketProvider>
           <Router>
-            <ClickSpark sparkColor="#000000" sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
-              <div className="min-h-screen flex flex-col bg-white text-[#555555]">
-                <Navbar />
+            <ScrollToTop />
+            <OnboardingProvider>
+              <ClickSpark sparkColor="#000000" sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
+                <div className="min-h-screen flex flex-col bg-white text-[#555555]">
+                  <Navbar />
                 <main className="flex-grow">
                   <Routes>
                     {/* Public */}
                     <Route path="/"           element={<LandingPage />} />
                     <Route path="/auth"        element={<AuthPage />} />
+                    <Route path="/onboarding/step-1" element={
+                      <ProtectedRoute requiredRole="creator"><OnboardingPage /></ProtectedRoute>
+                    } />
                     <Route path="/creators"   element={<CreatorsPage />} />
                     <Route path="/brands"     element={<BrandsPage />} />
                     <Route path="/explore"    element={<ExplorePage />} />
@@ -106,10 +114,11 @@ function App() {
                     {/* 404 catch-all */}
                     <Route path="*" element={<NotFoundPage />} />
                   </Routes>
-                </main>
-                <Footer />
-              </div>
-            </ClickSpark>
+                  </main>
+                  <Footer />
+                </div>
+              </ClickSpark>
+            </OnboardingProvider>
           </Router>
         </SocketProvider>
       </AuthProvider>

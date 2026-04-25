@@ -1,210 +1,183 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
+import { useSearchParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
-import { ApiError } from '../lib/api';
-
+import './agency.css';
+ 
 export default function AuthPage() {
   const [searchParams] = useSearchParams();
   const navigate  = useNavigate();
   const location  = useLocation();
   const { login, register, isLoggedIn, user } = useAuth();
-
+ 
   const initialMode = searchParams.get('mode') === 'register' ? 'register' : 'login';
   const initialRole = searchParams.get('role') === 'brand' ? 'brand' : 'creator';
-
+ 
   const [mode, setMode]     = useState(initialMode);
   const [role, setRole]     = useState(initialRole);
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState('');
   const [loading, setLoading]   = useState(false);
-
-  // Already logged in — send to dashboard
+ 
   useEffect(() => {
-    if (isLoggedIn && user) navigate(`/dashboard/${user.role}`, { replace: true });
-  }, [isLoggedIn, user, navigate]);
-
+    if (isLoggedIn && user) {
+      if (user.role === 'creator' && !user.onboarding_complete) {
+        navigate('/onboarding/step-1', { replace: true });
+      } else {
+        const from = location.state?.from?.pathname || `/dashboard/${user.role}`;
+        navigate(from, { replace: true });
+      }
+    }
+  }, [isLoggedIn, user, navigate, location.state]);
+ 
   useEffect(() => {
     setMode(searchParams.get('mode') === 'register' ? 'register' : 'login');
     if (searchParams.get('role')) setRole(searchParams.get('role'));
   }, [searchParams]);
-
+ 
   const validate = () => {
     const e = {};
-    if (mode === 'register' && !formData.username.trim()) e.username = 'Username is required';
-    if (mode === 'register' && formData.username.length < 3) e.username = 'Minimum 3 characters';
-    if (!formData.email.match(/^\S+@\S+\.\S+$/)) e.email = 'Enter a valid email';
-    if (formData.password.length < 8) e.password = 'Password must be at least 8 characters';
+    if (mode === 'register') {
+      if (!formData.username.trim()) e.username = 'Username is required';
+    }
+    if (!formData.email.trim()) e.email = 'Email/Username is required';
+    if (formData.password.length < 8) e.password = 'Min 8 characters';
     return e;
   };
-
+ 
   const handleChange = (e) => {
     setFormData(p => ({ ...p, [e.target.name]: e.target.value }));
     if (errors[e.target.name]) setErrors(p => ({ ...p, [e.target.name]: '' }));
   };
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setApiError('');
     const validationErrors = validate();
     if (Object.keys(validationErrors).length) { setErrors(validationErrors); return; }
-
+ 
     setLoading(true);
     try {
       if (mode === 'register') {
-        const userData = await register(formData.username, formData.email, formData.password, role);
-        navigate(`/dashboard/${userData.role}`, { replace: true });
+        await register(formData.username, formData.email, formData.password, role);
       } else {
-        const userData = await login(formData.email, formData.password);
-        // Go back to where they came from, or dashboard
-        const from = location.state?.from?.pathname || `/dashboard/${userData.role}`;
-        navigate(from, { replace: true });
+        await login(formData.email, formData.password);
       }
     } catch (err) {
-      setApiError(err instanceof ApiError ? err.message : 'Something went wrong. Please try again.');
+      setApiError(err.message || 'Authentication failed');
     } finally {
       setLoading(false);
     }
   };
-
-  const switchMode = () => {
-    setMode(m => m === 'register' ? 'login' : 'register');
-    setErrors({});
-    setApiError('');
-  };
-
-  const inputClass = (field) =>
-    `w-full border-b py-3 focus:outline-none transition-colors bg-transparent text-black placeholder:text-[#CCC] ${
-      errors[field] ? 'border-red-400' : 'border-[#DDD] focus:border-black'
-    }`;
-
+ 
   return (
-    <>
+    <div className="agency-auth-page">
       <Helmet>
-        <title>Sign In / Join — Driplens</title>
-        <meta name="description" content="Sign In or Join Driplens" />
+        <title>{mode === 'register' ? 'Join' : 'Sign In'} — Driplens</title>
       </Helmet>
-
-      <div className="min-h-[calc(100vh-80px)] flex items-center justify-center py-16 px-4 bg-[#FAFAFA]">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full max-w-md bg-white p-10 border border-[#E5E5E5]"
+ 
+      <div className="auth-left">
+        <Link to="/" style={{ color: 'white', textDecoration: 'none', fontWeight: 900, fontSize: '1.2rem' }}>DRIPLENS</Link>
+        <div>
+          <motion.div 
+            initial={{ x: -50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h1>{mode === 'register' ? 'JOIN THE' : 'BACK TO'}</h1>
+            <h1 className="outline-text" style={{ WebkitTextStroke: '2px white' }}>MOVEMENT</h1>
+          </motion.div>
+        </div>
+        <div style={{ fontSize: '0.8rem', fontWeight: 700, letterSpacing: '2px' }}>
+          THE PROFESSIONAL MERITOCRACY
+        </div>
+      </div>
+ 
+      <div className="auth-right">
+        <motion.div 
+          className="auth-form-wrapper"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
         >
-          {/* Header */}
-          <div className="mb-10">
-            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#999] mb-3">
-              {mode === 'register' ? 'Create Account' : 'Welcome Back'}
-            </p>
-            <h1 className="text-3xl font-bold text-black tracking-tight">
-              {mode === 'register' ? 'Join Driplens' : 'Sign in'}
-            </h1>
+          <h2>{mode === 'register' ? 'CREATE ACCOUNT' : 'WELCOME BACK'}</h2>
+          
+          <div className="auth-tabs">
+            <button className={`auth-tab ${mode === 'login' ? 'active' : ''}`} onClick={() => setMode('login')}>LOGIN</button>
+            <button className={`auth-tab ${mode === 'register' ? 'active' : ''}`} onClick={() => setMode('register')}>REGISTER</button>
           </div>
-
-          {/* Role Selector (register only) */}
-          {mode === 'register' && (
-            <div className="flex gap-3 mb-8">
-              {['creator', 'brand'].map(r => (
-                <button
-                  key={r}
-                  type="button"
-                  onClick={() => setRole(r)}
-                  className={`flex-1 py-3 text-xs font-bold uppercase tracking-widest border transition-all ${
-                    role === r
-                      ? 'bg-black text-white border-black'
-                      : 'bg-white text-[#999] border-[#E5E5E5] hover:border-black hover:text-black'
-                  }`}
-                >
-                  {r === 'creator' ? '🎨 Creator' : '🏢 Brand'}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* API Error */}
-          {apiError && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 text-sm">
-              {apiError}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+ 
+          {apiError && <div style={{ color: 'red', fontWeight: 700, marginBottom: '1rem', fontSize: '0.8rem' }}>{apiError}</div>}
+ 
+          <form onSubmit={handleSubmit}>
             {mode === 'register' && (
-              <div>
-                <label className="block text-[10px] font-bold uppercase tracking-widest text-[#999] mb-2">
-                  Username
-                </label>
-                <input
-                  name="username"
-                  type="text"
-                  autoComplete="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  placeholder="your_handle"
-                  className={inputClass('username')}
+              <div className="agency-form-group">
+                <label>USERNAME</label>
+                <input 
+                  name="username" 
+                  value={formData.username} 
+                  onChange={handleChange} 
+                  className="agency-input" 
+                  placeholder="handle"
                 />
-                {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username}</p>}
+                {errors.username && <span style={{ color: 'red', fontSize: '10px' }}>{errors.username}</span>}
               </div>
             )}
-
-            <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest text-[#999] mb-2">
-                Email
-              </label>
-              <input
-                name="email"
-                type="email"
-                autoComplete="email"
-                value={formData.email}
-                onChange={handleChange}
+ 
+            <div className="agency-form-group">
+              <label>EMAIL / USERNAME</label>
+              <input 
+                name="email" 
+                value={formData.email} 
+                onChange={handleChange} 
+                className="agency-input" 
                 placeholder="you@example.com"
-                className={inputClass('email')}
               />
-              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+              {errors.email && <span style={{ color: 'red', fontSize: '10px' }}>{errors.email}</span>}
             </div>
-
-            <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest text-[#999] mb-2">
-                Password
-              </label>
-              <input
-                name="password"
-                type="password"
-                autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Minimum 8 characters"
-                className={inputClass('password')}
+ 
+            <div className="agency-form-group">
+              <label>PASSWORD</label>
+              <input 
+                name="password" 
+                type="password" 
+                value={formData.password} 
+                onChange={handleChange} 
+                className="agency-input" 
+                placeholder="********"
               />
-              {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+              {errors.password && <span style={{ color: 'red', fontSize: '10px' }}>{errors.password}</span>}
             </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-black text-white py-4 font-bold text-xs uppercase tracking-[0.2em] hover:bg-black/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-4"
-            >
-              {loading
-                ? <span className="flex items-center justify-center gap-2">
-                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-none animate-spin" />
-                    {mode === 'register' ? 'Creating account...' : 'Signing in...'}
-                  </span>
-                : mode === 'register' ? 'Create Account' : 'Sign In'
-              }
+ 
+            {mode === 'register' && (
+              <div className="agency-form-group">
+                <label>I AM A</label>
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                   <button 
+                    type="button" 
+                    className="agency-btn-book"
+                    onClick={() => setRole('creator')}
+                    style={{ flex: 1, backgroundColor: role === 'creator' ? '#0044ff' : 'white', color: role === 'creator' ? 'white' : 'black' }}
+                   >CREATOR</button>
+                   <button 
+                    type="button" 
+                    className="agency-btn-book"
+                    onClick={() => setRole('brand')}
+                    style={{ flex: 1, backgroundColor: role === 'brand' ? '#0044ff' : 'white', color: role === 'brand' ? 'white' : 'black' }}
+                   >BRAND</button>
+                </div>
+              </div>
+            )}
+ 
+            <button className="agency-btn-submit" disabled={loading} type="submit">
+              {loading ? 'PROCESSING...' : (mode === 'register' ? 'JOIN NOW' : 'SIGN IN')}
             </button>
           </form>
-
-          <p className="text-center text-sm text-[#999] mt-8">
-            {mode === 'register' ? 'Already have an account?' : "Don't have an account?"}{' '}
-            <button onClick={switchMode} className="text-black font-bold hover:underline">
-              {mode === 'register' ? 'Sign in' : 'Sign up'}
-            </button>
-          </p>
         </motion.div>
       </div>
-    </>
+    </div>
   );
 }
+

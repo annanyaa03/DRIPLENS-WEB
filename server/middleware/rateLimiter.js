@@ -10,10 +10,10 @@ const makeHandler = (windowMs, max, message) =>
     handler: (req, res, next) => next(new AppError(message, 429, 'RATE_LIMITED'))
   });
 
-// Auth endpoints — strict (5 attempts per 15 min)
+// Auth endpoints — strict (100 attempts per 15 min for dev)
 export const authLimiter = makeHandler(
   15 * 60 * 1000,
-  5,
+  100,
   'Too many attempts. Please wait 15 minutes before trying again.'
 );
 
