@@ -22,8 +22,15 @@ export default function AuthPage() {
   const [loading, setLoading]   = useState(false);
  
   useEffect(() => {
-    if (isLoggedIn && user) navigate(`/dashboard/${user.role}`, { replace: true });
-  }, [isLoggedIn, user, navigate]);
+    if (isLoggedIn && user) {
+      if (user.role === 'creator' && !user.onboarding_complete) {
+        navigate('/onboarding/step-1', { replace: true });
+      } else {
+        const from = location.state?.from?.pathname || `/dashboard/${user.role}`;
+        navigate(from, { replace: true });
+      }
+    }
+  }, [isLoggedIn, user, navigate, location.state]);
  
   useEffect(() => {
     setMode(searchParams.get('mode') === 'register' ? 'register' : 'login');
@@ -54,12 +61,9 @@ export default function AuthPage() {
     setLoading(true);
     try {
       if (mode === 'register') {
-        const userData = await register(formData.username, formData.email, formData.password, role);
-        navigate(`/dashboard/${userData.role}`, { replace: true });
+        await register(formData.username, formData.email, formData.password, role);
       } else {
-        const userData = await login(formData.email, formData.password);
-        const from = location.state?.from?.pathname || `/dashboard/${userData.role}`;
-        navigate(from, { replace: true });
+        await login(formData.email, formData.password);
       }
     } catch (err) {
       setApiError(err.message || 'Authentication failed');

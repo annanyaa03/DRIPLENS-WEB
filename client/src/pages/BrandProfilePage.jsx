@@ -141,9 +141,14 @@ export default function BrandProfilePage() {
                     </div>
                   </div>
 
-                  <button className="w-full btn-primary mt-10">
-                    Follow Brand Updates
-                  </button>
+                  <div className="mt-10 flex flex-col gap-3">
+                    <Link to="/messages" className="w-full flex items-center justify-center py-4 border border-black text-black font-bold uppercase text-[10px] tracking-widest hover:bg-black hover:text-white transition-colors">
+                      MESSAGE BRAND
+                    </Link>
+                    <button className="w-full btn-primary">
+                      FOLLOW BRAND UPDATES
+                    </button>
+                  </div>
                 </div>
               </div>
 

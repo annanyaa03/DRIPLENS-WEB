@@ -86,12 +86,20 @@ export default function CreatorDashboard() {
             </h1>
             <p className="text-[#555] mb-8 text-sm">Here's what's happening with your profile.</p>
           </div>
-          <Link 
-            to="/edit-profile" 
-            className="btn-primary text-xs py-2 px-4"
-          >
-            ✎ Edit Profile
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link 
+              to="/messages" 
+              className="btn-secondary text-xs py-2 px-4 border border-black rounded-[8px] hover:bg-gray-50 font-bold"
+            >
+              ✉ Messages
+            </Link>
+            <Link 
+              to="/edit-profile" 
+              className="btn-primary text-xs py-2 px-4"
+            >
+              ✎ Edit Profile
+            </Link>
+          </div>
         </div>
 
         {/* Stats */}
