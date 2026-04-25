@@ -152,45 +152,7 @@ export default function LandingPage() {
         </div>
       </section>
  
-      {/* ── Footer ── */}
-      <footer className="agency-footer">
-        <div className="footer-left">
-          <h3>NEWSLETTER</h3>
-          <div className="email-input">
-            <input type="text" placeholder="YOUR EMAIL ADDRESS..." />
-          </div>
-        </div>
- 
-        <div className="footer-center">
-          <div className="footer-col">
-            <h4>PRODUCT</h4>
-            <Link to="/explore">Explore</Link>
-            <Link to="/pricing">Pricing</Link>
-            <Link to="/features">Features</Link>
-          </div>
-          <div className="footer-col">
-            <h4>RESOURCES</h4>
-            <Link to="/documentation">Documenation</Link>
-            <Link to="/support">Support</Link>
-            <Link to="/blog">Blog</Link>
-          </div>
-          <div className="footer-col">
-            <h4>COMPANY</h4>
-            <Link to="/about">About Us</Link>
-            <Link to="/careers">Careers</Link>
-            <Link to="/contact">Contact</Link>
-          </div>
-        </div>
- 
-        <div className="footer-right">
-          <div className="social-sidebar">
-            <a href="#">FB</a>
-            <a href="#">IG</a>
-            <a href="#">TW</a>
-            <a href="#">YT</a>
-          </div>
-        </div>
-      </footer>
+
     </div>
   );
 }

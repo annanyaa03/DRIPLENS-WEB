@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ClickSpark from './components/ClickSpark';
+import ScrollToTop from './components/ScrollToTop';
 
 // Pages
 import LandingPage       from './pages/LandingPage';
@@ -51,6 +52,7 @@ function App() {
       <AuthProvider>
         <SocketProvider>
           <Router>
+            <ScrollToTop />
             <OnboardingProvider>
               <ClickSpark sparkColor="#000000" sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
                 <div className="min-h-screen flex flex-col bg-white text-[#555555]">
