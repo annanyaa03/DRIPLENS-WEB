@@ -9,21 +9,29 @@ import { api } from '../lib/api';
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const CATEGORIES = [
-  { label: 'Cinematography', icon: '🎬' },
-  { label: 'Photography',    icon: '📷' },
-  { label: '3D Motion',      icon: '🌀' },
-  { label: 'Design',         icon: '🎨' },
-  { label: 'Illustration',   icon: '✏️' },
-  { label: 'Animation',      icon: '🎞' },
-  { label: 'Graphic Design', icon: '🖼' },
-  { label: 'VFX',            icon: '✨' },
+  { label: 'Cinematography' },
+  { label: 'Photography' },
+  { label: '3D Motion' },
+  { label: 'Design' },
+  { label: 'Illustration' },
+  { label: 'Animation' },
+  { label: 'Graphic Design' },
+  { label: 'VFX' },
 ];
 
 const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'Twitter', 'Twitch', 'LinkedIn'];
 
 const PLATFORM_ICONS = {
-  Instagram: '📸', TikTok: '🎵', YouTube: '▶️',
-  Twitter: '🐦', Twitch: '🟣', LinkedIn: '💼',
+
+const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'Twitter', 'Twitch', 'LinkedIn'];
+
+const PLATFORM_ICONS = {
+  Instagram: '',
+  TikTok: '',
+  YouTube: '',
+  Twitter: '',
+  Twitch: '',
+  LinkedIn: '',
 };
 
 const WORK_TYPES = [
@@ -32,14 +40,16 @@ const WORK_TYPES = [
 ];
 
 const CATEGORY_TAGS = {
-  Cinematography:  ['cinematic','storytelling','documentary','music video','commercial','short film','colour grading'],
-  Photography:     ['editorial','lifestyle','portrait','product','fashion','street','event','food'],
-  '3D Motion':     ['abstract','product viz','character animation','NFT','VFX','motion graphics','loop art'],
-  Design:          ['brand identity','UI/UX','packaging','typography','poster','logo','system design'],
-  Illustration:    ['editorial','concept art','character design','mural','children\'s book','pattern','storyboard'],
-  Animation:       ['2D','frame-by-frame','explainer','character','logo animation','whiteboard','kinetic type'],
-  'Graphic Design':['social media','ads','infographic','presentation','print','campaign','web banners'],
-  VFX:             ['compositing','green screen','simulation','titles','particle FX','environment build'],
+
+  Cinematography:  ['Cinematic','Storytelling','Documentary','Music Video','Commercial','Short Film','Colour Grading'],
+  Photography:     ['Editorial','Lifestyle','Portrait','Product','Fashion','Street','Event','Food'],
+  '3D Motion':     ['Abstract','Product Viz','Character Animation','NFT','VFX','Motion Graphics','Loop Art'],
+  Design:          ['Brand Identity','UI/UX','Packaging','Typography','Poster','Logo','System Design'],
+  Illustration:    ['Editorial','Concept Art','Character Design','Mural','Children\'s Book','Pattern','Storyboard'],
+  Animation:       ['2D','Frame-by-Frame','Explainer','Character','Logo Animation','Whiteboard','Kinetic Type'],
+  'Graphic Design':['Social Media','Ads','Infographic','Presentation','Print','Campaign','Web Banners'],
+  VFX:             ['Compositing','Green Screen','Simulation','Titles','Particle FX','Environment Build'],
+
 };
 
 const TIER_COLORS = {
@@ -63,15 +73,18 @@ function ProgressBar({ step, total = 5 }) {
 }
 
 function Chip({ label, selected, onClick, icon }) {
+  const [hovered, setHovered] = useState(false);
   return (
     <button
       type="button"
       onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
         padding: '8px 14px',
         borderRadius: 4,
-        border: selected ? '2px solid #000' : '1.5px solid #E5E7EB',
-        background: selected ? '#000' : '#fff',
+        border: selected ? '2px solid #000' : hovered ? '1.5px solid #999' : '1.5px solid transparent',
+        background: selected ? '#000' : 'transparent',
         color: selected ? '#fff' : '#333',
         cursor: 'pointer',
         fontSize: 13,
@@ -89,27 +102,63 @@ function Chip({ label, selected, onClick, icon }) {
   );
 }
 
-function Input({ label, value, onChange, placeholder, type = 'text', maxLength, note }) {
+function Input({ label, value, onChange, placeholder, type = 'text', maxLength, note, tooltip }) {
+  const [showTooltip, setShowTooltip] = useState(false);
+
   return (
     <div style={{ marginBottom: 20 }}>
       <label style={{ display: 'block', fontWeight: 700, fontSize: 11, letterSpacing: 1.2, color: '#555', marginBottom: 6, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase' }}>
         {label}
       </label>
-      <input
-        type={type}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        placeholder={placeholder}
-        maxLength={maxLength}
-        style={{
-          width: '100%', padding: '10px 14px', border: '1.5px solid #E5E7EB',
-          borderRadius: 4, fontSize: 14, fontFamily: 'Poppins, sans-serif',
-          outline: 'none', boxSizing: 'border-box',
-          transition: 'border-color 0.2s',
-        }}
-        onFocus={e => e.target.style.borderColor = '#000'}
-        onBlur={e => e.target.style.borderColor = '#E5E7EB'}
-      />
+      <div style={{ position: 'relative' }}>
+        <input
+          type={type}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          placeholder={placeholder}
+          maxLength={maxLength}
+          style={{
+            width: '100%', padding: '10px 14px', paddingRight: tooltip ? 40 : 14,
+            border: '1.5px solid #E5E7EB',
+            borderRadius: 4, fontSize: 14, fontFamily: 'Poppins, sans-serif',
+            outline: 'none', boxSizing: 'border-box',
+            transition: 'border-color 0.2s',
+            background: '#fff'
+          }}
+          onFocus={e => e.target.style.borderColor = '#000'}
+          onBlur={e => e.target.style.borderColor = '#E5E7EB'}
+        />
+        {tooltip && (
+          <div 
+            style={{ 
+              position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+              display: 'flex', alignItems: 'center' 
+            }}
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+          >
+            <div style={{
+              width: 16, height: 16, borderRadius: '50%', border: '1.2px solid #999',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 10, color: '#999', cursor: 'help', fontWeight: 800
+            }}>?</div>
+            {showTooltip && (
+              <div style={{
+                position: 'absolute', bottom: '100%', right: 0,
+                marginBottom: 8, padding: '8px 12px', background: '#000', color: '#fff',
+                borderRadius: 4, fontSize: 11, width: 200, zIndex: 10,
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)', pointerEvents: 'none'
+              }}>
+                {tooltip}
+                <div style={{
+                  position: 'absolute', top: '100%', right: 3,
+                  borderWidth: '5px', borderStyle: 'solid', borderColor: '#000 transparent transparent transparent'
+                }} />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
       {note && <p style={{ fontSize: 11, color: '#999', marginTop: 4, fontFamily: 'Poppins, sans-serif' }}>{note}</p>}
       {maxLength && <p style={{ fontSize: 10, color: '#bbb', marginTop: 2, textAlign: 'right', fontFamily: 'Poppins, sans-serif' }}>{value?.length || 0}/{maxLength}</p>}
     </div>
@@ -148,7 +197,7 @@ function Step1({ onNext }) {
   return (
     <div>
       <h2 style={{ fontSize: 26, fontWeight: 800, color: '#000', marginBottom: 6, fontFamily: 'Poppins, sans-serif' }}>What kind of creator are you?</h2>
-      <p style={{ color: '#777', fontSize: 13, marginBottom: 28, fontFamily: 'Poppins, sans-serif' }}>This shapes everything on your profile. Pick one.</p>
+      <p style={{ color: '#777', fontSize: 13, marginBottom: 28, fontFamily: 'Poppins, sans-serif' }}>This shapes everything on your profile. Select all that apply.</p>
 
       <Input label="Display Name" value={data.display_name} onChange={v => update({ display_name: v })} placeholder="Your public name" />
       <Input label="One-line tagline" value={data.tagline} onChange={v => update({ tagline: v })} placeholder="Describe your work in one line..." maxLength={80} />
@@ -156,25 +205,107 @@ function Step1({ onNext }) {
       <label style={{ display: 'block', fontWeight: 700, fontSize: 11, letterSpacing: 1.2, color: '#555', marginBottom: 12, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase' }}>Creative Category</label>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, marginBottom: 8 }}>
         {CATEGORIES.map(c => (
-          <Chip key={c.label} label={c.label} icon={c.icon} selected={data.category === c.label} onClick={() => update({ category: c.label, tags: [] })} />
+          <Chip 
+            key={c.label} 
+            label={c.label} 
+            icon={c.icon} 
+            selected={(data.categories || []).includes(c.label)} 
+            onClick={() => {
+              const current = data.categories || [];
+              const next = current.includes(c.label) ? current.filter(x => x !== c.label) : [...current, c.label];
+              update({ categories: next, tags: [] });
+            }} 
+          />
         ))}
       </div>
 
-      <NavButtons onNext={onNext} nextDisabled={!data.category} />
+      <NavButtons onNext={onNext} nextDisabled={!(data.categories && data.categories.length > 0) || !data.display_name?.trim() || !data.tagline?.trim()} />
     </div>
   );
 }
 
+function URLInputRow({ platform, value, onChange }) {
+  const [focused, setFocused] = useState(false);
+  const isValid = value.trim().length > 0 && (value.includes('http') || value.includes(platform.toLowerCase()));
+  const isFilled = value.trim().length > 0;
+
+  return (
+    <motion.div
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: 48, opacity: 1 }}
+      exit={{ height: 0, opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        borderBottom: '1px solid #F0F0F0',
+        overflow: 'hidden',
+        padding: '0 4px',
+      }}
+    >
+      <div style={{
+        width: 100,
+        fontSize: 11,
+        fontWeight: 700,
+        letterSpacing: '0.1em',
+        color: focused ? '#000' : '#999',
+        textTransform: 'uppercase',
+        transition: 'color 0.2s',
+      }}>
+        {platform}
+      </div>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        placeholder={`${platform.toLowerCase()}.com/@username`}
+        style={{
+          flex: 1,
+          border: 'none',
+          outline: 'none',
+          fontSize: 13,
+          color: '#000',
+          fontFamily: 'Poppins, sans-serif',
+          background: 'transparent',
+          padding: '0 12px',
+          fontStyle: isFilled ? 'normal' : 'italic',
+        }}
+      />
+      <div style={{ width: 60, display: 'flex', justifyContent: 'flex-end' }}>
+        {isFilled ? (
+          isValid ? (
+            <span style={{ color: '#22C55E', fontSize: 14 }}>✓</span>
+          ) : (
+            <span style={{ color: '#EF4444', fontSize: 10, fontWeight: 700 }}>!</span>
+          )
+        ) : (
+          <span style={{ color: '#EF4444', fontSize: 10, fontWeight: 700 }}>Required</span>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
 function Step2({ onNext, onBack }) {
-  const { data, update, audienceTier } = useOnboarding();
+  const { data, update } = useOnboarding();
 
   const togglePlatform = (p) => {
     const next = data.platforms.includes(p) ? data.platforms.filter(x => x !== p) : [...data.platforms, p];
-    const primary = next.length === 1 ? next[0] : (next.includes(data.primary_platform) ? data.primary_platform : '');
-    update({ platforms: next, primary_platform: primary });
+    const nextUrls = { ...data.platform_urls };
+    if (!next.includes(p)) delete nextUrls[p];
+    update({ platforms: next, platform_urls: nextUrls });
   };
 
-  const tierColor = audienceTier ? TIER_COLORS[audienceTier] : null;
+  const updateUrl = (p, url) => {
+    update({ platform_urls: { ...data.platform_urls, [p]: url } });
+  };
+
+  const allUrlsFilled = data.platforms.length > 0 && data.platforms.every(p => {
+    const url = data.platform_urls[p] || '';
+    return url.trim().length > 0 && (url.includes('http') || url.includes(p.toLowerCase()));
+  });
 
   return (
     <div>
@@ -183,48 +314,35 @@ function Step2({ onNext, onBack }) {
 
       <label style={{ display: 'block', fontWeight: 700, fontSize: 11, letterSpacing: 1.2, color: '#555', marginBottom: 12, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase' }}>Active Platforms</label>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 24 }}>
-        {PLATFORMS.map(p => <Chip key={p} label={p} icon={PLATFORM_ICONS[p]} selected={data.platforms.includes(p)} onClick={() => togglePlatform(p)} />)}
+        {PLATFORMS.map(p => <Chip key={p} label={p} selected={data.platforms.includes(p)} onClick={() => togglePlatform(p)} />)}
       </div>
 
-      {data.platforms.length > 1 && (
-        <div style={{ marginBottom: 20 }}>
-          <label style={{ display: 'block', fontWeight: 700, fontSize: 11, letterSpacing: 1.2, color: '#555', marginBottom: 10, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase' }}>Primary Platform</label>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {data.platforms.map(p => <Chip key={p} label={p} icon={PLATFORM_ICONS[p]} selected={data.primary_platform === p} onClick={() => update({ primary_platform: p })} />)}
-          </div>
+      {data.platforms.length > 0 && (
+        <div style={{ marginBottom: 24, borderTop: '1px solid #F0F0F0' }}>
+          <AnimatePresence>
+            {data.platforms.map(p => (
+              <URLInputRow
+                key={p}
+                platform={p}
+                value={data.platform_urls[p] || ''}
+                onChange={(url) => updateUrl(p, url)}
+              />
+            ))}
+          </AnimatePresence>
         </div>
       )}
 
-      <div style={{ marginBottom: 20 }}>
-        <label style={{ display: 'block', fontWeight: 700, fontSize: 11, letterSpacing: 1.2, color: '#555', marginBottom: 6, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase' }}>
-          {data.primary_platform ? `${data.primary_platform} Followers` : 'Follower Count'}
-        </label>
-        <input
-          type="number"
-          value={data.follower_count}
-          onChange={e => update({ follower_count: e.target.value })}
-          placeholder="e.g. 25000"
-          style={{ width: '100%', padding: '10px 14px', border: '1.5px solid #E5E7EB', borderRadius: 4, fontSize: 14, fontFamily: 'Poppins, sans-serif', outline: 'none', boxSizing: 'border-box' }}
-          onFocus={e => e.target.style.borderColor = '#000'}
-          onBlur={e => e.target.style.borderColor = '#E5E7EB'}
-        />
-        {audienceTier && (
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 8, padding: '4px 12px', borderRadius: 20, background: tierColor + '18', border: `1.5px solid ${tierColor}` }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: tierColor }} />
-            <span style={{ fontSize: 12, fontWeight: 700, color: tierColor, fontFamily: 'Poppins, sans-serif' }}>You are a {audienceTier} Creator</span>
-          </div>
-        )}
-      </div>
-
-      <NavButtons onBack={onBack} onNext={onNext} nextDisabled={data.platforms.length === 0} />
+      <NavButtons onBack={onBack} onNext={onNext} nextDisabled={!allUrlsFilled} />
     </div>
   );
 }
 
+
+
 function Step3({ onNext, onBack }) {
   const { data, update } = useOnboarding();
   const [customTag, setCustomTag] = useState('');
-  const suggestedTags = CATEGORY_TAGS[data.category] || [];
+  const suggestedTags = Array.from(new Set((data.categories || []).flatMap(c => CATEGORY_TAGS[c] || [])));
 
   const toggleTag = (t) => {
     const next = data.tags.includes(t) ? data.tags.filter(x => x !== t) : [...data.tags, t];
@@ -279,7 +397,7 @@ function Step3({ onNext, onBack }) {
         />
       ))}
 
-      <NavButtons onBack={onBack} onNext={onNext} />
+      <NavButtons onBack={onBack} onNext={onNext} nextDisabled={data.tags.length === 0 || !data.qualifications.some(q => q.trim()) || !data.past_work.some(p => p.trim())} />
     </div>
   );
 }
@@ -366,7 +484,7 @@ function Step4({ onNext, onBack }) {
 
       <p style={{ fontSize: 11, color: '#999', fontFamily: 'Poppins, sans-serif', marginTop: 16, fontStyle: 'italic' }}>You can change all of this anytime from your dashboard.</p>
 
-      <NavButtons onBack={onBack} onNext={onNext} />
+      <NavButtons onBack={onBack} onNext={onNext} nextDisabled={!data.min_budget || !data.max_budget || data.preferred_work_type.length === 0} />
     </div>
   );
 }
@@ -403,7 +521,7 @@ function Step5({ onBack, onSubmit, loading }) {
         >
           {data.avatar_url
             ? <img src={data.avatar_url} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            : <span style={{ fontSize: 28 }}>📷</span>
+            : <span style={{ fontSize: 14, color: '#999', fontFamily: 'Poppins, sans-serif' }}>Upload</span>
           }
         </div>
         <div>
@@ -436,9 +554,15 @@ function Step5({ onBack, onSubmit, loading }) {
         <p style={{ fontSize: 10, color: '#bbb', textAlign: 'right', fontFamily: 'Poppins, sans-serif' }}>{data.bio?.length || 0}/300</p>
       </div>
 
-      <Input label="Portfolio Link (Optional)" value={data.website} onChange={v => update({ website: v })} placeholder="https://yourportfolio.com" />
+      <Input 
+        label="Portfolio Link" 
+        value={data.website} 
+        onChange={v => update({ website: v })} 
+        placeholder="https://yourportfolio.com" 
+        tooltip="A link to your past work helps brands verify your style and expertise."
+      />
 
-      <NavButtons onBack={onBack} onNext={onSubmit} nextLabel="Complete My Profile 🎉" loading={loading} />
+      <NavButtons onBack={onBack} onNext={onSubmit} nextLabel="Complete My Profile" loading={loading} nextDisabled={!data.avatar_url || !data.location?.trim() || !data.bio?.trim() || !data.website?.trim()} />
     </div>
   );
 }
@@ -452,7 +576,7 @@ function Celebration() {
       animate={{ opacity: 1, scale: 1 }}
       style={{ textAlign: 'center', padding: '40px 0' }}
     >
-      <div style={{ fontSize: 64, marginBottom: 16 }}>🎉</div>
+      <div style={{ fontSize: 28, fontWeight: 800, marginBottom: 16, fontFamily: 'Poppins, sans-serif' }}>Done</div>
       <h2 style={{ fontSize: 28, fontWeight: 800, fontFamily: 'Poppins, sans-serif', marginBottom: 8 }}>You're all set!</h2>
       <p style={{ color: '#777', fontFamily: 'Poppins, sans-serif', fontSize: 14 }}>Taking you to your dashboard...</p>
     </motion.div>
@@ -489,9 +613,10 @@ export default function OnboardingPage() {
 
       const payload = {
         display_name:       data.display_name || user?.username,
-        category:           data.category,
+        category:           (data.categories || []).join(','),
         tagline:            data.tagline,
         platforms:          data.platforms,
+        platform_urls:      data.platform_urls,
         primary_platform:   data.primary_platform || data.platforms[0] || '',
         follower_count,
         audience_tier,

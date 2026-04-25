@@ -24,7 +24,8 @@ export const listCreators = async ({
 
   if (category) {
     const cats = category.split(',');
-    query = query.in('category', cats);
+    const orQuery = cats.map(c => `category.ilike.%${c}%`).join(',');
+    query = query.or(orQuery);
   }
   
   if (location) query = query.ilike('location', `%${location}%`);

@@ -82,7 +82,7 @@ export default function CreatorDashboard() {
         <div className="flex justify-between items-start mb-8">
           <div>
             <h1 className="text-3xl font-bold text-black mb-1">
-              Welcome back, {user?.username} 👋
+              Welcome back, {user?.username}
             </h1>
             <p className="text-[#555] mb-8 text-sm">Here's what's happening with your profile.</p>
           </div>

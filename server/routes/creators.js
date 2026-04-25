@@ -17,7 +17,10 @@ router.get('/', async (req, res) => {
       `)
       .eq('role', 'creator');
 
-    if (category) query = query.eq('category', category);
+    if (category) {
+      const cats = category.split(',');
+      query = query.or(cats.map(c => `category.ilike.%${c}%`).join(','));
+    }
     if (location) query = query.ilike('location', `%${location}%`);
     if (search)   query = query.ilike('username', `%${search}%`);
 

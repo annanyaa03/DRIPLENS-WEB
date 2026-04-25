@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const listCreatorsSchema = z.object({
-  category:   z.string().max(50).optional(),
+  category:   z.string().max(200).optional(),
   location:   z.string().max(100).optional(),
   search:     z.string().max(100).optional(),
   minBudget:  z.coerce.number().optional(),
@@ -18,7 +18,7 @@ export const listCreatorsSchema = z.object({
 export const updateProfileSchema = z.object({
   bio:           z.string().max(500).optional(),
   location:      z.string().max(100).optional(),
-  category:      z.string().max(50).optional(),
+  category:      z.string().max(200).optional(),
   avatar_url:    z.string().url().optional(),
   banner_url:    z.string().url().optional(),
   instagram:     z.string().max(50).optional(),

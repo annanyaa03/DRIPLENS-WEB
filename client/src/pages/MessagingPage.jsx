@@ -1,15 +1,9 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
 import { Helmet } from 'react-helmet-async';
-
-// ─── Status badge colour helper ───────────────────────────────────────────────
-function statusClass(status) {
-  if (status === 'Accepted' || status === 'Completed') return 'bg-green-100 text-green-800';
-  if (status === 'Declined') return 'bg-red-100 text-red-800';
-  return 'bg-yellow-100 text-yellow-800';
-}
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function MessagingPage() {
   const { user: currentUser } = useAuth();
@@ -20,14 +14,19 @@ export default function MessagingPage() {
   const [messages,        setMessages]        = useState([]);
   const [newMessage,      setNewMessage]      = useState('');
   const [isOtherTyping,   setIsOtherTyping]   = useState(false);
-  const [presence,        setPresence]        = useState({}); // { userId: 'online' | 'offline' }
-
-  // Mobile view: 'list' | 'chat'
-  const [mobileView, setMobileView] = useState('list');
+  const [presence,        setPresence]        = useState({});
+  const [search,          setSearch]          = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
 
   const messagesEndRef = useRef(null);
   const inputRef       = useRef(null);
   const typingTimeoutRef = useRef(null);
+
+  // ── Debounce Search ───────────────────────────────────────────────────────
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 200);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   // ── Load conversations ────────────────────────────────────────────────────
   useEffect(() => {
@@ -36,7 +35,9 @@ export default function MessagingPage() {
         const data = await api.get('/hiring');
         const reqs = data.data?.requests ?? [];
         setRequests(reqs);
-        if (reqs.length > 0 && !activeRequestId) setActiveRequestId(reqs[0].id);
+        if (reqs.length > 0 && !activeRequestId) {
+          // Don't auto-select on mobile maybe? Actually, spec says "When no conversation selected"
+        }
       } catch (err) {
         console.error('Failed to load conversations:', err);
       }
@@ -53,19 +54,22 @@ export default function MessagingPage() {
         const data = await api.get(`/messages/${activeRequestId}`);
         setMessages(data.data?.messages ?? []);
         
-        // Mark as read when loading
+        // Mark as read
         if (socket) {
           const req = requests.find(r => r.id === activeRequestId);
           const otherId = currentUser.role === 'creator' ? req?.brand_id : req?.creator_id;
           socket.emit('message_read', { recipientId: otherId, requestId: activeRequestId });
           await api.patch(`/messages/${activeRequestId}/read`);
+          
+          // Update local unread status if any
+          setRequests(prev => prev.map(r => r.id === activeRequestId ? { ...r, unread_count: 0 } : r));
         }
       } catch (err) {
         console.error('Failed to load messages:', err);
       }
     };
     load();
-  }, [activeRequestId, socket, currentUser.role, requests]);
+  }, [activeRequestId, socket, currentUser?.role, requests]);
 
   useEffect(() => {
     if (!socket) return;
@@ -74,10 +78,12 @@ export default function MessagingPage() {
       if (msg.hiring_request_id === activeRequestId) {
         setMessages(prev => [...prev, msg]);
         
-        // Mark as read immediately if chat is open
         const req = requests.find(r => r.id === activeRequestId);
         const otherId = currentUser.role === 'creator' ? req?.brand_id : req?.creator_id;
         socket.emit('message_read', { recipientId: otherId, requestId: activeRequestId });
+      } else {
+        // Increment unread count for other conversations
+        setRequests(prev => prev.map(r => r.id === msg.hiring_request_id ? { ...r, unread_count: (r.unread_count || 0) + 1 } : r));
       }
     };
 
@@ -99,16 +105,11 @@ export default function MessagingPage() {
       setPresence(prev => ({ ...prev, [userId]: status }));
     };
 
-    const handleHiringUpdate = (updatedReq) => {
-      setRequests(prev => prev.map(r => r.id === updatedReq.id ? updatedReq : r));
-    };
-
     socket.on('receive_message', handleMessage);
     socket.on('user_typing', handleTyping);
     socket.on('user_stop_typing', handleStopTyping);
     socket.on('read_receipt', handleReadReceipt);
     socket.on('presence_update', handlePresence);
-    socket.on('hiring_update', handleHiringUpdate);
 
     return () => {
       socket.off('receive_message', handleMessage);
@@ -116,23 +117,21 @@ export default function MessagingPage() {
       socket.off('user_stop_typing', handleStopTyping);
       socket.off('read_receipt', handleReadReceipt);
       socket.off('presence_update', handlePresence);
-      socket.off('hiring_update', handleHiringUpdate);
     };
-  }, [socket, activeRequestId, requests, currentUser.role]);
+  }, [socket, activeRequestId, requests, currentUser?.role]);
 
-  // ── Auto-scroll to latest message ─────────────────────────────────────────
+  // ── Auto-scroll ───────────────────────────────────────────────────────────
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isOtherTyping]);
 
-  // ── Send ──────────────────────────────────────────────────────────────────
+  // ── Handlers ──────────────────────────────────────────────────────────────
   const sendMessage = async (e) => {
     e.preventDefault();
     const content = newMessage.trim();
     if (!content || !activeRequestId) return;
     setNewMessage('');
     
-    // Stop typing immediately
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
       handleStopTypingEmit();
@@ -140,12 +139,10 @@ export default function MessagingPage() {
 
     try {
       const res = await api.post(`/messages/${activeRequestId}`, { content });
-      // The socket emission happens on backend, but we can optimistically update or wait for socket
-      // To avoid double messages if we listen to our own emits (we don't), we add it here
       setMessages(prev => [...prev, res.data.message]);
     } catch (err) {
       console.error(err);
-      setNewMessage(content); // restore on failure
+      setNewMessage(content);
     }
   };
 
@@ -165,226 +162,227 @@ export default function MessagingPage() {
 
   const handleInputChange = (e) => {
     setNewMessage(e.target.value);
-    
     if (!socket) return;
-
-    if (!typingTimeoutRef.current) {
-      handleTypingEmit();
-    } else {
-      clearTimeout(typingTimeoutRef.current);
-    }
-
+    if (!typingTimeoutRef.current) handleTypingEmit();
+    else clearTimeout(typingTimeoutRef.current);
     typingTimeoutRef.current = setTimeout(() => {
       handleStopTypingEmit();
       typingTimeoutRef.current = null;
     }, 2000);
   };
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
   const getOtherParty = (req) => {
     if (!currentUser) return null;
     return currentUser.role === 'creator' ? req.brand : req.creator;
   };
 
-  const handleSelectConversation = (id) => {
-    setActiveRequestId(id);
-    setMessages([]);
-    setIsOtherTyping(false);
-    setMobileView('chat');
-    setTimeout(() => inputRef.current?.focus(), 100);
-  };
-
-  const handleBack = () => {
-    setMobileView('list');
-  };
+  const filteredRequests = useMemo(() => {
+    if (!debouncedSearch) return requests;
+    const s = debouncedSearch.toLowerCase();
+    return requests.filter(r => {
+      const party = getOtherParty(r);
+      return (party?.username?.toLowerCase().includes(s)) || (r.project_title?.toLowerCase().includes(s));
+    });
+  }, [requests, debouncedSearch, currentUser]);
 
   const activeReq  = requests.find(r => r.id === activeRequestId);
   const otherParty = activeReq ? getOtherParty(activeReq) : null;
   const isOnline   = otherParty && presence[otherParty.id] === 'online';
 
-  // ── Components ────────────────────────────────────────────────────────────
-  const ConversationList = () => (
-    <div className="divide-y divide-gray-100 flex-1 overflow-y-auto">
-      {requests.length === 0 ? (
-        <p className="p-6 text-sm text-gray-400">No conversations yet.</p>
-      ) : (
-        requests.map((r) => {
-          const party    = getOtherParty(r);
-          const isActive = activeRequestId === r.id;
-          const userOnline = party && presence[party.id] === 'online';
-          return (
-            <button
-              key={r.id}
-              onClick={() => handleSelectConversation(r.id)}
-              className={`w-full text-left p-4 transition-colors relative ${
-                isActive ? 'bg-gray-50 border-l-2 border-black' : 'hover:bg-gray-50'
-              }`}
-            >
-              <div className="flex justify-between items-center mb-1">
-                <div className="flex items-center gap-2">
-                  <p className={`font-semibold text-sm ${isActive ? 'text-black' : 'text-gray-800'}`}>
-                    {party?.username ?? 'Unknown'}
-                  </p>
-                  {userOnline && <div className="w-2 h-2 rounded-full bg-green-500" />}
-                </div>
-                <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${statusClass(r.status)}`}>
-                  {r.status}
-                </span>
-              </div>
-              <p className="text-xs text-gray-500 truncate">{r.project_title}</p>
-            </button>
-          );
-        })
-      )}
-    </div>
-  );
+  return (
+    <div style={{ height: 'calc(100vh - 64px)', display: 'flex', background: '#FFF', overflow: 'hidden', fontFamily: 'Inter, sans-serif' }}>
+      <Helmet><title>Messages — Driplens</title></Helmet>
 
-  const ChatPanel = () => (
-    <>
-      {/* Header */}
-      <div className="p-4 border-b border-gray-100 flex items-center gap-3 bg-white flex-shrink-0">
-        <button
-          onClick={handleBack}
-          className="md:hidden flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 transition-colors flex-shrink-0"
-        >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M12 4L6 10L12 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-
-        <div className="relative">
-          {otherParty?.avatar_url ? (
-            <img
-              src={otherParty.avatar_url}
-              alt=""
-              className="w-9 h-9 rounded-full object-cover bg-gray-200 flex-shrink-0"
+      {/* ── Left Sidebar ────────────────────────────────────────────────────── */}
+      <div style={{ width: 320, display: 'flex', flexDirection: 'column', borderRight: '1px solid #E0E0E0' }}>
+        <div style={{ padding: '24px 16px 16px' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', color: '#999', marginBottom: 16 }}>MESSAGES</div>
+          <div style={{ position: 'relative' }}>
+            <input 
+              type="text" 
+              placeholder="Search conversations..." 
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              style={{
+                width: '100%', height: 36, border: '1px solid #E0E0E0', borderRadius: 0,
+                padding: '0 12px', fontSize: 12, outline: 'none', fontStyle: 'italic',
+                color: '#000'
+              }}
             />
+          </div>
+        </div>
+
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          {filteredRequests.length === 0 ? (
+            <div style={{ padding: 40, textAlign: 'center', fontSize: 12, color: '#CCC' }}>
+              {requests.length === 0 ? 'No conversations yet.' : 'No results found.'}
+            </div>
           ) : (
-            <div className="w-9 h-9 rounded-full bg-gray-200 flex-shrink-0" />
-          )}
-          {isOnline && (
-            <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full" />
-          )}
-        </div>
-
-        <div className="min-w-0">
-          <p className="font-poppins font-bold text-black text-sm truncate">
-            {otherParty?.username ?? 'Unknown'}
-            <span className="text-gray-400 font-normal"> · </span>
-            <span className="text-gray-600 font-normal">{activeReq?.project_title}</span>
-          </p>
-          <p className={`text-xs font-medium ${isOnline ? 'text-green-600' : 'text-gray-400'}`}>
-            {isOnline ? 'Online now' : activeReq?.status}
-          </p>
-        </div>
-      </div>
-
-      {/* Messages */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-gray-50">
-        {messages.length === 0 ? (
-          <p className="text-center text-sm text-gray-400 mt-8">No messages yet. Say hello!</p>
-        ) : (
-          messages.map((m, i) => {
-            const isMe = m.sender_id === currentUser?.id;
-            return (
-              <div key={m.id ?? i} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                <div className={`px-4 py-2 max-w-[75%] shadow-sm relative ${
-                  isMe
-                    ? 'bg-black text-white rounded-2xl rounded-tr-sm'
-                    : 'bg-white border border-gray-200 text-black rounded-2xl rounded-tl-sm'
-                }`}>
-                  <p className="text-sm break-words">{m.content}</p>
-                  <div className="flex items-center justify-end gap-1 mt-1">
-                    <p className="text-[10px] text-gray-400">
-                      {m.created_at
-                        ? new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                        : 'Sending…'}
-                    </p>
-                    {isMe && (
-                      <div className="flex">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className={m.is_read ? 'text-blue-400' : 'text-gray-400'}>
-                          <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                          {m.is_read && <path d="M16 6L7 15L2 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" transform="translate(4,0)"/>}
-                        </svg>
-                      </div>
+            filteredRequests.map(r => {
+              const party = getOtherParty(r);
+              const isActive = activeRequestId === r.id;
+              const userOnline = party && presence[party.id] === 'online';
+              const hasUnread = (r.unread_count || 0) > 0;
+              
+              return (
+                <div 
+                  key={r.id} 
+                  onClick={() => setActiveRequestId(r.id)}
+                  style={{
+                    height: 64, padding: '0 16px', display: 'flex', alignItems: 'center', gap: 12,
+                    cursor: 'pointer', borderBottom: '1px solid #F5F5F5', position: 'relative',
+                    background: isActive ? '#F8F8F8' : 'transparent',
+                    transition: 'background 150ms ease'
+                  }}
+                  className="conv-row"
+                >
+                  {isActive && <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 2, background: '#000' }} />}
+                  
+                  <div style={{ position: 'relative', flexShrink: 0 }}>
+                    {party?.avatar_url ? (
+                      <img src={party.avatar_url} style={{ width: 36, height: 36, objectFit: 'cover' }} alt="" />
+                    ) : (
+                      <div style={{ width: 36, height: 36, background: '#F0F0F0' }} />
                     )}
+                    {userOnline && <div style={{ position: 'absolute', top: -2, right: -2, width: 6, height: 6, background: '#22C55E' }} />}
+                  </div>
+
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                      <span style={{ fontSize: 13, fontWeight: hasUnread ? 600 : 500, color: '#000' }}>{party?.username || 'Unknown'}</span>
+                      <span style={{ fontSize: 10, color: '#CCC' }}>12:45 PM</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ fontSize: 12, color: hasUnread ? '#333' : '#999', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {r.project_title}
+                      </div>
+                      {hasUnread && <div style={{ width: 6, height: 6, background: '#000', flexShrink: 0, marginLeft: 8 }} />}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })
-        )}
-        
-        {isOtherTyping && (
-          <div className="flex justify-start">
-            <div className="bg-white border border-gray-200 px-4 py-3 rounded-2xl rounded-tl-sm shadow-sm">
-              <div className="flex gap-1">
-                <div className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" />
-                <div className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]" />
-                <div className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:0.4s]" />
-              </div>
-            </div>
-          </div>
-        )}
-        
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input */}
-      <div className="p-3 border-t border-gray-100 bg-white flex-shrink-0">
-        <form className="flex gap-2" onSubmit={sendMessage}>
-          <input
-            ref={inputRef}
-            type="text"
-            value={newMessage}
-            onChange={handleInputChange}
-            placeholder="Type a message…"
-            className="flex-1 border border-gray-200 rounded-[8px] px-4 py-2.5 text-sm focus:outline-none focus:border-black"
-          />
-          <button
-            type="submit"
-            disabled={!newMessage.trim()}
-            className="btn-primary py-2 px-5 text-sm disabled:opacity-40"
-          >
-            Send
-          </button>
-        </form>
-      </div>
-    </>
-  );
-
-  return (
-    <>
-      <Helmet>
-        <title>Messages — Driplens</title>
-      </Helmet>
-
-      <div className="md:hidden h-[calc(100vh-64px)] flex flex-col bg-white">
-        {mobileView === 'list' ? (
-          <div className="flex flex-col flex-1 overflow-hidden">
-            <h2 className="p-4 border-b border-gray-100 font-poppins font-bold text-xl flex-shrink-0">Messages</h2>
-            <ConversationList />
-          </div>
-        ) : (
-          <div className="flex flex-col flex-1 overflow-hidden">
-            {activeReq ? <ChatPanel /> : <div className="p-10 text-center">Conversation not found</div>}
-          </div>
-        )}
-      </div>
-
-      <div className="hidden md:flex max-w-7xl mx-auto px-4 py-8 h-[calc(100vh-64px)] gap-6">
-        <div className="w-1/3 flex flex-col border border-gray-100 rounded-[8px] bg-white overflow-hidden shadow-sm">
-          <h2 className="p-4 border-b border-gray-100 font-poppins font-bold text-xl flex-shrink-0">Messages</h2>
-          <ConversationList />
-        </div>
-        <div className="flex-1 flex flex-col border border-gray-100 rounded-[8px] bg-white overflow-hidden shadow-sm">
-          {!activeReq ? (
-            <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">Select a conversation to start messaging.</div>
-          ) : (
-            <ChatPanel />
+              );
+            })
           )}
         </div>
       </div>
-    </>
+
+      {/* ── Right Chat Panel ────────────────────────────────────────────────── */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        {!activeReq ? (
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.2em', color: '#CCC' }}>SELECT A CONVERSATION</div>
+          </div>
+        ) : (
+          <>
+            {/* Header */}
+            <div style={{ height: 56, padding: '0 20px', borderBottom: '1px solid #E0E0E0', display: 'flex', alignItems: 'center', gap: 12 }}>
+              {otherParty?.avatar_url ? (
+                <img src={otherParty.avatar_url} style={{ width: 32, height: 32, objectFit: 'cover' }} alt="" />
+              ) : (
+                <div style={{ width: 32, height: 32, background: '#F0F0F0' }} />
+              )}
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 500, color: '#000' }}>{otherParty?.username}</div>
+                <div style={{ fontSize: 11, color: isOnline ? '#22C55E' : '#999' }}>{isOnline ? 'Active now' : 'Away'}</div>
+              </div>
+            </div>
+
+            {/* Messages Area */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+              <AnimatePresence initial={false}>
+                {messages.map((m, i) => {
+                  const isMe = m.sender_id === currentUser?.id;
+                  const isLast = i === messages.length - 1;
+                  return (
+                    <motion.div 
+                      key={m.id || i}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2 }}
+                      style={{ alignSelf: isMe ? 'flex-end' : 'flex-start', maxWidth: '70%' }}
+                    >
+                      <div style={{ 
+                        padding: '10px 14px', 
+                        background: isMe ? '#000' : '#F5F5F5',
+                        color: isMe ? '#FFF' : '#000',
+                        fontSize: 13, lineHeight: 1.5,
+                      }}>
+                        {m.content}
+                      </div>
+                      <div style={{ marginTop: 4, display: 'flex', justifyContent: isMe ? 'flex-end' : 'flex-start', alignItems: 'center', gap: 6 }}>
+                        <span style={{ fontSize: 10, color: '#CCC' }}>
+                          {m.created_at ? new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
+                        </span>
+                        {isMe && isLast && m.is_read && (
+                          <span style={{ fontSize: 10, color: '#CCC' }}>Seen</span>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+
+              {isOtherTyping && (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  style={{ alignSelf: 'flex-start' }}
+                >
+                  <div style={{ display: 'flex', gap: 4, padding: '10px 0' }}>
+                    {[0, 1, 2].map(i => (
+                      <motion.div
+                        key={i}
+                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        transition={{ repeat: Infinity, duration: 1.2, delay: i * 0.2 }}
+                        style={{ width: 4, height: 4, background: '#999' }}
+                      />
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input Bar */}
+            <div style={{ height: 56, borderTop: '1px solid #E0E0E0', display: 'flex', alignItems: 'center', padding: '0 20px', gap: 16 }}>
+              <div style={{ color: '#999', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+              </div>
+              <form onSubmit={sendMessage} style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+                <input 
+                  ref={inputRef}
+                  type="text" 
+                  value={newMessage}
+                  onChange={handleInputChange}
+                  placeholder="Write a message..."
+                  style={{ flex: 1, border: 'none', outline: 'none', fontSize: 13, background: 'transparent' }}
+                />
+                <button 
+                  type="submit" 
+                  disabled={!newMessage.trim()}
+                  style={{ 
+                    background: 'none', border: 'none', padding: '0 0 0 16px',
+                    fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
+                    color: newMessage.trim() ? '#000' : '#CCC',
+                    cursor: newMessage.trim() ? 'pointer' : 'default',
+                    transition: 'color 200ms'
+                  }}
+                >
+                  SEND
+                </button>
+              </form>
+            </div>
+          </>
+        )}
+      </div>
+
+      <style>{`
+        .conv-row:hover { background: #FAFAFA !important; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #EEE; }
+        ::-webkit-scrollbar-thumb:hover { background: #DDD; }
+      `}</style>
+    </div>
   );
 }
