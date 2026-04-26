@@ -21,7 +21,7 @@ const writeUsers = (users) => {
   fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
 };
 
-export const register = async ({ username, email, password, role }) => {
+export const register = async ({ username, email, password, role, display_name, tagline }) => {
   if (isLocalAuth) {
     const users = readUsers();
     if (users.find(u => u.email === email)) throw conflict('Email already in use');
@@ -56,7 +56,13 @@ export const register = async ({ username, email, password, role }) => {
     throw error;
   }
 
-  await supabase.from('profiles').insert({ id: data.user.id, username, role });
+  await supabase.from('profiles').upsert({ 
+    id: data.user.id, 
+    username, 
+    role,
+    display_name,
+    tagline
+  }, { onConflict: 'id' });
 
   const { data: sessionData, error: sessionError } = await supabase.auth.signInWithPassword({ email, password });
   if (sessionError) throw sessionError;

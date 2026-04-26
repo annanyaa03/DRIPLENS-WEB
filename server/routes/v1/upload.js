@@ -56,7 +56,9 @@ router.post(
   }
 );
 
-const paginationSchema = listCreatorsSchema.pick({ page: true, limit: true });
+const paginationSchema = listCreatorsSchema.pick({ page: true, limit: true }).extend({
+  creator_id: z.string().uuid().optional()
+});
 
 router.get('/', apiLimiter, validate(paginationSchema, 'query'), async (req, res, next) => {
   try {
