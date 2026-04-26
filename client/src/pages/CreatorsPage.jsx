@@ -49,7 +49,7 @@ export default function CreatorsPage() {
   const [search,      setSearch]      = useState(searchParams.get('q') || '');
   const [categories,  setCategories]  = useState(searchParams.get('cat')?.split(',').filter(Boolean) || []);
   const [platforms,   setPlatforms]   = useState(searchParams.get('plt')?.split(',').filter(Boolean) || []);
-  const [budget,      setBudget]      = useState([parseInt(searchParams.get('minB')) || 50, parseInt(searchParams.get('maxB')) || 10000]);
+  const [budget,      setBudget]      = useState([parseInt(searchParams.get('minB')) || 0, parseInt(searchParams.get('maxB')) || 10000]);
   const [tier,        setTier]        = useState(searchParams.get('tier') || 'Any');
   const [radius,      setRadius]      = useState(searchParams.get('rad') || 'Nationwide');
   const [available,   setAvailable]   = useState(searchParams.get('avail') === 'true');
@@ -286,7 +286,7 @@ export default function CreatorsPage() {
                         <div className="absolute top-[13px] left-0 h-px bg-black transition-all" style={{ width: `${(budget[1] / 10000) * 100}%` }} />
                       </div>
                       <div className="flex justify-between mt-2">
-                        <span className="text-[9px] font-bold text-gray-300">$50</span>
+                        <span className="text-[9px] font-bold text-gray-300">$0</span>
                         <span className="text-[9px] font-bold text-gray-300">$10,000+</span>
                       </div>
                     </div>
