@@ -635,7 +635,7 @@ export default function OnboardingPage() {
       };
 
       // Save to backend
-      await api.patch(`/creators/${user?.id}`, payload);
+      await api.patch('/creators/profile', payload);
 
       // Update localStorage user object
       const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
