@@ -25,10 +25,10 @@ export const uploadPortfolio = async (userId, file, { title, description, catego
   const filePath = `portfolio/${safeName}`;
 
   const { error: uploadError } = await supabase.storage
-    .from('portfolio-media')
+    .from('DripLens upload')
     .upload(filePath, file.buffer, {
       contentType: file.mimetype,
-      cacheControl: '31536000',   // 1 year — content is immutable once uploaded
+      cacheControl: '31536000',
       upsert: false,
     });
 
@@ -43,7 +43,7 @@ export const uploadPortfolio = async (userId, file, { title, description, catego
   }
 
   const { data: { publicUrl } } = supabase.storage
-    .from('portfolio-media')
+    .from('DripLens upload')
     .getPublicUrl(filePath);
 
   const { data, error: dbError } = await supabase
@@ -62,7 +62,7 @@ export const uploadPortfolio = async (userId, file, { title, description, catego
 
   if (dbError) {
     // Attempt cleanup — don't leave orphaned storage objects on DB failure
-    await supabase.storage.from('portfolio-media').remove([filePath]);
+    await supabase.storage.from('DripLens upload').remove([filePath]);
     throw new AppError(dbError.message || 'Database insert failed', 500, 'DB_INSERT_FAILED');
   }
 
@@ -77,11 +77,11 @@ export const uploadProfileImage = async (userId, file, type) => {
   const filePath = `images/${safeName}`;
 
   const { error: uploadError } = await supabase.storage
-    .from('profiles')
+    .from('DripLens')
     .upload(filePath, file.buffer, {
       contentType: file.mimetype,
-      cacheControl: '3600',   // 1 hour — profile images change more often
-      upsert: true,     // overwrite allowed (user re-uploading avatar)
+      cacheControl: '3600',
+      upsert: true,
     });
 
   // FIX: same AppError wrapping as above
@@ -94,19 +94,27 @@ export const uploadProfileImage = async (userId, file, type) => {
   }
 
   const { data: { publicUrl } } = supabase.storage
-    .from('profiles')
+    .from('DripLens')
     .getPublicUrl(filePath);
 
   return { publicUrl, storagePath: filePath };
 };
 
-export const listPortfolio = async ({ page, limit }) => {
-  const from = (page - 1) * limit;
-  const to = from + limit - 1;
+export const listPortfolio = async ({ page = 1, limit = 10, creator_id }) => {
+  const pageNum = parseInt(page) || 1;
+  const limitNum = parseInt(limit) || 10;
+  const from = (pageNum - 1) * limitNum;
+  const to = from + limitNum - 1;
 
-  const { data, error, count } = await supabase
+  let query = supabase
     .from('portfolio_items')
-    .select('*, author:profiles(username, avatar_url)', { count: 'exact' })
+    .select('*, author:profiles(username, avatar_url)', { count: 'exact' });
+
+  if (creator_id) {
+    query = query.eq('creator_id', creator_id);
+  }
+
+  const { data, error, count } = await query
     .order('created_at', { ascending: false })
     .range(from, to);
 
@@ -114,6 +122,11 @@ export const listPortfolio = async ({ page, limit }) => {
 
   return {
     items: data,
-    pagination: { page, limit, total: count, totalPages: Math.ceil(count / limit) },
+    pagination: { 
+      page: pageNum, 
+      limit: limitNum, 
+      total: count, 
+      totalPages: Math.ceil(count / limitNum) 
+    },
   };
-};
+};
