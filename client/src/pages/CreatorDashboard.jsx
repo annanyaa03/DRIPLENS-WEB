@@ -24,11 +24,13 @@ export default function CreatorDashboard() {
   const [loading, setLoading]     = useState(true);
 
   useEffect(() => {
+    if (!user?.id) return;
+    
     const load = async () => {
       try {
         const [hiringData, uploadData] = await Promise.all([
           api.get('/hiring'),
-          api.get('/upload?limit=10')
+          api.get(`/upload?limit=10&creator_id=${user.id}`)
         ]);
         setRequests(hiringData.data.requests || []);
         setPortfolio(uploadData.data.items || []);
@@ -39,7 +41,7 @@ export default function CreatorDashboard() {
       }
     };
     load();
-  }, []);
+  }, [user?.id]);
  
    const socket = useSocket();
  
@@ -82,7 +84,7 @@ export default function CreatorDashboard() {
         <div className="flex justify-between items-start mb-8">
           <div>
             <h1 className="text-3xl font-bold text-black mb-1">
-              Welcome back, {user?.username}
+              Welcome back, {user?.display_name || user?.username}
             </h1>
             <p className="text-[#555] mb-8 text-sm">Here's what's happening with your profile.</p>
           </div>
@@ -103,10 +105,89 @@ export default function CreatorDashboard() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
           <StatCard label="Portfolio Items" value={portfolio.length} loading={loading} />
           <StatCard label="Pending Inquiries" value={pendingRequests.length} loading={loading} />
           <StatCard label="Active Projects" value={accepted.length} loading={loading} />
+          <StatCard label="Audience Tier" value={user?.audience_tier || 'Nano'} loading={loading} />
+        </div>
+
+        {/* Profile Overview (Added Onboarding Data) */}
+        <div className="driplens-card p-10 mb-12 bg-black text-white border-none relative overflow-hidden">
+          {/* Subtle background decoration */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32" />
+          
+          <div className="relative flex flex-col lg:flex-row gap-10 items-start">
+            <div className="w-32 h-32 rounded-none border-2 border-white/20 overflow-hidden flex-shrink-0 bg-gray-900 group">
+              {user?.avatar_url ? (
+                <img src={user.avatar_url} alt="" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-4xl font-black">{user?.username?.[0]}</div>
+              )}
+            </div>
+            
+            <div className="flex-1">
+              <div className="flex flex-wrap items-center gap-4 mb-3">
+                <h2 className="text-4xl font-black uppercase tracking-tighter">{user?.display_name || user?.username}</h2>
+                <div className="flex gap-2">
+                  {(user?.category?.split(',') || []).map(cat => (
+                    <span key={cat} className="bg-white text-black text-[9px] font-black px-2 py-0.5 uppercase tracking-widest leading-none flex items-center">
+                      {cat}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              
+              <p className="text-gray-400 font-bold mb-4 text-xs uppercase tracking-[0.2em]">{user?.tagline || 'Visual Storyteller'}</p>
+              
+              <div className="flex flex-wrap gap-2 mb-8">
+                {user?.tags?.map(tag => (
+                  <span key={tag} className="text-[10px] border border-white/10 px-2 py-1 text-gray-400 uppercase tracking-widest">#{tag}</span>
+                ))}
+              </div>
+
+              <p className="text-gray-300 max-w-3xl text-sm leading-relaxed mb-10 font-light italic">
+                "{user?.bio || 'Professional creative production and high-impact visual storytelling.'}"
+              </p>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/10 pt-8">
+                <div>
+                  <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.3em] mb-2">Budget Range</p>
+                  <p className="text-base font-bold">${user?.min_budget?.toLocaleString() || 0} — ${user?.max_budget?.toLocaleString() || '10k'}+</p>
+                </div>
+                <div>
+                  <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.3em] mb-2">Base Location</p>
+                  <p className="text-base font-bold">{user?.location || 'Remote'}</p>
+                </div>
+                <div>
+                  <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.3em] mb-2">Total Reach</p>
+                  <p className="text-base font-bold">{user?.follower_count?.toLocaleString() || 0} <span className="text-[10px] text-gray-500">AVG</span></p>
+                </div>
+                <div>
+                  <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.3em] mb-2">Availability</p>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 ${user?.is_available ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+                    <p className="text-base font-bold">{user?.is_available ? 'Open to Work' : 'Booked'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Social Links */}
+              <div className="flex gap-4 mt-8">
+                {user?.platforms?.map(p => (
+                  <a 
+                    key={p} 
+                    href={user?.platform_urls?.[p] || '#'} 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="text-[10px] font-black text-white hover:text-gray-400 transition-colors uppercase tracking-widest border-b border-white pb-1"
+                  >
+                    {p}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
