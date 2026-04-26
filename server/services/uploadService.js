@@ -8,7 +8,8 @@ export const validateFile = (file) => {
   if (!ALLOWED_MIME_TYPES.includes(file.mimetype)) {
     throw new AppError(
       `File type not allowed. Allowed: ${ALLOWED_MIME_TYPES.join(', ')}`,
-      415, 'INVALID_FILE_TYPE'
+      415,
+      'INVALID_FILE_TYPE'
     );
   }
   if (file.size > MAX_FILE_SIZE) {
@@ -19,19 +20,27 @@ export const validateFile = (file) => {
 export const uploadPortfolio = async (userId, file, { title, description, category }) => {
   validateFile(file);
 
-  const ext      = file.originalname.split('.').pop().toLowerCase();
-  const safeName = `${userId}/${uuidv4()}.${ext}`;         // uuid prevents path guessing
+  const ext = file.originalname.split('.').pop().toLowerCase();
+  const safeName = `${userId}/${uuidv4()}.${ext}`;   // UUID prevents path guessing
   const filePath = `portfolio/${safeName}`;
 
   const { error: uploadError } = await supabase.storage
     .from('portfolio-media')
     .upload(filePath, file.buffer, {
-      contentType:  file.mimetype,
-      cacheControl: '31536000',  // 1 year — content is immutable once uploaded
-      upsert:       false
+      contentType: file.mimetype,
+      cacheControl: '31536000',   // 1 year — content is immutable once uploaded
+      upsert: false,
     });
 
-  if (uploadError) throw uploadError;
+  // FIX: wrap raw Supabase storage error in AppError so errorHandler formats it
+  //      consistently instead of leaking the raw Supabase error object to the client
+  if (uploadError) {
+    throw new AppError(
+      uploadError.message || 'Storage upload failed',
+      500,
+      'STORAGE_UPLOAD_FAILED'
+    );
+  }
 
   const { data: { publicUrl } } = supabase.storage
     .from('portfolio-media')
@@ -40,21 +49,21 @@ export const uploadPortfolio = async (userId, file, { title, description, catego
   const { data, error: dbError } = await supabase
     .from('portfolio_items')
     .insert({
-      creator_id:   userId,
+      creator_id: userId,
       title,
-      description:  description || null,
+      description: description || null,
       category,
-      media_url:    publicUrl,
-      media_type:   file.mimetype.startsWith('video') ? 'video' : 'image',
-      storage_path: filePath
+      media_url: publicUrl,
+      media_type: file.mimetype.startsWith('video') ? 'video' : 'image',
+      storage_path: filePath,
     })
     .select()
     .single();
 
   if (dbError) {
-    // Attempt cleanup — don't leave orphaned storage objects
+    // Attempt cleanup — don't leave orphaned storage objects on DB failure
     await supabase.storage.from('portfolio-media').remove([filePath]);
-    throw dbError;
+    throw new AppError(dbError.message || 'Database insert failed', 500, 'DB_INSERT_FAILED');
   }
 
   return data;
@@ -63,19 +72,26 @@ export const uploadPortfolio = async (userId, file, { title, description, catego
 export const uploadProfileImage = async (userId, file, type) => {
   validateFile(file);
 
-  const ext      = file.originalname.split('.').pop().toLowerCase();
+  const ext = file.originalname.split('.').pop().toLowerCase();
   const safeName = `${userId}/${type}_${uuidv4()}.${ext}`;
   const filePath = `images/${safeName}`;
 
   const { error: uploadError } = await supabase.storage
     .from('profiles')
     .upload(filePath, file.buffer, {
-      contentType:  file.mimetype,
-      cacheControl: '3600',  // 1 hour
-      upsert:       true
+      contentType: file.mimetype,
+      cacheControl: '3600',   // 1 hour — profile images change more often
+      upsert: true,     // overwrite allowed (user re-uploading avatar)
     });
 
-  if (uploadError) throw uploadError;
+  // FIX: same AppError wrapping as above
+  if (uploadError) {
+    throw new AppError(
+      uploadError.message || 'Profile image upload failed',
+      500,
+      'STORAGE_UPLOAD_FAILED'
+    );
+  }
 
   const { data: { publicUrl } } = supabase.storage
     .from('profiles')
@@ -86,7 +102,7 @@ export const uploadProfileImage = async (userId, file, type) => {
 
 export const listPortfolio = async ({ page, limit }) => {
   const from = (page - 1) * limit;
-  const to   = from + limit - 1;
+  const to = from + limit - 1;
 
   const { data, error, count } = await supabase
     .from('portfolio_items')
@@ -97,7 +113,7 @@ export const listPortfolio = async ({ page, limit }) => {
   if (error) throw error;
 
   return {
-    items:      data,
-    pagination: { page, limit, total: count, totalPages: Math.ceil(count / limit) }
+    items: data,
+    pagination: { page, limit, total: count, totalPages: Math.ceil(count / limit) },
   };
 };
