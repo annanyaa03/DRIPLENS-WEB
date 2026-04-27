@@ -6,6 +6,7 @@ import { validate } from '../../middleware/validate.js';
 import { uploadMetaSchema } from '../../schemas/uploadSchemas.js';
 import { listCreatorsSchema } from '../../schemas/creatorSchemas.js';
 import * as uploadService from '../../services/uploadService.js';
+import { z } from 'zod';
 
 const router = Router();
 
