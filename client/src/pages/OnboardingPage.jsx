@@ -791,7 +791,7 @@ export default function OnboardingPage() {
           padding: '28px 0 24px',
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16,
         }}>
-          <div style={{ fontWeight: 900, fontSize: 18, letterSpacing: 2, color: '#000' }}>DRIPLENS</div>
+          <div style={{ fontWeight: 900, fontSize: 18, letterSpacing: 2, color: '#0540F2' }}>DRIPLENS</div>
           {!done && (
             <>
               <ProgressBar step={step} />
