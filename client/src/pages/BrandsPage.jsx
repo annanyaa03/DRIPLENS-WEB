@@ -12,22 +12,22 @@ export default function BrandsPage() {
       </Helmet>
       <div className="mb-24 px-4 md:px-0">
         <motion.div
-           initial={{ opacity: 0, x: -20 }}
-           animate={{ opacity: 1, x: 0 }}
-           className="flex items-center gap-4 mb-8"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-4 mb-8"
         >
           <div className="w-16 h-px bg-black"></div>
           <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-black">Active Briefs</p>
         </motion.div>
-        
-        <motion.h1 
+
+        <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-6xl md:text-8xl font-bold text-black mb-8 tracking-tighter"
         >
           Brand Opportunities
         </motion.h1>
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
@@ -39,7 +39,7 @@ export default function BrandsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {brands.map((brand, i) => (
-          <motion.div 
+          <motion.div
             key={brand.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -53,14 +53,14 @@ export default function BrandsPage() {
                   <img src={brand.logo} alt={brand.name} className="w-10 h-10 object-contain" />
                 </div>
                 <div>
-                    <div className="flex items-center gap-2 mb-1">
-                        <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#AAAAAA]">{brand.name}</p>
-                        <div className="p-0.5 bg-blue-500 rounded-none">
-                            <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#AAAAAA]">{brand.name}</p>
+                    <div className="p-0.5 bg-blue-500 rounded-none">
+                      <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
                     </div>
+                  </div>
                   <h3 className="text-xl font-bold text-black group-hover:translate-x-1 transition-transform tracking-tight">
                     {brand.briefs[0].title}
                   </h3>
@@ -70,7 +70,7 @@ export default function BrandsPage() {
                 {brand.briefs[0].type}
               </span>
             </div>
-            
+
             <p className="text-[#666666] text-sm leading-relaxed mb-8 max-w-lg font-light relative z-10">
               {brand.briefs[0].description}
             </p>
@@ -92,7 +92,7 @@ export default function BrandsPage() {
                 SUBMIT <span className="ml-2">→</span>
               </Link>
             </div>
-            
+
           </motion.div>
         ))}
       </div>
