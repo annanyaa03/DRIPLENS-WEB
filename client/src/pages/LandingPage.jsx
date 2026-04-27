@@ -20,7 +20,7 @@ export default function LandingPage() {
       <section className="agency-hero" style={{ position: 'relative' }}>
         <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
           <Aurora
-            colorStops={["#0044ff", "#ff00ff", "#3366ff"]}
+            colorStops={["#0540F2", "#F072F2", "#0554F2"]}
             blend={0.8}
             amplitude={1.2}
           />
