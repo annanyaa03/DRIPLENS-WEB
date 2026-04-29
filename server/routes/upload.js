@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { z } from 'zod';
 import multer from 'multer';
 import { requireAuth, requireRole } from '../../middleware/auth.js';
 import { uploadLimiter, apiLimiter } from '../../middleware/rateLimiter.js';
@@ -60,7 +61,9 @@ router.post(
 );
 
 // GET /api/v1/upload  — paginated public portfolio feed
-const paginationSchema = listCreatorsSchema.pick({ page: true, limit: true });
+const paginationSchema = listCreatorsSchema.pick({ page: true, limit: true }).extend({
+  creator_id: z.string().uuid().optional()
+});
 
 router.get('/', apiLimiter, validate(paginationSchema, 'query'), async (req, res, next) => {
   try {
