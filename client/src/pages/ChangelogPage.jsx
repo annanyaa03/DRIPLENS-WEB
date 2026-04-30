@@ -282,44 +282,6 @@ export default function ChangelogPage() {
         </div>
       </section>
 
-      {/* Subscription CTA Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 border-t border-[#EEEEEE] bg-white">
-        <div className="max-w-4xl mx-auto">
-          <div className="relative overflow-hidden bg-black rounded-none p-8 sm:p-16 text-center">
-            {/* Background Decorative Elements */}
-            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-zinc-800 rounded-none blur-[80px] opacity-50"></div>
-            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-zinc-800 rounded-none blur-[80px] opacity-50"></div>
-
-            <div className="relative z-10">
-              <h3 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-                Never miss an update
-              </h3>
-              <p className="text-zinc-400 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-                Stay informed about new features and improvements. We'll send you a brief summary of what's new once a month.
-              </p>
-              
-              <form className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto" onSubmit={(e) => e.preventDefault()}>
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  required
-                  className="flex-1 px-6 py-4 rounded-none bg-zinc-900 border border-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
-                />
-                <button
-                  type="submit"
-                  className="px-8 py-4 bg-white text-black font-bold rounded-none hover:bg-zinc-100 transition-all duration-300 transform active:scale-95"
-                >
-                  Subscribe
-                </button>
-              </form>
-              
-              <p className="mt-6 text-zinc-500 text-xs">
-                No spam, ever. Unsubscribe at any time.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Footer Navigation */}
       <div className="py-12 text-center bg-[#FAFAFA]">

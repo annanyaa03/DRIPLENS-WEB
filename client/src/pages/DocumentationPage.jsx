@@ -321,14 +321,14 @@ export default function DocumentationPage() {
       </section>
 
       {/* Support Section */}
-      <section className="py-24 px-4 bg-gray-950 relative overflow-hidden">
+      <section className="py-24 px-4 bg-white relative overflow-hidden">
         {/* Abstract background blobs */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/5 blur-[100px] rounded-none"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-600/5 blur-[100px] rounded-none"></div>
 
         <div className="max-w-7xl mx-auto relative z-10 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Still need help?</h2>
-          <p className="text-gray-400 text-lg mb-16 max-w-2xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-bold text-black mb-6">Still need help?</h2>
+          <p className="text-gray-600 text-lg mb-16 max-w-2xl mx-auto">
             Our support team is always here to help you solve any issues and get the most out of our platform.
           </p>
           
@@ -362,16 +362,16 @@ export default function DocumentationPage() {
               <motion.div
                 key={i}
                 whileHover={{ y: -5 }}
-                className="p-8 rounded-none bg-white/5 border border-white/10 backdrop-blur-xl group hover:bg-white/10 transition-all"
+                className="p-8 rounded-none bg-gray-50 border border-gray-200 backdrop-blur-xl group hover:bg-gray-100 transition-all"
               >
-                <div className={`w-12 h-12 rounded-none flex items-center justify-center mb-6 bg-white/10 text-white group-hover:scale-110 transition-transform`}>
+                <div className={`w-12 h-12 rounded-none flex items-center justify-center mb-6 bg-gray-200 text-gray-800 group-hover:scale-110 transition-transform`}>
                   {item.icon}
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
-                <p className="text-gray-400 text-sm mb-8 leading-relaxed">{item.desc}</p>
+                <h3 className="text-xl font-bold text-black mb-3">{item.title}</h3>
+                <p className="text-gray-600 text-sm mb-8 leading-relaxed">{item.desc}</p>
                 <a 
                   href={item.href}
-                  className="inline-flex items-center gap-2 text-white font-bold group-hover:gap-3 transition-all"
+                  className="inline-flex items-center gap-2 text-black font-bold group-hover:gap-3 transition-all"
                 >
                   {item.link} <ArrowRight className="w-4 h-4" />
                 </a>
