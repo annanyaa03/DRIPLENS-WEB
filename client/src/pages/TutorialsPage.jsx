@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion, AnimatePresence } from "framer-motion";
+import { PlayCircle, Palette, BarChart2, Link as LinkIcon, Briefcase, Users, Building, Search, Megaphone, TrendingUp, Smartphone, MessageSquare } from "lucide-react";
 
 export default function TutorialsPage() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -15,7 +16,7 @@ export default function TutorialsPage() {
       category: "Creator",
       description: "Learn the basics of setting up your creator profile and getting your first followers.",
       videoUrl: "#",
-      thumbnail: "🎬"
+      thumbnail: <PlayCircle className="w-12 h-12 text-gray-400 group-hover:text-black transition-colors" />
     },
     {
       id: 2,
@@ -25,7 +26,7 @@ export default function TutorialsPage() {
       category: "Creator",
       description: "Strategies to showcase your work and attract more brand partnerships.",
       videoUrl: "#",
-      thumbnail: "🎨"
+      thumbnail: <Palette className="w-12 h-12 text-gray-400 group-hover:text-black transition-colors" />
     },
     {
       id: 3,
@@ -35,7 +36,7 @@ export default function TutorialsPage() {
       category: "Creator",
       description: "Understand your metrics and use them to grow your audience effectively.",
       videoUrl: "#",
-      thumbnail: "📊"
+      thumbnail: <BarChart2 className="w-12 h-12 text-gray-400 group-hover:text-black transition-colors" />
     },
     {
       id: 4,
@@ -45,7 +46,7 @@ export default function TutorialsPage() {
       category: "Creator",
       description: "Step-by-step guide to linking Instagram, TikTok, YouTube and other platforms.",
       videoUrl: "#",
-      thumbnail: "🔗"
+      thumbnail: <LinkIcon className="w-12 h-12 text-gray-400 group-hover:text-black transition-colors" />
     },
     {
       id: 5,
@@ -55,7 +56,7 @@ export default function TutorialsPage() {
       category: "Creator",
       description: "Expert tips on negotiating rates and creating successful brand collaborations.",
       videoUrl: "#",
-      thumbnail: "🤝"
+      thumbnail: <Briefcase className="w-12 h-12 text-gray-400 group-hover:text-black transition-colors" />
     },
     {
       id: 6,
@@ -65,7 +66,7 @@ export default function TutorialsPage() {
       category: "Creator",
       description: "Identify and understand your ideal audience to create more engaging content.",
       videoUrl: "#",
-      thumbnail: "👥"
+      thumbnail: <Users className="w-12 h-12 text-gray-400 group-hover:text-black transition-colors" />
     },
     {
       id: 7,
@@ -75,7 +76,7 @@ export default function TutorialsPage() {
       category: "Brand",
       description: "Complete guide to creating a compelling brand profile on Driplens.",
       videoUrl: "#",
-      thumbnail: "🏢"
+      thumbnail: <Building className="w-12 h-12 text-gray-400 group-hover:text-black transition-colors" />
     },
     {
       id: 8,
@@ -85,7 +86,7 @@ export default function TutorialsPage() {
       category: "Brand",
       description: "Learn advanced search techniques to find creators that match your brand.",
       videoUrl: "#",
-      thumbnail: "🔍"
+      thumbnail: <Search className="w-12 h-12 text-gray-400 group-hover:text-black transition-colors" />
     },
     {
       id: 9,
@@ -95,7 +96,7 @@ export default function TutorialsPage() {
       category: "Brand",
       description: "Best practices for planning and executing influencer marketing campaigns.",
       videoUrl: "#",
-      thumbnail: "📢"
+      thumbnail: <Megaphone className="w-12 h-12 text-gray-400 group-hover:text-black transition-colors" />
     },
     {
       id: 10,
@@ -105,7 +106,7 @@ export default function TutorialsPage() {
       category: "Brand",
       description: "Track and analyze the performance of your influencer partnerships.",
       videoUrl: "#",
-      thumbnail: "📈"
+      thumbnail: <TrendingUp className="w-12 h-12 text-gray-400 group-hover:text-black transition-colors" />
     },
     {
       id: 11,
@@ -115,7 +116,7 @@ export default function TutorialsPage() {
       category: "General",
       description: "Navigate and understand all the metrics in your analytics dashboard.",
       videoUrl: "#",
-      thumbnail: "📱"
+      thumbnail: <Smartphone className="w-12 h-12 text-gray-400 group-hover:text-black transition-colors" />
     },
     {
       id: 12,
@@ -125,7 +126,7 @@ export default function TutorialsPage() {
       category: "General",
       description: "Master the messaging platform for efficient communication.",
       videoUrl: "#",
-      thumbnail: "💬"
+      thumbnail: <MessageSquare className="w-12 h-12 text-gray-400 group-hover:text-black transition-colors" />
     }
   ];
 
@@ -263,7 +264,7 @@ export default function TutorialsPage() {
                   className="group"
                 >
                   <div className="relative aspect-video rounded-none overflow-hidden bg-gray-100 mb-6 group-hover:shadow-xl transition-all duration-500">
-                    <div className="absolute inset-0 flex items-center justify-center text-5xl grayscale group-hover:grayscale-0 transition-all duration-500">
+                    <div className="absolute inset-0 flex items-center justify-center transition-all duration-500">
                       {tutorial.thumbnail}
                     </div>
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500" />
@@ -297,22 +298,22 @@ export default function TutorialsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-black text-white overflow-hidden relative">
-        <div className="absolute top-0 left-0 w-full h-full opacity-10">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-none blur-3xl -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white rounded-none blur-3xl translate-y-1/2 -translate-x-1/2" />
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white text-black overflow-hidden relative border-t border-gray-100">
+        <div className="absolute top-0 left-0 w-full h-full">
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/5 rounded-none blur-[100px] -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/5 rounded-none blur-[100px] translate-y-1/2 -translate-x-1/2" />
         </div>
         
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <h2 className="text-4xl sm:text-5xl font-bold mb-8 tracking-tight">Still have questions?</h2>
-          <p className="text-gray-400 text-xl mb-12">
+          <p className="text-gray-600 text-xl mb-12">
             Our support team is available 24/7 to help you with any issues you might encounter.
           </p>
           <div className="flex flex-wrap justify-center gap-6">
-            <Link to="/contact" className="px-10 py-4 bg-white text-black font-bold rounded-none hover:bg-gray-200 transition-all">
+            <Link to="/contact" className="px-10 py-4 bg-black text-white font-bold rounded-none hover:bg-gray-800 transition-all">
               Contact Support
             </Link>
-            <Link to="/documentation" className="px-10 py-4 border border-white/20 text-white font-bold rounded-none hover:bg-white hover:text-black transition-all">
+            <Link to="/documentation" className="px-10 py-4 border border-black/20 text-black font-bold rounded-none hover:bg-black hover:text-white transition-all">
               Browse Docs
             </Link>
           </div>
