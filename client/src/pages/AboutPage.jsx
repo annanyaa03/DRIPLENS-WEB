@@ -9,27 +9,33 @@ export default function AboutPage() {
 
   const teamMembers = [
     {
-      name: "Sarah Chen",
-      role: "Co-Founder & CEO",
+      name: "Aditi Janugade",
+      role: "Co-Founder",
       bio: "Former influencer marketing director with 10+ years in the creator economy.",
       image: ""
     },
     {
-      name: "Marcus Johnson",
-      role: "Co-Founder & CTO",
+      name: "Annanya Ukey",
+      role: "Co-Founder",
       bio: "Tech entrepreneur who built platforms serving millions of creators.",
       image: ""
     },
     {
-      name: "Jessica Williams",
-      role: "Head of Creator Relations",
+      name: "Ayush Gajbhiye",
+      role: "Co-Founder",
       bio: "Creator advocate with deep relationships across all major platforms.",
       image: ""
     },
     {
-      name: "David Park",
-      role: "VP of Brand Partnerships",
+      name: "Atharv Gadekar",
+      role: "Co-Founder",
       bio: "Marketing strategist with experience at Fortune 500 brands.",
+      image: ""
+    },
+    {
+      name: "Anandi Khandelwal",
+      role: "Co-Founder",
+      bio: "Product visionary dedicated to creating seamless and intuitive user experiences.",
       image: ""
     }
   ];
@@ -112,7 +118,7 @@ export default function AboutPage() {
           <h2 className="text-4xl font-bold text-black mb-12">Our Story</h2>
           <div className="space-y-8 text-[#555555] text-lg leading-relaxed">
             <p>
-              Driplens was founded in 2023 by Sarah Chen and Marcus Johnson, two entrepreneurs who witnessed firsthand the challenges creators face in monetizing their work. Sarah had spent years as an influencer marketing director, watching talented creators struggle with unfair rates and misaligned partnerships. Marcus, a tech innovator, believed technology could solve this problem.
+              Driplens was founded in 2023 by a dedicated team of five entrepreneurs—Aditi, Annanya, Ayush, Atharv, and Anandi—who witnessed firsthand the challenges creators face in monetizing their work. They saw talented creators struggle with unfair rates and misaligned partnerships, and believed technology could solve this problem.
             </p>
             <p>
               Together, they built Driplens as a response to the broken influencer marketing landscape. We created a platform where creators control their narrative, where engagement quality matters more than follower vanity metrics, and where partnerships are built on genuine alignment.
@@ -215,7 +221,7 @@ export default function AboutPage() {
               Bridging the gap between creative passion and professional excellence.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
             {teamMembers.map((member, index) => (
               <div key={index} className="group">
                 <div className="bg-[#F3F3F3] aspect-square rounded-none mb-6 flex items-center justify-center text-8xl grayscale group-hover:grayscale-0 transition-all duration-500">
@@ -227,10 +233,10 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-          <div className="text-center mt-24 p-16 bg-white border border-black rounded-none text-black relative overflow-hidden group hover:bg-black hover:text-white transition-all duration-500">
+          <div className="text-center mt-24 p-16 bg-white border border-gray-200 rounded-none text-black relative overflow-hidden transition-all duration-500">
             <h3 className="text-3xl font-bold mb-6 tracking-tight uppercase">We're always looking for talent</h3>
-            <p className="text-zinc-500 group-hover:text-zinc-400 mb-10 max-w-xl mx-auto text-lg">Interested in helping us build the future of the creator economy? Check out our open roles.</p>
-            <Link to="/careers" className="inline-block px-12 py-5 bg-black text-white group-hover:bg-white group-hover:text-black font-bold rounded-none transition-all uppercase tracking-widest text-xs border border-transparent group-hover:border-white">
+            <p className="text-zinc-500 mb-10 max-w-xl mx-auto text-lg">Interested in helping us build the future of the creator economy? Check out our open roles.</p>
+            <Link to="/careers" className="inline-block px-12 py-5 bg-black text-white hover:bg-zinc-800 font-bold rounded-none transition-all uppercase tracking-widest text-xs border border-transparent">
               View Careers
             </Link>
           </div>
@@ -263,23 +269,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-32 px-4 sm:px-6 lg:px-8 bg-white overflow-hidden relative">
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h2 className="text-5xl sm:text-6xl font-bold text-black mb-8 tracking-tighter">Ready to Join Us?</h2>
-          <p className="text-xl text-[#555555] mb-12 max-w-2xl mx-auto leading-relaxed">
-            Whether you're a creator looking for opportunities or a brand seeking authentic partnerships, Driplens is here for you.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link to="/auth" className="w-full sm:w-auto px-12 py-5 bg-black text-white font-bold rounded-none hover:bg-zinc-800 transition-all transform hover:scale-105 uppercase tracking-widest text-xs">
-              Get Started
-            </Link>
-            <a href="#learn-more" className="w-full sm:w-auto px-12 py-5 border-2 border-black text-black font-bold rounded-none hover:bg-black hover:text-white transition-all transform hover:scale-105 uppercase tracking-widest text-xs">
-              Learn More
-            </a>
-          </div>
-        </div>
-      </section>
+
     </div>
   );
 }

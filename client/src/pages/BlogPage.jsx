@@ -13,103 +13,100 @@ export default function BlogPage() {
   const blogPosts = [
     {
       id: 1,
-      title: "How to Build an Engaged Audience as a Creator",
-      excerpt: "Discover proven strategies for growing your audience organically and building genuine connections with followers. Learn how to leverage storytelling and consistent engagement to create a loyal community.",
-      date: "April 10, 2024",
-      author: "Sarah Chen",
-      authorImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
-      category: "Creator Tips",
-      readTime: "8 min",
-      image: "/images/blog/featured.png",
-      isFeatured: true
-    },
-    {
-      id: 2,
-      title: "The Future of Influencer Marketing in 2024",
-      excerpt: "Explore emerging trends in influencer marketing and what brands should expect this year. From AI-driven campaigns to the rise of micro-communities.",
-      date: "April 8, 2024",
-      author: "Marcus Johnson",
-      authorImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus",
-      category: "Industry Insights",
-      readTime: "10 min",
-      image: "/images/blog/industry-insights.png"
-    },
-    {
-      id: 3,
-      title: "5 Brands That Nailed Influencer Partnerships",
-      excerpt: "Case studies of successful brand-creator collaborations and what made them work. Analysis of campaign ROI and creative execution.",
-      date: "April 5, 2024",
-      author: "Jessica Lee",
-      authorImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jessica",
-      category: "Case Studies",
-      readTime: "12 min",
-      image: "/images/blog/creator-tips.png"
-    },
-    {
-      id: 4,
-      title: "Pricing Your Collaborations: A Creator's Guide",
-      excerpt: "Learn how to determine fair rates for your influencer work and negotiate with brands like a pro. Pricing models explained.",
-      date: "March 28, 2024",
-      author: "Alex Rivera",
-      authorImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex",
-      category: "Creator Tips",
-      readTime: "9 min",
-      image: "/images/blog/creator-tips.png"
-    },
-    {
-      id: 5,
       title: "How Driplens Is Changing Creator-Brand Relationships",
       excerpt: "Inside look at how our platform is revolutionizing the way creators and brands connect, focusing on transparency and merit.",
-      date: "March 25, 2024",
+      date: "April 10, 2024",
       author: "David Park",
       authorImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=David",
       category: "Company News",
       readTime: "6 min",
-      image: "/images/blog/featured.png"
+      image: "https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg",
+      imageAlt: "Professional handshake or business partnership",
+      isFeatured: true
     },
     {
-      id: 6,
+      id: 2,
       title: "The Science Behind Authentic Engagement",
       excerpt: "Understanding what makes content resonate with audiences and how to apply psychological principles to your strategy.",
-      date: "March 22, 2024",
+      date: "April 8, 2024",
       author: "Emma Wilson",
       authorImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emma",
       category: "Industry Insights",
       readTime: "11 min",
-      image: "/images/blog/industry-insights.png"
+      image: "https://images.pexels.com/photos/3183198/pexels-photo-3183198.jpeg",
+      imageAlt: "Team collaborating with laptops and data"
     },
     {
-      id: 7,
+      id: 3,
       title: "Brand Safety: Protecting Your Creator Reputation",
       excerpt: "Best practices for creators to maintain brand alignment and avoid controversial partnerships that could hurt longevity.",
-      date: "March 19, 2024",
+      date: "April 5, 2024",
       author: "Tom Anderson",
       authorImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Tom",
       category: "Creator Tips",
       readTime: "7 min",
-      image: "/images/blog/creator-tips.png"
+      image: "https://images.pexels.com/photos/3184637/pexels-photo-3184637.jpeg",
+      imageAlt: "Professional discussion, contract or compliance theme"
     },
     {
-      id: 8,
+      id: 4,
       title: "The ROI of Micro-Influencers vs Macro-Influencers",
       excerpt: "Data-driven comparison of different influencer tiers and their effectiveness for niche brand conversions.",
-      date: "March 15, 2024",
+      date: "March 28, 2024",
       author: "Rachel Green",
       authorImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Rachel",
       category: "Case Studies",
       readTime: "13 min",
-      image: "/images/blog/industry-insights.png"
+      image: "https://images.pexels.com/photos/3182769/pexels-photo-3182769.jpeg",
+      imageAlt: "Business data analysis and charts"
     },
     {
-      id: 9,
+      id: 5,
       title: "2024 Creator Economy Report",
       excerpt: "Annual industry report with statistics on creator earnings, platform dominance, and emerging growth trends in the ecosystem.",
-      date: "March 12, 2024",
+      date: "March 25, 2024",
       author: "Driplens Team",
       authorImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Driplens",
       category: "Industry Insights",
       readTime: "15 min",
-      image: "/images/blog/featured.png"
+      image: "https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg",
+      imageAlt: "Workspace with reports and charts"
+    },
+    {
+      id: 6,
+      title: "How to Build Long-Term Brand Collaborations",
+      excerpt: "Case studies of successful brand-creator collaborations and what made them work. Discover proven strategies for building genuine connections.",
+      date: "March 22, 2024",
+      author: "Jessica Lee",
+      authorImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jessica",
+      category: "Creator Tips",
+      readTime: "8 min",
+      image: "https://images.pexels.com/photos/3184373/pexels-photo-3184373.jpeg",
+      imageAlt: "Creative team brainstorming"
+    },
+    {
+      id: 7,
+      title: "Top Tools for Influencer Marketing in 2024",
+      excerpt: "Explore the emerging tools and platforms that brands and creators should leverage this year for optimal campaign management.",
+      date: "March 19, 2024",
+      author: "Marcus Johnson",
+      authorImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus",
+      category: "Industry Insights",
+      readTime: "10 min",
+      image: "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg",
+      imageAlt: "Person working on analytics dashboards"
+    },
+    {
+      id: 8,
+      title: "Social Media Trends Shaping Creator Success",
+      excerpt: "Understanding the latest social media trends, algorithm changes, and how to apply these insights to your content strategy.",
+      date: "March 15, 2024",
+      author: "Sarah Chen",
+      authorImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
+      category: "Industry Insights",
+      readTime: "9 min",
+      image: "https://images.pexels.com/photos/3184395/pexels-photo-3184395.jpeg",
+      imageAlt: "Social media communication concept"
     }
   ];
 
@@ -157,8 +154,8 @@ export default function BlogPage() {
           >
             <img 
               src={featuredPost.image} 
-              alt={featuredPost.title}
-              className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
+              alt={featuredPost.imageAlt || featuredPost.title}
+              className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
             
@@ -231,8 +228,8 @@ export default function BlogPage() {
                   <div className="relative aspect-[4/3] rounded-none overflow-hidden mb-6 bg-gray-100">
                     <img 
                       src={post.image} 
-                      alt={post.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      alt={post.imageAlt || post.title}
+                      className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:brightness-105"
                     />
                     <div className="absolute top-4 left-4">
                       <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-none text-[10px] font-bold text-black uppercase tracking-wider shadow-sm">
@@ -299,10 +296,10 @@ export default function BlogPage() {
       </section>
 
       {/* Newsletter */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-zinc-950 relative overflow-hidden">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 relative overflow-hidden border-t border-gray-100">
         {/* Abstract background elements */}
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-blue-500/10 to-transparent blur-3xl opacity-50"></div>
-        <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-tr from-purple-500/10 to-transparent blur-3xl opacity-50"></div>
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-blue-500/5 to-transparent blur-3xl opacity-50"></div>
+        <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-tr from-purple-500/5 to-transparent blur-3xl opacity-50"></div>
         
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <motion.div
@@ -311,8 +308,8 @@ export default function BlogPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Stay ahead of the curve</h2>
-            <p className="text-lg text-gray-400 mb-10 max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-5xl font-bold text-black mb-6 tracking-tight">Stay ahead of the curve</h2>
+            <p className="text-lg text-gray-600 mb-10 max-w-2xl mx-auto">
               Join 5,000+ creators and brands receiving our weekly digest on performance-based influencer marketing.
             </p>
             <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
@@ -320,11 +317,11 @@ export default function BlogPage() {
                 type="email"
                 placeholder="your@email.com"
                 required
-                className="flex-1 px-6 py-4 rounded-none bg-white/5 border border-white/10 text-white placeholder:text-gray-500 focus:outline-none focus:border-white/40 transition-all"
+                className="flex-1 px-6 py-4 rounded-none bg-white border border-gray-200 text-black placeholder:text-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
               />
               <button
                 type="submit"
-                className="px-8 py-4 bg-white text-black font-bold rounded-none hover:bg-gray-200 transition-all active:scale-95 whitespace-nowrap"
+                className="px-8 py-4 bg-black text-white font-bold rounded-none hover:bg-gray-800 transition-all active:scale-95 whitespace-nowrap"
               >
                 Join Newsletter
               </button>
