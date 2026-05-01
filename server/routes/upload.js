@@ -1,116 +1,75 @@
-import express from 'express';
+import { Router } from 'express';
+import { z } from 'zod';
 import multer from 'multer';
-import { requireAuth } from '../middleware/auth.js';
-import { supabase } from '../utils/supabase.js';
+import { requireAuth, requireRole } from '../../middleware/auth.js';
+import { uploadLimiter, apiLimiter } from '../../middleware/rateLimiter.js';
+import { validate } from '../../middleware/validate.js';
+import { uploadMetaSchema } from '../../schemas/uploadSchemas.js';
+import { listCreatorsSchema } from '../../schemas/creatorSchemas.js';
+import * as uploadService from '../../services/uploadService.js';
 
-const router = express.Router();
+const router = Router();
 
-// Configure multer to use memory storage
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-
-// POST /api/upload/portfolio - Upload media and save metadata
-router.post('/portfolio', requireAuth, upload.single('media'), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
-    }
-
-    const { title, description, category } = req.body;
-
-    if (!title || !category) {
-      return res.status(400).json({ message: 'Title and Category are required' });
-    }
-
-    const fileExt = req.file.originalname.split('.').pop();
-    const fileName = `${req.user.id}/${Date.now()}.${fileExt}`;
-    const filePath = `portfolio/${fileName}`;
-
-    // 1. Upload to Supabase Storage
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('portfolio-media')
-      .upload(filePath, req.file.buffer, {
-        contentType: req.file.mimetype,
-        cacheControl: '3600',
-        upsert: false
-      });
-
-    if (uploadError) {
-      console.error('Supabase Storage error:', uploadError);
-      return res.status(500).json({ message: 'Error uploading to storage' });
-    }
-
-    // 2. Get Public URL
-    const { data: { publicUrl } } = supabase.storage
-      .from('portfolio-media')
-      .getPublicUrl(filePath);
-
-    // 3. Save metadata to PostgreSQL
-    const { data: contentData, error: dbError } = await supabase
-      .from('portfolio_items')
-      .insert([
-        {
-          creator_id: req.user.id,
-          title,
-          description,
-          category,
-          media_url: publicUrl,
-          media_type: req.file.mimetype.startsWith('video') ? 'video' : 'image',
-          storage_path: filePath
-        }
-      ])
-      .select()
-      .single();
-
-    if (dbError) {
-      console.error('Supabase DB error:', dbError);
-      return res.status(500).json({ message: 'Error saving metadata' });
-    }
-
-    res.status(200).json({
-      message: 'Upload successful',
-      content: contentData
-    });
-  } catch (error) {
-    console.error('Upload error:', error);
-    res.status(500).json({ message: 'Error processing upload' });
-  }
+// File size limit enforced at multer level — 50MB hard cap
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 50 * 1024 * 1024 },
 });
 
-// GET /api/upload - Fetch content for Explore page with pagination
-router.get('/', async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const from = (page - 1) * limit;
-    const to = from + limit - 1;
-
-    const { data: contents, error, count } = await supabase
-      .from('portfolio_items')
-      .select(`
-        *,
-        author:profiles(username, avatar_url)
-      `, { count: 'exact' })
-      .order('created_at', { ascending: false })
-      .range(from, to);
-
-    if (error) {
-      throw error;
-    }
-    
-    res.status(200).json({
-      items: contents,
-      pagination: {
-        page,
-        limit,
-        totalItems: count,
-        totalPages: Math.ceil(count / limit)
-      }
-    });
-  } catch (error) {
-    console.error('Fetch content error:', error);
-    res.status(500).json({ message: 'Error fetching content' });
+// POST /api/v1/upload/portfolio
+router.post(
+  '/portfolio',
+  requireAuth,
+  requireRole('creator'),
+  uploadLimiter,
+  upload.single('media'),
+  validate(uploadMetaSchema),
+  async (req, res, next) => {
+    try {
+      const item = await uploadService.uploadPortfolio(req.user.id, req.file, req.body);
+      res.status(201).json({ success: true, data: { item } });
+    } catch (err) { next(err); }
   }
+);
+
+// POST /api/v1/upload/avatar
+router.post(
+  '/avatar',
+  requireAuth,
+  uploadLimiter,
+  upload.single('avatar'),
+  async (req, res, next) => {
+    try {
+      const { publicUrl } = await uploadService.uploadProfileImage(req.user.id, req.file, 'avatar');
+      res.json({ success: true, data: { publicUrl } });
+    } catch (err) { next(err); }
+  }
+);
+
+// POST /api/v1/upload/banner
+router.post(
+  '/banner',
+  requireAuth,
+  uploadLimiter,
+  upload.single('banner'),
+  async (req, res, next) => {
+    try {
+      const { publicUrl } = await uploadService.uploadProfileImage(req.user.id, req.file, 'banner');
+      res.json({ success: true, data: { publicUrl } });
+    } catch (err) { next(err); }
+  }
+);
+
+// GET /api/v1/upload  — paginated public portfolio feed
+const paginationSchema = listCreatorsSchema.pick({ page: true, limit: true }).extend({
+  creator_id: z.string().uuid().optional()
+});
+
+router.get('/', apiLimiter, validate(paginationSchema, 'query'), async (req, res, next) => {
+  try {
+    const result = await uploadService.listPortfolio(req.query);
+    res.json({ success: true, data: result });
+  } catch (err) { next(err); }
 });
 
 export default router;

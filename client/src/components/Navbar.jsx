@@ -22,16 +22,16 @@ export default function Navbar() {
   };
 
   const linkClass = ({ isActive }) =>
-    `text-[11px] font-bold uppercase tracking-[0.2em] transition-colors ${isActive ? 'text-black' : 'text-[#999] hover:text-black'
+    `text-[11px] font-bold uppercase tracking-[0.2em] transition-colors ${isActive ? 'text-[var(--color-brand-accent)]' : 'text-[var(--color-brand-body)] opacity-60 hover:opacity-100 hover:text-[var(--color-brand-accent)]'
     }`;
 
   return (
-    <nav className="border-b border-black/5 bg-white/80 backdrop-blur-md sticky top-0 z-[100]">
+    <nav className="border-b border-[var(--color-brand-border)]/10 bg-[var(--color-brand-bg)]/80 backdrop-blur-md sticky top-0 z-[100]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
 
           {/* Logo */}
-          <Link to="/" className="font-heading font-bold text-2xl tracking-tighter text-black uppercase">
+          <Link to="/" className="font-heading font-bold text-2xl tracking-tighter text-[var(--color-brand-accent)] hover:bg-clip-text hover:text-transparent hover:bg-gradient-to-r hover:from-[var(--color-brand-accent)] hover:to-[var(--color-brand-label)] transition-colors uppercase">
             Driplens
           </Link>
 
@@ -47,26 +47,26 @@ export default function Navbar() {
             {isLoggedIn ? (
               <>
                 {user?.role === 'creator' && (
-                  <Link to="/upload" className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#999] hover:text-black transition-colors flex items-center gap-1.5">
+                  <Link to="/upload" className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--color-brand-body)] opacity-60 hover:opacity-100 hover:text-[var(--color-brand-accent)] transition-colors flex items-center gap-1.5">
                     <Upload size={13} /> Upload
                   </Link>
                 )}
-                <Link
-                  to={`/dashboard/${user?.role}`}
-                  className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#999] hover:text-black transition-colors flex items-center gap-1.5"
-                >
-                  <LayoutDashboard size={13} /> Dashboard
-                </Link>
-                <Link to="/messages" className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#999] hover:text-black transition-colors">
+                  <Link
+                    to={`/dashboard/${user?.role}`}
+                    className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--color-brand-body)] opacity-60 hover:opacity-100 hover:text-[var(--color-brand-accent)] transition-colors flex items-center gap-1.5"
+                  >
+                    <LayoutDashboard size={13} /> Dashboard
+                  </Link>
+                <Link to="/messages" className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--color-brand-body)] opacity-60 hover:opacity-100 hover:text-[var(--color-brand-accent)] transition-colors">
                   Messages
                 </Link>
                 <div className="h-4 w-px bg-black/10 mx-1" />
                 {/* User Avatar + Name */}
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center text-xs font-bold uppercase">
+                  <div className="w-8 h-8 bg-[var(--color-brand-accent)] text-white rounded-full flex items-center justify-center text-xs font-bold uppercase">
                     {user?.username?.[0] || user?.email?.[0]}
                   </div>
-                  <span className="text-xs font-bold text-black hidden lg:block">{user?.username}</span>
+                  <span className="text-xs font-bold text-[var(--color-brand-headings)] hidden lg:block">{user?.username}</span>
                 </div>
                 <button
                   onClick={handleLogout}
@@ -77,7 +77,7 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link to="/auth" className="text-[11px] font-bold uppercase tracking-[0.2em] text-black hover:opacity-70 transition-opacity">
+                <Link to="/auth" className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--color-brand-headings)] hover:text-[var(--color-brand-accent)] transition-colors">
                   Log in
                 </Link>
                 <Link to="/auth?mode=register" className="btn-primary py-2.5 px-6">

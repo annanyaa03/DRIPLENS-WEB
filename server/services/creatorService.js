@@ -19,7 +19,7 @@ export const listCreators = async ({
 
   let query = supabase
     .from('profiles')
-    .select('id, username, bio, location, category, avatar_url, min_budget, max_budget, follower_count, platforms, is_available, rating, tags', { count: 'exact' })
+    .select('id, username, bio, location, category, avatar_url, display_name, tagline, min_budget, max_budget, follower_count, platforms, primary_platform, audience_tier, is_available, rating, tags, onboarding_complete', { count: 'exact' })
     .eq('role', 'creator');
 
   if (category) {
@@ -75,7 +75,12 @@ export const getCreator = async (id) => {
   const { data, error } = await supabase
     .from('profiles')
     .select(`
-      id, username, bio, location, category, avatar_url, banner_url, instagram, twitter, website, created_at,
+      id, username, bio, location, category, avatar_url, banner_url,
+      display_name, tagline, primary_platform, audience_tier,
+      min_budget, max_budget, follower_count, platforms,
+      is_available, rating, tags, qualifications, past_work,
+      preferred_work_type, onboarding_complete,
+      instagram, twitter, website, created_at,
       portfolio_items (id, title, media_url, media_type, created_at)
     `)
     .eq('id', id)

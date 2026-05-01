@@ -1,9 +1,19 @@
 import { z } from 'zod';
 
+// Valid creative categories — must stay in sync with:
+//   • OnboardingPage.jsx  CATEGORIES array
+//   • UploadPage.jsx      category <select> options
+//   • EditProfilePage.jsx CATEGORIES array
+//   • portfolio_items.category column (max 50 chars)
+export const ALLOWED_CATEGORIES = [
+  'Cinematography', 'Photography', '3D Motion', 'Design',
+  'Illustration', 'Animation', 'Graphic Design', 'VFX'
+];
+
 export const uploadMetaSchema = z.object({
   title:       z.string().min(1).max(100),
   description: z.string().max(500).optional(),
-  category:    z.string().min(1).max(50)
+  category:    z.enum(ALLOWED_CATEGORIES)
 });
 
 export const ALLOWED_MIME_TYPES = [

@@ -5,25 +5,30 @@ import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { useOnboarding } from '../context/OnboardingContext';
 import { api } from '../lib/api';
+import { supabase } from '../lib/supabase';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const CATEGORIES = [
-  { label: 'Cinematography' },
-  { label: 'Photography' },
-  { label: '3D Motion' },
-  { label: 'Design' },
-  { label: 'Illustration' },
-  { label: 'Animation' },
-  { label: 'Graphic Design' },
-  { label: 'VFX' },
+  { label: 'Cinematography', icon: '🎥' },
+  { label: 'Photography',    icon: '📸' },
+  { label: '3D Motion',      icon: '🧊' },
+  { label: 'Design',         icon: '🎨' },
+  { label: 'Illustration',   icon: '✒️' },
+  { label: 'Animation',      icon: '🎞️' },
+  { label: 'Graphic Design', icon: '📐' },
+  { label: 'VFX',            icon: '💥' },
 ];
 
 const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'Twitter', 'Twitch', 'LinkedIn'];
 
 const PLATFORM_ICONS = {
-  Instagram: '', TikTok: '', YouTube: '',
-  Twitter: '', Twitch: '', LinkedIn: '',
+  Instagram: '',
+  TikTok: '',
+  YouTube: '',
+  Twitter: '',
+  Twitch: '',
+  LinkedIn: '',
 };
 
 const WORK_TYPES = [
@@ -32,6 +37,7 @@ const WORK_TYPES = [
 ];
 
 const CATEGORY_TAGS = {
+
   Cinematography:  ['Cinematic','Storytelling','Documentary','Music Video','Commercial','Short Film','Colour Grading'],
   Photography:     ['Editorial','Lifestyle','Portrait','Product','Fashion','Street','Event','Food'],
   '3D Motion':     ['Abstract','Product Viz','Character Animation','NFT','VFX','Motion Graphics','Loop Art'],
@@ -40,6 +46,7 @@ const CATEGORY_TAGS = {
   Animation:       ['2D','Frame-by-Frame','Explainer','Character','Logo Animation','Whiteboard','Kinetic Type'],
   'Graphic Design':['Social Media','Ads','Infographic','Presentation','Print','Campaign','Web Banners'],
   VFX:             ['Compositing','Green Screen','Simulation','Titles','Particle FX','Environment Build'],
+
 };
 
 const TIER_COLORS = {
@@ -322,7 +329,20 @@ function Step2({ onNext, onBack }) {
         </div>
       )}
 
-      <NavButtons onBack={onBack} onNext={onNext} nextDisabled={!allUrlsFilled} />
+      {allUrlsFilled && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ marginTop: 24 }}>
+          <Input 
+            label="Total Combined Followers" 
+            value={data.follower_count} 
+            onChange={v => update({ follower_count: v })} 
+            placeholder="e.g. 12500" 
+            type="number"
+            tooltip="This helps us calculate your audience tier and attracts brands looking for your reach."
+          />
+        </motion.div>
+      )}
+
+      <NavButtons onBack={onBack} onNext={onNext} nextDisabled={!allUrlsFilled || !data.follower_count} />
     </div>
   );
 }
@@ -480,15 +500,58 @@ function Step4({ onNext, onBack }) {
 }
 
 function Step5({ onBack, onSubmit, loading }) {
+  const { user } = useAuth();
   const { data, update } = useOnboarding();
   const fileRef = useRef();
+  const resumeFileRef = useRef();
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [uploadingResume, setUploadingResume] = useState(false);
 
-  const handleFileChange = (e) => {
+  const uploadFile = async (file, bucket = 'DripLens upload', folder = 'avatars') => {
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+      const filePath = `${user?.id || 'temp'}/${folder}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from(bucket)
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from(bucket)
+        .getPublicUrl(filePath);
+
+      return publicUrl;
+    } catch (error) {
+      console.error('Error uploading file:', error.message);
+      alert('Upload failed: ' + error.message);
+      return null;
+    }
+  };
+
+  const handleAvatarChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => update({ avatar_url: ev.target.result });
-    reader.readAsDataURL(file);
+    
+    setUploadingAvatar(true);
+    const url = await uploadFile(file, 'DripLens', 'avatars');
+    if (url) update({ avatar_url: url });
+    setUploadingAvatar(false);
+  };
+
+  const handleResumeChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploadingResume(true);
+    const url = await uploadFile(file, 'DripLens upload', 'resumes');
+    if (url) update({ website: url });
+    setUploadingResume(false);
   };
 
   return (
@@ -507,8 +570,14 @@ function Step5({ onBack, onSubmit, loading }) {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             background: data.avatar_url ? 'transparent' : '#F9FAFB',
             flexShrink: 0,
+            position: 'relative',
           }}
         >
+          {uploadingAvatar && (
+            <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 5 }}>
+              <div style={{ width: 20, height: 20, border: '2px solid #000', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+            </div>
+          )}
           {data.avatar_url
             ? <img src={data.avatar_url} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             : <span style={{ fontSize: 14, color: '#999', fontFamily: 'Poppins, sans-serif' }}>Upload</span>
@@ -518,13 +587,14 @@ function Step5({ onBack, onSubmit, loading }) {
           <button
             type="button"
             onClick={() => fileRef.current.click()}
-            style={{ padding: '8px 18px', border: '1.5px solid #000', background: '#fff', borderRadius: 4, cursor: 'pointer', fontFamily: 'Poppins, sans-serif', fontSize: 12, fontWeight: 700 }}
+            disabled={uploadingAvatar}
+            style={{ padding: '8px 18px', border: '1.5px solid #000', background: '#fff', borderRadius: 4, cursor: uploadingAvatar ? 'wait' : 'pointer', fontFamily: 'Poppins, sans-serif', fontSize: 12, fontWeight: 700, opacity: uploadingAvatar ? 0.6 : 1 }}
           >
-            {data.avatar_url ? 'Change Photo' : 'Upload Photo'}
+            {uploadingAvatar ? 'Uploading...' : data.avatar_url ? 'Change Photo' : 'Upload Photo'}
           </button>
           <p style={{ fontSize: 11, color: '#999', marginTop: 4, fontFamily: 'Poppins, sans-serif' }}>JPG, PNG or WebP — max 5MB</p>
         </div>
-        <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
+        <input ref={fileRef} type="file" accept="image/*" onChange={handleAvatarChange} style={{ display: 'none' }} />
       </div>
 
       <Input label="Location" value={data.location} onChange={v => update({ location: v })} placeholder="City, Country" />
@@ -544,15 +614,65 @@ function Step5({ onBack, onSubmit, loading }) {
         <p style={{ fontSize: 10, color: '#bbb', textAlign: 'right', fontFamily: 'Poppins, sans-serif' }}>{data.bio?.length || 0}/300</p>
       </div>
 
-      <Input 
-        label="Portfolio Link" 
-        value={data.website} 
-        onChange={v => update({ website: v })} 
-        placeholder="https://yourportfolio.com" 
-        tooltip="A link to your past work helps brands verify your style and expertise."
-      />
+      <div style={{ marginBottom: 20 }}>
+        <label style={{ display: 'block', fontWeight: 700, fontSize: 11, letterSpacing: 1.2, color: '#555', marginBottom: 6, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase' }}>
+          Resume / Portfolio Document
+        </label>
+        <div style={{ display: 'flex', gap: 12 }}>
+          <input
+            readOnly
+            value={data.website || ''}
+            placeholder="No file uploaded"
+            style={{
+              flex: 1, padding: '10px 14px',
+              border: '1.5px solid #E5E7EB',
+              borderRadius: 4, fontSize: 13, fontFamily: 'Poppins, sans-serif',
+              outline: 'none', background: '#F9FAFB', color: '#666'
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => resumeFileRef.current.click()}
+            disabled={uploadingResume}
+            style={{
+              padding: '0 20px', background: '#fff', border: '1.5px solid #000',
+              borderRadius: 4, cursor: 'pointer', fontFamily: 'Poppins, sans-serif',
+              fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap'
+            }}
+          >
+            {uploadingResume ? 'Uploading...' : 'Upload DOC/PDF'}
+          </button>
+        </div>
+        <input 
+          ref={resumeFileRef} 
+          type="file" 
+          accept=".pdf,.doc,.docx" 
+          onChange={handleResumeChange} 
+          style={{ display: 'none' }} 
+        />
+        <p style={{ fontSize: 11, color: '#999', marginTop: 8, fontFamily: 'Poppins, sans-serif' }}>
+          Or paste a link instead:
+        </p>
+        <input 
+          value={data.website} 
+          onChange={e => update({ website: e.target.value })} 
+          placeholder="https://docs.google.com/..." 
+          style={{
+            width: '100%', padding: '10px 14px',
+            border: '1.5px solid #E5E7EB',
+            borderRadius: 4, fontSize: 14, fontFamily: 'Poppins, sans-serif',
+            outline: 'none', boxSizing: 'border-box', marginTop: 4
+          }}
+        />
+      </div>
 
-      <NavButtons onBack={onBack} onNext={onSubmit} nextLabel="Complete My Profile" loading={loading} nextDisabled={!data.avatar_url || !data.location?.trim() || !data.bio?.trim() || !data.website?.trim()} />
+      <NavButtons onBack={onBack} onNext={onSubmit} nextLabel="Complete My Profile" loading={loading} nextDisabled={!data.avatar_url || !data.location?.trim() || !data.bio?.trim() || !data.website?.trim() || uploadingAvatar || uploadingResume} />
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}} />
     </div>
   );
 }
@@ -581,7 +701,7 @@ const STEP_TITLES = [
 
 export default function OnboardingPage() {
   const navigate = useNavigate();
-  const { user, token } = useAuth();
+  const { user, token, updateUser } = useAuth();
   const { data, clear, audienceTier } = useOnboarding();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -621,15 +741,15 @@ export default function OnboardingPage() {
         location:           data.location,
         bio:                data.bio,
         website:            data.website,
+        role:               'creator',
         onboarding_complete: true,
       };
 
       // Save to backend
-      await api.patch(`/creators/${user?.id}`, payload);
+      await api.patch('/creators/profile', payload);
 
-      // Update localStorage user object
-      const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-      localStorage.setItem('user', JSON.stringify({ ...storedUser, onboarding_complete: true, ...payload }));
+      // Update auth context (replaces manual localStorage update)
+      updateUser(payload);
 
       clear();
       setDone(true);
@@ -671,7 +791,7 @@ export default function OnboardingPage() {
           padding: '28px 0 24px',
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16,
         }}>
-          <div style={{ fontWeight: 900, fontSize: 18, letterSpacing: 2, color: '#000' }}>DRIPLENS</div>
+          <div style={{ fontWeight: 900, fontSize: 18, letterSpacing: 2, color: '#0540F2' }}>DRIPLENS</div>
           {!done && (
             <>
               <ProgressBar step={step} />

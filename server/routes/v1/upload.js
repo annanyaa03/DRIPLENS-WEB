@@ -6,6 +6,7 @@ import { validate } from '../../middleware/validate.js';
 import { uploadMetaSchema } from '../../schemas/uploadSchemas.js';
 import { listCreatorsSchema } from '../../schemas/creatorSchemas.js';
 import * as uploadService from '../../services/uploadService.js';
+import { z } from 'zod';
 
 const router = Router();
 
@@ -56,7 +57,9 @@ router.post(
   }
 );
 
-const paginationSchema = listCreatorsSchema.pick({ page: true, limit: true });
+const paginationSchema = listCreatorsSchema.pick({ page: true, limit: true }).extend({
+  creator_id: z.string().uuid().optional()
+});
 
 router.get('/', apiLimiter, validate(paginationSchema, 'query'), async (req, res, next) => {
   try {

@@ -258,5 +258,10 @@ alter publication supabase_realtime add table public.hiring_requests;
 
 -- =============================================================================
 -- Schema complete.
--- Apply RLS policies next: 20240002_rls_policies.sql
+-- Apply migrations in order:
+--   1. 20240001_initial_schema.sql      (this file)
+--   2. 20240002_rls_policies.sql        (row level security)
+--   3. 20240003_add_social_links.sql    (instagram, twitter, website)
+--   4. 20240004_profile_storage.sql     (profiles bucket + storage RLS)
+--   5. 20240005_advanced_filters.sql    (filter columns + onboarding fields)
 -- =============================================================================

@@ -54,11 +54,13 @@ export default function CreatorDashboard() {
   const [loading, setLoading]     = useState(true);
 
   useEffect(() => {
+    if (!user?.id) return;
+    
     const load = async () => {
       try {
         const [hiringData, uploadData] = await Promise.all([
           api.get('/hiring'),
-          api.get('/upload?limit=10')
+          api.get(`/upload?limit=10&creator_id=${user.id}`)
         ]);
         setRequests(hiringData.data.requests || []);
         setPortfolio(uploadData.data.items || []);
@@ -69,7 +71,7 @@ export default function CreatorDashboard() {
       }
     };
     load();
-  }, []);
+  }, [user?.id]);
  
    const socket = useSocket();
  

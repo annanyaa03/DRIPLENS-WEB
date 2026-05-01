@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
 
 const OnboardingContext = createContext(null);
 
@@ -31,6 +32,7 @@ const defaultData = {
 };
 
 export function OnboardingProvider({ children }) {
+  const { user } = useAuth();
   const [data, setData] = useState(() => {
     try {
       const saved = sessionStorage.getItem(STORAGE_KEY);
@@ -39,6 +41,17 @@ export function OnboardingProvider({ children }) {
       return defaultData;
     }
   });
+
+  // If user data exists but onboarding data is empty, pre-fill from user
+  useEffect(() => {
+    if (user && !data.display_name && (user.display_name || user.username)) {
+      setData(prev => ({
+        ...prev,
+        display_name: user.display_name || user.username,
+        tagline: user.tagline || prev.tagline
+      }));
+    }
+  }, [user]);
 
   useEffect(() => {
     try {

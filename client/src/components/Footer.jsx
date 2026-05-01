@@ -4,23 +4,23 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-white py-12 px-4 sm:px-6 lg:px-8">
+    <footer className="bg-[var(--color-brand-bg)] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-white border-t border-[#E5E5E5] pt-24 pb-12">
+        <div className="bg-[var(--color-brand-bg)] border-t border-[var(--color-brand-border)]/20 pt-24 pb-12">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
             {/* Brand Section */}
             <div className="md:col-span-5">
               <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 bg-black flex items-center justify-center text-white font-bold text-xl tracking-tighter">
+                <div className="w-10 h-10 bg-[var(--color-brand-accent)] flex items-center justify-center text-white font-bold text-xl tracking-tighter">
                   D
                 </div>
-                <span className="font-heading font-bold text-2xl tracking-tighter text-black uppercase">Driplens</span>
+                <span className="font-heading font-bold text-2xl tracking-tighter text-[var(--color-brand-accent)] uppercase">Driplens</span>
               </div>
-              <p className="text-[#555555] text-sm leading-relaxed max-w-sm mb-8">
+              <p className="text-[var(--color-brand-body)] text-sm leading-relaxed max-w-sm mb-8">
                 Driplens empowers creators to transform their craft into a professional career through a merit-based portfolio system.
               </p>
-              <div className="flex space-x-5 text-[#555555]">
-                <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors">
+              <div className="flex space-x-5 text-[var(--color-brand-body)]">
+                <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-brand-accent)] transition-colors">
                   <span className="sr-only">X</span>
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.494h2.039L6.486 3.24H4.298l13.311 17.407z"/></svg>
                 </a>
@@ -42,9 +42,9 @@ export default function Footer() {
             {/* Links Sections */}
             <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
               <div>
-                <h4 className="font-heading font-bold text-black mb-6 uppercase tracking-widest text-xs">Product</h4>
-                <ul className="space-y-3 text-sm text-[#555555]">
-                  <li><Link to="/features" className="hover:text-black transition-colors">Features</Link></li>
+                <h4 className="font-heading font-bold text-[var(--color-brand-headings)] mb-6 uppercase tracking-widest text-xs">Product</h4>
+                <ul className="space-y-3 text-sm text-[var(--color-brand-body)]">
+                  <li><Link to="/features" className="hover:text-[var(--color-brand-accent)] transition-colors">Features</Link></li>
                   <li><Link to="/pricing" className="hover:text-black transition-colors">Pricing</Link></li>
                   <li><Link to="/integrations" className="hover:text-black transition-colors">Integrations</Link></li>
                   <li><Link to="/changelog" className="hover:text-black transition-colors">Changelog</Link></li>

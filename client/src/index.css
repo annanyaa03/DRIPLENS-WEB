@@ -1,15 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-bg: #FFFFFF;
-  --color-brand-accent: #000000;
-  --color-brand-headings: #111111;
-  --color-brand-body: #555555;
-  --color-brand-label: #999999;
-  --color-brand-border: #E5E5E5;
+  /* Core Colors - Refined for Premium Feel */
+  --color-brand-bg: #F8F9FA;
+  --color-brand-accent: #0540F2;
+  --color-brand-headings: #020617;
+  --color-brand-body: #334155;
+  --color-brand-label: #F072F2;
+  --color-brand-border: #0540F2;
 
+  /* Typography */
   --font-heading: 'Space Grotesk', sans-serif;
   --font-inter: 'Inter', sans-serif;
+
+  /* Shadows for Depth */
+  --shadow-premium: 0 10px 30px -10px rgba(5, 64, 242, 0.1);
+  --shadow-glow: 0 0 20px rgba(5, 64, 242, 0.15);
 }
 
 @layer base {
@@ -20,6 +26,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.6;
+    transition: background-color 0.4s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -42,29 +49,62 @@
 
 @layer components {
   .driplens-card {
-    @apply bg-white border border-[#E5E5E5] rounded-none;
-    transition: all 0.2s ease;
+    @apply bg-white border border-[#0540F2] rounded-none;
+    box-shadow: 0 0 0 transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .driplens-card:hover {
-    @apply border-black;
+    @apply border-[#F072F2];
+    box-shadow: 10px 10px 0 #F072F2;
+    transform: translate(-4px, -4px);
   }
 
   .btn-primary {
-    @apply bg-black text-white rounded-none font-bold px-6 py-3 uppercase tracking-wider text-sm;
-    transition: all 0.2s ease;
+    @apply relative overflow-hidden bg-[#0540F2] text-white rounded-none font-bold px-8 py-4 uppercase tracking-[0.2em] text-xs;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .btn-primary:hover {
-    @apply opacity-90 -translate-y-[2px];
+    @apply -translate-y-1;
+    background-color: #0332C2;
+    box-shadow: 0 10px 20px -5px rgba(5, 64, 242, 0.3);
+  }
+
+  .btn-primary:active {
+    @apply translate-y-0 shadow-none;
   }
 
   .btn-secondary {
-    @apply bg-white text-black border border-black rounded-none px-6 py-3 font-bold uppercase tracking-wider text-sm;
-    transition: all 0.2s ease;
+    @apply bg-white text-[#0540F2] border-2 border-[#0540F2] rounded-none px-8 py-4 font-bold uppercase tracking-[0.2em] text-xs;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .btn-secondary:hover {
-    @apply bg-black text-white;
+    @apply bg-[#0540F2] text-white;
   }
+
+  .text-gradient {
+    background: linear-gradient(135deg, var(--color-brand-accent), var(--color-brand-label));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-brand-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-border);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-label);
 }
