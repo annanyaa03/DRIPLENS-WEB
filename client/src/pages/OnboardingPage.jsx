@@ -666,7 +666,7 @@ function Step5({ onBack, onSubmit, loading }) {
         />
       </div>
 
-      <NavButtons onBack={onBack} onNext={onSubmit} nextLabel="Complete My Profile" loading={loading} nextDisabled={!data.avatar_url || !data.location?.trim() || !data.bio?.trim() || !data.website?.trim() || uploadingAvatar || uploadingResume} />
+      <NavButtons onBack={onBack} onNext={onSubmit} nextLabel="Complete My Profile" loading={loading} nextDisabled={!data.location?.trim() || !data.bio?.trim() || !data.website?.trim() || uploadingAvatar || uploadingResume} />
 
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes spin {
@@ -740,7 +740,7 @@ export default function OnboardingPage() {
         avatar_url:         data.avatar_url,
         location:           data.location,
         bio:                data.bio,
-        website:            data.website,
+        website:            data.website ? (data.website.startsWith('http') ? data.website : 'https://' + data.website) : '',
         role:               'creator',
         onboarding_complete: true,
       };
