@@ -56,7 +56,7 @@ export default function BrandsPage() {
           <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-black">Active Briefs</p>
         </motion.div>
 
-        <motion.h1
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="max-w-3xl"

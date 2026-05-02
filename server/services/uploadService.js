@@ -2,6 +2,9 @@ import { supabase } from '../utils/supabase.js';
 import { AppError } from '../utils/AppError.js';
 import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE } from '../schemas/uploadSchemas.js';
 import { v4 as uuidv4 } from 'uuid';
+import { env } from '../config/env.js';
+import fs from 'fs';
+import path from 'path';
 
 export const validateFile = (file) => {
   if (!file) throw new AppError('No file uploaded', 400, 'NO_FILE');
@@ -21,8 +24,36 @@ export const uploadPortfolio = async (userId, file, { title, description, catego
   validateFile(file);
 
   const ext = file.originalname.split('.').pop().toLowerCase();
-  const safeName = `${userId}/${uuidv4()}.${ext}`;   // UUID prevents path guessing
+  const safeName = `${userId}_${uuidv4()}.${ext}`;   // UUID prevents path guessing
   const filePath = `portfolio/${safeName}`;
+
+  if (env.SUPABASE_URL.includes('dummy')) {
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+    
+    fs.writeFileSync(path.join(uploadDir, safeName), file.buffer);
+    const publicUrl = `http://localhost:${env.PORT || 5001}/uploads/${safeName}`;
+
+    const dbPath = path.join(process.cwd(), 'portfolio.json');
+    let items = [];
+    if (fs.existsSync(dbPath)) items = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+
+    const newItem = {
+      id: uuidv4(),
+      creator_id: userId,
+      title,
+      description: description || null,
+      category,
+      media_url: publicUrl,
+      media_type: file.mimetype.startsWith('video') ? 'video' : 'image',
+      created_at: new Date().toISOString()
+    };
+    
+    items.push(newItem);
+    fs.writeFileSync(dbPath, JSON.stringify(items, null, 2));
+    
+    return newItem;
+  }
 
   const { error: uploadError } = await supabase.storage
     .from('DripLens upload')
@@ -73,8 +104,16 @@ export const uploadProfileImage = async (userId, file, type) => {
   validateFile(file);
 
   const ext = file.originalname.split('.').pop().toLowerCase();
-  const safeName = `${userId}/${type}_${uuidv4()}.${ext}`;
+  const safeName = `${userId}_${type}_${uuidv4()}.${ext}`;
   const filePath = `images/${safeName}`;
+
+  if (env.SUPABASE_URL.includes('dummy')) {
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+    fs.writeFileSync(path.join(uploadDir, safeName), file.buffer);
+    const publicUrl = `http://localhost:${env.PORT || 5001}/uploads/${safeName}`;
+    return { publicUrl, storagePath: filePath };
+  }
 
   const { error: uploadError } = await supabase.storage
     .from('DripLens')
@@ -105,6 +144,32 @@ export const listPortfolio = async ({ page = 1, limit = 10, creator_id }) => {
   const limitNum = parseInt(limit) || 10;
   const from = (pageNum - 1) * limitNum;
   const to = from + limitNum - 1;
+
+  if (env.SUPABASE_URL.includes('dummy')) {
+    const dbPath = path.join(process.cwd(), 'portfolio.json');
+    let items = [];
+    if (fs.existsSync(dbPath)) items = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+
+    if (creator_id) {
+      items = items.filter(i => i.creator_id === creator_id);
+    }
+    
+    // Sort descending by created_at
+    items.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    const total = items.length;
+    const paginatedItems = items.slice(from, to + 1);
+
+    return {
+      items: paginatedItems,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total: total,
+        totalPages: Math.ceil(total / limitNum)
+      }
+    };
+  }
 
   let query = supabase
     .from('portfolio_items')

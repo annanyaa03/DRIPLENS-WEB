@@ -20,7 +20,7 @@ export const updateProfileSchema = z.object({
   bio:           z.string().max(500).optional(),
   location:      z.string().max(100).optional(),
   category:      z.string().max(200).optional(),
-  avatar_url:    z.string().url().optional(),
+  avatar_url:    z.string().url().or(z.literal('')).optional(),
   banner_url:    z.string().url().or(z.literal('')).optional(),
   // Social links (from 20240003_add_social_links migration)
   instagram:     z.string().max(50).optional(),

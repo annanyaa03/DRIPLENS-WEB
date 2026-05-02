@@ -12,3 +12,5 @@ yarn-error.log*
 
 server/users.json
 server/.env
+server/portfolio.json
+server/public/uploads/
