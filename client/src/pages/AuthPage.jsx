@@ -31,14 +31,16 @@ export default function AuthPage() {
  
   useEffect(() => {
     if (isLoggedIn && user) {
-      if (user.role === 'creator' && !user.onboarding_complete) {
+      // Only redirect to onboarding if we are in registration mode and onboarding is incomplete.
+      // If we are in login mode, we go straight to dashboard even if onboarding is not complete.
+      if (mode === 'register' && user.role === 'creator' && !user.onboarding_complete) {
         navigate('/onboarding/step-1', { replace: true });
       } else {
         const from = location.state?.from?.pathname || `/dashboard/${user.role}`;
         navigate(from, { replace: true });
       }
     }
-  }, [isLoggedIn, user, navigate, location.state]);
+  }, [isLoggedIn, user, mode, navigate, location.state]);
  
   useEffect(() => {
     setMode(searchParams.get('mode') === 'register' ? 'register' : 'login');
