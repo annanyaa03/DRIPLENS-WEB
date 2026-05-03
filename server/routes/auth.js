@@ -27,7 +27,7 @@ const writeUsers = (users) => {
 // Register new user
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password, role } = req.body;
+    const { username, email, password, role, display_name, tagline } = req.body;
 
     if (!username || !email || !password || !role) {
       return res.status(400).json({ message: 'All fields are required' });
@@ -45,7 +45,9 @@ router.post('/register', async (req, res) => {
       username,
       email,
       password, // In a real app, hash this!
-      role
+      role,
+      display_name: display_name || username,
+      tagline: tagline || ''
     };
 
     users.push(newUser);
@@ -60,7 +62,9 @@ router.post('/register', async (req, res) => {
         id: newUser.id,
         username: newUser.username,
         email: newUser.email,
-        role: newUser.role
+        role: newUser.role,
+        display_name: newUser.display_name,
+        tagline: newUser.tagline
       }
     });
   } catch (error) {

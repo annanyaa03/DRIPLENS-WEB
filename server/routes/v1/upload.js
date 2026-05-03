@@ -6,13 +6,14 @@ import { validate } from '../../middleware/validate.js';
 import { uploadMetaSchema } from '../../schemas/uploadSchemas.js';
 import { listCreatorsSchema } from '../../schemas/creatorSchemas.js';
 import * as uploadService from '../../services/uploadService.js';
+import { z } from 'zod';
 
 const router = Router();
 
-// File size limit enforced at multer level — 50MB hard cap
+// File size limit enforced at multer level — 500MB hard cap
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits:  { fileSize: 50 * 1024 * 1024 }
+  limits:  { fileSize: 500 * 1024 * 1024 }
 });
 
 router.post(
@@ -56,7 +57,9 @@ router.post(
   }
 );
 
-const paginationSchema = listCreatorsSchema.pick({ page: true, limit: true });
+const paginationSchema = listCreatorsSchema.pick({ page: true, limit: true }).extend({
+  creator_id: z.string().uuid().optional()
+});
 
 router.get('/', apiLimiter, validate(paginationSchema, 'query'), async (req, res, next) => {
   try {

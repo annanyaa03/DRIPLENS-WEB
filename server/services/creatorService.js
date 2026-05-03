@@ -12,7 +12,7 @@ const FOLLOWER_TIERS = {
 export const listCreators = async ({ 
   category, location, search, minBudget, maxBudget, 
   followerTier, platforms, isAvailable, minRating, tags, 
-  page, limit 
+  page = 1, limit = 50 
 }) => {
   const from = (page - 1) * limit;
   const to   = from + limit - 1;
@@ -22,21 +22,24 @@ export const listCreators = async ({
     .select('id, username, bio, location, category, avatar_url, min_budget, max_budget, follower_count, platforms, is_available, rating, tags', { count: 'exact' })
     .eq('role', 'creator');
 
-  if (category) {
-    const cats = category.split(',');
-    const orQuery = cats.map(c => `category.ilike.%${c}%`).join(',');
-    query = query.or(orQuery);
+  if (category && category.trim()) {
+    const cats = category.split(',').filter(Boolean);
+    if (cats.length > 0) {
+      const orQuery = cats.map(c => `category.ilike.%${c}%`).join(',');
+      query = query.or(orQuery);
+    }
   }
   
-  if (location) query = query.ilike('location', `%${location}%`);
+  if (location && location.trim()) query = query.ilike('location', `%${location}%`);
   
-  if (search) {
+  if (search && search.trim()) {
     // Multi-field search using OR
     query = query.or(`username.ilike.%${search}%,bio.ilike.%${search}%,location.ilike.%${search}%,category.ilike.%${search}%`);
   }
 
-  if (minBudget !== undefined) query = query.gte('max_budget', minBudget);
-  if (maxBudget !== undefined) query = query.lte('min_budget', maxBudget);
+  // Only apply budget filters if they are not the defaults
+  if (minBudget !== undefined && minBudget > 0) query = query.gte('max_budget', minBudget);
+  if (maxBudget !== undefined && maxBudget < 10000) query = query.lte('min_budget', maxBudget);
   
   if (followerTier && followerTier !== 'Any') {
     const range = FOLLOWER_TIERS[followerTier];
@@ -45,17 +48,28 @@ export const listCreators = async ({
     }
   }
 
-  if (platforms) {
-    const pList = platforms.split(',');
-    query = query.contains('platforms', pList);
+  if (platforms && platforms.trim()) {
+    const pList = platforms.split(',').filter(Boolean);
+    if (pList.length > 0) {
+      query = query.contains('platforms', pList);
+    }
   }
 
-  if (isAvailable !== undefined) query = query.eq('is_available', isAvailable);
-  if (minRating !== undefined) query = query.gte('rating', minRating);
+  // Only filter by availability if explicitly requested (true)
+  // If false, it means "don't care", so we don't filter.
+  if (isAvailable === true) {
+    query = query.eq('is_available', true);
+  }
+
+  if (minRating !== undefined && minRating > 0) {
+    query = query.gte('rating', minRating);
+  }
   
-  if (tags) {
-    const tagList = tags.split(',');
-    query = query.overlaps('tags', tagList);
+  if (tags && tags.trim()) {
+    const tagList = tags.split(',').filter(Boolean);
+    if (tagList.length > 0) {
+      query = query.overlaps('tags', tagList);
+    }
   }
 
   const { data, error, count } = await query
@@ -66,7 +80,7 @@ export const listCreators = async ({
   if (error) throw error;
 
   return {
-    creators:   data,
+    creators:   data || [],
     pagination: { page, limit, total: count, totalPages: Math.ceil(count / limit) }
   };
 };
@@ -75,7 +89,10 @@ export const getCreator = async (id) => {
   const { data, error } = await supabase
     .from('profiles')
     .select(`
-      id, username, bio, location, category, avatar_url, banner_url, instagram, twitter, website, created_at,
+      id, username, bio, location, category, avatar_url, banner_url,
+      min_budget, max_budget, follower_count, platforms,
+      is_available, rating, tags,
+      instagram, twitter, website, created_at,
       portfolio_items (id, title, media_url, media_type, created_at)
     `)
     .eq('id', id)

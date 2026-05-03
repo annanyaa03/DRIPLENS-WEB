@@ -117,18 +117,20 @@ export const fetchPixabayContent = async (query = 'creative', page = 1, perPage 
 export const getAllExploreContent = async (query = 'creative', page = 1) => {
   try {
     // Fetch local content first with pagination
-    const localRes = await fetch(`${API_BASE}/api/v1/upload?page=${page}&limit=6`);
+    const localRes = await fetch(`${API_BASE}/api/v1/upload?page=${page}&limit=12`);
     let localData = [];
     if (localRes.ok) {
-      const data = await localRes.json();
-      // Ensure we pull from .items array returned by backend
-      const items = Array.isArray(data) ? data : (data.items || []);
+      const response = await localRes.json();
+      // Backend returns { success: true, data: { items, pagination } }
+      const items = response.data?.items || [];
       localData = items.map(item => ({
         ...item,
         mediaUrl: item.media_url || item.mediaUrl,
         mediaType: item.media_type || item.mediaType,
         source: 'Local'
       }));
+    } else {
+      console.error('Local fetch failed:', localRes.status, localRes.statusText);
     }
 
     // Fetch external content (fetch fewer per page to avoid massive results)

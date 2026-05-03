@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate, useLocation, Link } from 'react-router-do
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
+import { useOnboarding } from '../context/OnboardingContext';
 import './agency.css';
  
 export default function AuthPage() {
@@ -10,27 +11,36 @@ export default function AuthPage() {
   const navigate  = useNavigate();
   const location  = useLocation();
   const { login, register, isLoggedIn, user } = useAuth();
+  const { update: updateOnboarding } = useOnboarding();
  
   const initialMode = searchParams.get('mode') === 'register' ? 'register' : 'login';
   const initialRole = searchParams.get('role') === 'brand' ? 'brand' : 'creator';
  
   const [mode, setMode]     = useState(initialMode);
   const [role, setRole]     = useState(initialRole);
-  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+  const [formData, setFormData] = useState({ 
+    username: '', 
+    email: '', 
+    password: '',
+    display_name: '',
+    tagline: ''
+  });
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState('');
   const [loading, setLoading]   = useState(false);
  
   useEffect(() => {
     if (isLoggedIn && user) {
-      if (user.role === 'creator' && !user.onboarding_complete) {
+      // Only redirect to onboarding if we are in registration mode and onboarding is incomplete.
+      // If we are in login mode, we go straight to dashboard even if onboarding is not complete.
+      if (mode === 'register' && user.role === 'creator' && !user.onboarding_complete) {
         navigate('/onboarding/step-1', { replace: true });
       } else {
         const from = location.state?.from?.pathname || `/dashboard/${user.role}`;
         navigate(from, { replace: true });
       }
     }
-  }, [isLoggedIn, user, navigate, location.state]);
+  }, [isLoggedIn, user, mode, navigate, location.state]);
  
   useEffect(() => {
     setMode(searchParams.get('mode') === 'register' ? 'register' : 'login');
@@ -41,6 +51,7 @@ export default function AuthPage() {
     const e = {};
     if (mode === 'register') {
       if (!formData.username.trim()) e.username = 'Username is required';
+      if (!formData.display_name.trim()) e.display_name = 'Display name is required';
     }
     if (!formData.email.trim()) e.email = 'Email/Username is required';
     if (formData.password.length < 8) e.password = 'Min 8 characters';
@@ -61,7 +72,15 @@ export default function AuthPage() {
     setLoading(true);
     try {
       if (mode === 'register') {
-        await register(formData.username, formData.email, formData.password, role);
+        await register(formData.username, formData.email, formData.password, role, {
+          display_name: formData.display_name,
+          tagline: formData.tagline
+        });
+        // Sync to onboarding draft
+        updateOnboarding({
+          display_name: formData.display_name,
+          tagline: formData.tagline
+        });
       } else {
         await login(formData.email, formData.password);
       }
@@ -137,6 +156,33 @@ export default function AuthPage() {
               />
               {errors.email && <span style={{ color: 'red', fontSize: '10px' }}>{errors.email}</span>}
             </div>
+
+            {mode === 'register' && (
+              <>
+                <div className="agency-form-group">
+                  <label>{role === 'creator' ? 'DISPLAY NAME' : 'BRAND NAME'}</label>
+                  <input 
+                    name="display_name" 
+                    value={formData.display_name} 
+                    onChange={handleChange} 
+                    className="agency-input" 
+                    placeholder={role === 'creator' ? 'Your Public Name' : 'Company Name'}
+                  />
+                  {errors.display_name && <span style={{ color: 'red', fontSize: '10px' }}>{errors.display_name}</span>}
+                </div>
+
+                <div className="agency-form-group">
+                  <label>{role === 'creator' ? 'TAGLINE' : 'BRAND SLOGAN'}</label>
+                  <input 
+                    name="tagline" 
+                    value={formData.tagline} 
+                    onChange={handleChange} 
+                    className="agency-input" 
+                    placeholder={role === 'creator' ? 'Briefly describe what you do' : 'Our Brand Vision'}
+                  />
+                </div>
+              </>
+            )}
  
             <div className="agency-form-group">
               <label>PASSWORD</label>

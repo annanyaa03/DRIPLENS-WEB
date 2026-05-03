@@ -3,17 +3,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
 
 :root {
-  --agency-blue: #0044ff;
-  --agency-blue-light: #3366ff;
-  --agency-black: #0c0c0c;
-  --agency-white: #f8f8f8;
-  --agency-grad-1: #e6e6fa; /* lavender */
+  --agency-blue: var(--color-brand-accent);
+  --agency-blue-light: color-mix(in srgb, var(--color-brand-accent), white 20%);
+  --agency-black: var(--color-brand-headings);
+  --agency-white: var(--color-brand-bg);
+  --agency-grad-1: color-mix(in srgb, var(--color-brand-accent), transparent 90%);
   --agency-border: 1px solid var(--agency-black);
 }
 
 body, html {
-  background-color: var(--agency-white) !important;
-  color: var(--agency-black) !important;
+  background-color: var(--color-brand-bg) !important;
+  color: var(--color-brand-body) !important;
   margin: 0;
   padding: 0;
 }
@@ -359,9 +359,10 @@ body, html {
 
 .cta-text-wrapper h1 {
   font-family: 'Impact', 'Arial Black', sans-serif;
-  font-size: 10rem;
+  font-size: clamp(4rem, 15vw, 10rem);
   margin: 0;
-  line-height: 0.9;
+  line-height: 0.85;
+  letter-spacing: -2px;
 }
 
 .outline-text {
@@ -370,7 +371,8 @@ body, html {
 }
 
 .solid-text {
-  color: var(--agency-black);
+  color: var(--agency-white);
+  text-shadow: 10px 10px 0px rgba(0,0,0,0.2);
 }
 
 .cta-polaroids {

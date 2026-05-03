@@ -12,6 +12,11 @@
 --   • Service-role key (used by the Express server) bypasses RLS entirely,
 --     so application-layer checks (assertParty, requireRole, etc.) are the
 --     second line of defence; RLS is the first.
+--
+-- Column coverage:
+--   • Columns added by later migrations (20240003 social links, 20240005
+--     advanced filters + onboarding) are automatically covered by the
+--     row-level policies below. No per-column RLS changes are needed.
 -- =============================================================================
 
 
@@ -27,6 +32,15 @@ as $$ select auth.role() = 'authenticated' $$;
 
 -- ===========================================================================
 -- TABLE: public.profiles
+--
+-- Columns (after all migrations):
+--   id, username, role, bio, avatar_url, banner_url, location, category,
+--   instagram, twitter, website,                              (20240003)
+--   display_name, tagline, primary_platform, audience_tier,   (20240005)
+--   min_budget, max_budget, follower_count, platforms,         (20240005)
+--   is_available, rating, tags, qualifications, past_work,    (20240005)
+--   preferred_work_type, onboarding_complete,                  (20240005)
+--   created_at, updated_at
 -- ===========================================================================
 alter table public.profiles enable row level security;
 
@@ -38,6 +52,7 @@ create policy "profiles: public read"
   using (true);
 
 -- A user can only update their own profile.
+-- Covers all columns: bio, social links, onboarding fields, filter data, etc.
 create policy "profiles: owner update"
   on public.profiles
   for update
@@ -218,6 +233,9 @@ create policy "messages: no delete"
 -- Supabase Storage RLS uses the storage.objects table.
 -- Bucket name: portfolio-media
 -- Path format: portfolio/{creator_uuid}/{file_uuid}.{ext}
+--
+-- NOTE: Storage RLS for the 'profiles' bucket (avatars & banners) is
+-- defined separately in 20240004_profile_storage.sql.
 -- ===========================================================================
 
 -- Public read — anyone can view portfolio media via the public URL.
@@ -256,7 +274,7 @@ create policy "storage portfolio-media: no update"
 
 -- ===========================================================================
 -- Verification queries
--- Run these after applying to confirm policies are in place.
+-- Run these after applying ALL migrations to confirm policies are in place.
 -- ===========================================================================
 -- select tablename, policyname, cmd, qual
 -- from pg_policies
@@ -264,11 +282,17 @@ create policy "storage portfolio-media: no update"
 -- order by tablename, policyname;
 
 -- select *
--- from storage.policies
--- where bucket_id = 'portfolio-media';
+-- from pg_policies
+-- where tablename = 'objects'
+-- order by policyname;
+--
+-- Expected storage policies (after 002 + 004):
+--   portfolio-media: public read, creator upload, creator delete, no update
+--   profiles:        public read, owner upload, owner delete, owner update
 -- ===========================================================================
 
 
 -- =============================================================================
 -- RLS policies complete.
+-- Next migration: 20240003_add_social_links.sql
 -- =============================================================================
