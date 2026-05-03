@@ -25,6 +25,7 @@ import ExplorePage from './pages/ExplorePage';
 import UploadPage from './pages/UploadPage';
 import CreatorDashboard from './pages/CreatorDashboard';
 import BrandDashboard from './pages/BrandDashboard';
+import MessagingPage from './pages/MessagingPage';
 
 import DirectMessagePage from './pages/DirectMessagePage';
 import CheckoutPage from './pages/CheckoutPage';
