@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../lib/api';
 
@@ -70,6 +70,7 @@ const DEMO_CREATOR = {
 
 export default function CreatorProfilePage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [creator, setCreator] = useState(null);
   const [error, setError] = useState(null);
   const [selectedMedia, setSelectedMedia] = useState(null);
@@ -363,7 +364,10 @@ export default function CreatorProfilePage() {
                       ))}
                     </ul>
                     
-                    <button className={`w-full py-3 font-bold uppercase tracking-widest text-[10px] rounded-full transition-all mt-auto ${pkg.popular ? 'bg-black text-white hover:bg-gray-800' : 'bg-white/10 text-white hover:bg-white/20'}`}>
+                    <button 
+                      onClick={() => navigate('/checkout', { state: { pkg, creator } })}
+                      className={`w-full py-3 font-bold uppercase tracking-widest text-[10px] rounded-full transition-all mt-auto ${pkg.popular ? 'bg-black text-white hover:bg-gray-800' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                    >
                       Select Package
                     </button>
                   </div>

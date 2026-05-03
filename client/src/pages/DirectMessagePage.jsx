@@ -114,7 +114,16 @@ export default function DirectMessagePage() {
               <p className="text-[10px] text-green-500 font-bold uppercase tracking-widest">Online</p>
             </div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
+            <a 
+              href="https://meet.google.com/new" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-[#0540F2] text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-blue-600 transition-colors shadow-lg"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+              Meet
+            </a>
             <button className="text-white/40 hover:text-white transition-colors">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/></svg>
             </button>

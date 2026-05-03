@@ -24,6 +24,8 @@ import CreatorDashboard from './pages/CreatorDashboard';
 import BrandDashboard from './pages/BrandDashboard';
 import MessagingPage from './pages/MessagingPage';
 import DirectMessagePage from './pages/DirectMessagePage';
+import CheckoutPage from './pages/CheckoutPage';
+import ProjectProgressPage from './pages/ProjectProgressPage';
 import EditProfilePage from './pages/EditProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -99,6 +101,8 @@ const AppLayout = () => {
             <ProtectedRoute><MessagingPage /></ProtectedRoute>
           } />
           <Route path="/dm/:id" element={<DirectMessagePage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/progress" element={<ProjectProgressPage />} />
           <Route path="/profile/edit" element={
             <ProtectedRoute><EditProfilePage /></ProtectedRoute>
           } />
