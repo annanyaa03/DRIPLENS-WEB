@@ -21,4 +21,4 @@ export const ALLOWED_MIME_TYPES = [
   'video/mp4', 'video/quicktime', 'video/webm'
 ];
 
-export const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+export const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500MB

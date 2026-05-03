@@ -1,15 +1,88 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../lib/api';
+
+const DEMO_CREATOR = {
+  id: 'demo',
+  name: 'Atharv Gadekar',
+  username: 'atharvagadekar2906',
+  role: 'Creative Director & Cinematographer',
+  location: 'Mumbai / Global',
+  img: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&auto=format&fit=crop',
+  qualifications: ['Advanced Color Grading', 'Certified Drone Operator', '10+ Years Industry Exp.'],
+  pastWork: ['Nike', 'Sony', 'RedBull'],
+  brandDeals: ['Nike', 'Sony', 'RedBull', 'Apple'],
+  workflow: [
+    { step: 'Discovery', description: 'Deep dive into brand guidelines and visual identity.' },
+    { step: 'Pre-Production', description: 'Storyboarding, scouting, and preparation.' },
+    { step: 'Production', description: 'On-set execution with top-tier equipment.' },
+    { step: 'Post & Delivery', description: 'Color grading and final rendering.' }
+  ],
+  portfolio_items: [
+    { id: 1, title: 'Mandai', type: 'Cinematography', img: 'https://images.unsplash.com/photo-1518131672697-613becd4fab5?w=500&auto=format&fit=crop' },
+    { id: 2, title: 'Ethnicity', type: 'Direction', img: 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=500&auto=format&fit=crop' },
+    { id: 3, title: 'Urban Flow', type: 'Photography', img: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?w=500&auto=format&fit=crop' },
+  ],
+  packages: [
+    {
+      title: "Social / Lifestyle",
+      price: "₹5,000-₹12,000",
+      subtitle: "Perfect for personal branding & short reels",
+      features: [
+        "2-4 hours shoot time",
+        "Professional lighting setup",
+        "Basic color grading",
+        "2-3 edited short videos",
+        "Optimized for Instagram/TikTok",
+        "Web-ready delivery"
+      ]
+    },
+    {
+      title: "Event Coverage",
+      price: "₹15,000-₹25,000",
+      subtitle: "Best choice for corporate events & parties",
+      features: [
+        "6-8 hours event coverage",
+        "Dual camera setup for backup",
+        "Candid + staged shots",
+        "Advanced color correction",
+        "1-3 minute highlight reel",
+        "Raw footage available"
+      ],
+      popular: true
+    },
+    {
+      title: "Commercial Film",
+      price: "₹35,000-₹80,000+",
+      subtitle: "High-end visuals for brands & businesses",
+      features: [
+        "Full-day shoot (10-12 hours)",
+        "Pre-production & storyboarding",
+        "Cinema-grade RED/ARRI cameras",
+        "Professional crew & sound design",
+        "Cinematic color grading",
+        "Multiple export formats"
+      ]
+    }
+  ]
+};
+
 export default function CreatorProfilePage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [creator, setCreator] = useState(null);
   const [error, setError] = useState(null);
   const [selectedMedia, setSelectedMedia] = useState(null);
+  const [showPricing, setShowPricing] = useState(false);
 
   useEffect(() => {
     const load = async () => {
+      if (id === 'demo') {
+        setCreator(DEMO_CREATOR);
+        window.scrollTo(0, 0);
+        return;
+      }
       try {
         const data = await api.get(`/creators/${id}`);
         if (data?.data?.creator) {
@@ -77,10 +150,13 @@ export default function CreatorProfilePage() {
               </div>
 
               <div className="flex gap-3 mb-10">
-                <Link to="/messages" className="flex-1 border border-zinc-200 text-black py-4 rounded-none font-bold text-sm text-center hover:bg-zinc-50 transition-all flex items-center justify-center">
+                <Link to={`/dm/${creator.id}`} target="_blank" rel="noopener noreferrer" className="flex-1 border border-zinc-200 text-black py-4 rounded-none font-bold text-sm text-center hover:bg-zinc-50 transition-all flex items-center justify-center">
                   Message
                 </Link>
-                <button className="flex-1 bg-black text-white py-4 rounded-none font-bold text-sm hover:bg-zinc-800 transition-all shadow-[0_4px_14px_rgba(0,0,0,0.1)]">
+                <button 
+                  onClick={() => setShowPricing(true)}
+                  className="flex-1 bg-black text-white py-4 rounded-none font-bold text-sm hover:bg-zinc-800 transition-all shadow-[0_4px_14px_rgba(0,0,0,0.1)]"
+                >
                   Hire
                 </button>
                 <button className="px-5 py-4 rounded-none border border-zinc-200 hover:bg-zinc-50 transition-all text-lg flex items-center justify-center">
@@ -234,6 +310,73 @@ export default function CreatorProfilePage() {
               <div className="absolute bottom-0 left-0 right-0 p-12 bg-gradient-to-t from-black via-transparent to-transparent">
                   <h2 className="text-4xl font-bold text-white mb-2">{selectedMedia.title}</h2>
                   <p className="text-white/60 uppercase tracking-widest text-sm">{selectedMedia.media_type || selectedMedia.type}</p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Pricing Modal */}
+      <AnimatePresence>
+        {showPricing && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 backdrop-blur-md font-poppins"
+            onClick={() => setShowPricing(false)}
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              className="max-w-5xl w-full my-auto bg-[#0a0a0a] rounded-3xl overflow-hidden relative shadow-2xl p-6 md:p-8 max-h-[95vh] flex flex-col" 
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center mb-8 shrink-0">
+                <button 
+                  onClick={() => setShowPricing(false)}
+                  className="text-white/70 text-[10px] font-bold tracking-widest uppercase hover:text-white flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10 transition-all hover:bg-white/10"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                  Back
+                </button>
+                <h2 className="text-xl md:text-2xl font-bold text-white text-center absolute left-1/2 -translate-x-1/2 tracking-wide">Photography</h2>
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 overflow-y-auto pb-2 custom-scrollbar pt-2">
+                {(creator.packages || []).map((pkg, i) => (
+                  <div key={i} className={`rounded-2xl p-6 md:p-8 flex flex-col relative ${pkg.popular ? 'bg-white text-black scale-[1.02] shadow-2xl z-10' : 'bg-[#111] border border-white/5 text-white'}`}>
+                    {pkg.popular && (
+                      <span className="absolute top-4 right-4 md:top-6 md:right-6 bg-[#2a2a2a] text-[#fcd53f] text-[9px] font-bold px-3 py-1 uppercase tracking-widest rounded-full flex items-center gap-1.5 shadow-lg z-20">
+                        <span>★</span> Popular
+                      </span>
+                    )}
+                    <div className="mb-6 relative">
+                      <p className={`text-[10px] tracking-[0.2em] uppercase font-bold mb-3 ${pkg.popular ? 'text-gray-500' : 'text-gray-400'}`}>{pkg.title}</p>
+                      <h3 className={`text-3xl md:text-4xl font-black mb-3 tracking-tighter leading-none ${pkg.popular ? 'text-black' : 'text-white'}`}>{pkg.price}</h3>
+                      <p className={`text-xs ${pkg.popular ? 'text-gray-600' : 'text-gray-400'}`}>{pkg.subtitle}</p>
+                    </div>
+                    
+                    <ul className="space-y-3 mb-6 flex-1">
+                      {pkg.features.map((f, j) => (
+                        <li key={j} className="flex items-start gap-3 text-xs font-medium">
+                          <div className={`mt-0.5 shrink-0 ${pkg.popular ? 'text-black' : 'text-gray-400'}`}>
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7"/></svg>
+                          </div>
+                          <span className={pkg.popular ? 'text-gray-800' : 'text-gray-300'}>{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    <button 
+                      onClick={() => navigate('/checkout', { state: { pkg, creator } })}
+                      className={`w-full py-3 font-bold uppercase tracking-widest text-[10px] rounded-full transition-all mt-auto ${pkg.popular ? 'bg-black text-white hover:bg-gray-800' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                    >
+                      Select Package
+                    </button>
+                  </div>
+                ))}
               </div>
             </motion.div>
           </motion.div>

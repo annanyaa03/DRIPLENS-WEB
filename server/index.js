@@ -32,8 +32,8 @@ app.use(cors({
 }));
 
 // ── Body parsing ──────────────────────────────────────────────
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(express.json({ limit: '500mb' }));
+app.use(express.urlencoded({ extended: true, limit: '500mb' }));
 import path from 'path';
 app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')));
 

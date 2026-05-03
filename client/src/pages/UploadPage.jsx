@@ -11,7 +11,7 @@ const ALLOWED_MIME_TYPES = [
   'image/jpeg', 'image/png', 'image/webp', 'image/gif',
   'video/mp4', 'video/quicktime', 'video/webm',
 ];
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
+const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500 MB
 
 export default function UploadPage() {
   const [dragActive, setDragActive] = useState(false);
@@ -63,7 +63,7 @@ export default function UploadPage() {
       return;
     }
     if (selectedFile.size > MAX_FILE_SIZE) {
-      setMessage({ type: 'error', text: 'File too large. Maximum size is 50 MB.' });
+      setMessage({ type: 'error', text: 'File too large. Maximum size is 500 MB.' });
       return;
     }
     setMessage({ type: '', text: '' });
@@ -151,7 +151,7 @@ export default function UploadPage() {
                 </svg>
                 <p className="text-sm font-bold uppercase tracking-widest text-black mb-2">Drag & Drop Files</p>
                 <p className="text-xs text-[#999] uppercase tracking-widest">or click to browse from device</p>
-                <p className="text-xs text-[#BBB] mt-3">JPEG · PNG · WEBP · GIF · MP4 · MOV · WEBM — max 50 MB</p>
+                <p className="text-xs text-[#BBB] mt-3">JPEG · PNG · WEBP · GIF · MP4 · MOV · WEBM — max 500 MB</p>
               </>
             )}
           </div>

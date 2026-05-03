@@ -23,6 +23,9 @@ import UploadPage from './pages/UploadPage';
 import CreatorDashboard from './pages/CreatorDashboard';
 import BrandDashboard from './pages/BrandDashboard';
 import MessagingPage from './pages/MessagingPage';
+import DirectMessagePage from './pages/DirectMessagePage';
+import CheckoutPage from './pages/CheckoutPage';
+import ProjectProgressPage from './pages/ProjectProgressPage';
 import EditProfilePage from './pages/EditProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -50,6 +53,7 @@ import TermsPage from './pages/TermsPage';
 const AppLayout = () => {
   const location = useLocation();
   const isDriplens = location.pathname.startsWith('/driplens');
+  const isDM = location.pathname.startsWith('/dm');
 
   return (
     <div className={isDriplens ? "bg-[#050508] min-h-screen text-white" : "min-h-screen flex flex-col bg-[var(--color-brand-bg)] text-[var(--color-brand-body)]"}>
@@ -96,6 +100,9 @@ const AppLayout = () => {
           <Route path="/messages" element={
             <ProtectedRoute><MessagingPage /></ProtectedRoute>
           } />
+          <Route path="/dm/:id" element={<DirectMessagePage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/progress" element={<ProjectProgressPage />} />
           <Route path="/profile/edit" element={
             <ProtectedRoute><EditProfilePage /></ProtectedRoute>
           } />
@@ -115,7 +122,7 @@ const AppLayout = () => {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
-      {!isDriplens && <Footer />}
+      {!isDriplens && !isDM && <Footer />}
     </div>
   );
 };
