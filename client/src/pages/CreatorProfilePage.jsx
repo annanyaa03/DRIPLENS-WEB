@@ -114,7 +114,7 @@ export default function CreatorProfilePage() {
       {/* Hero Section */}
       <div className="relative h-[40vh] md:h-[50vh] overflow-hidden">
         <img 
-          src={creator.img} 
+          src={creator.banner_url || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80'} 
           alt="Banner" 
           className="w-full h-full object-cover brightness-50 scale-105"
         />
@@ -137,16 +137,16 @@ export default function CreatorProfilePage() {
             >
               <div className="relative -mt-20 mb-6 flex justify-center lg:justify-start">
                 <div className="h-32 w-32 md:h-40 md:w-40 rounded-none bg-white p-2 shadow-2xl overflow-hidden rotate-3 hover:rotate-0 transition-transform duration-500">
-                  <img src={creator.img} alt={creator.name} className="w-full h-full object-cover rounded-none" />
+                  <img src={creator.avatar_url || 'https://via.placeholder.com/150'} alt={creator.username} className="w-full h-full object-cover rounded-none" />
                 </div>
               </div>
 
               <div className="text-center lg:text-left mb-8">
                 <div className="flex items-center justify-center lg:justify-start gap-3 mb-1">
-                  <h1 className="text-3xl font-bold text-black tracking-tight">{creator.name}</h1>
+                  <h1 className="text-3xl font-bold text-black tracking-tight">{creator.display_name || creator.username}</h1>
                   <span className="bg-black text-[10px] text-white px-2 py-1 rounded-none font-bold uppercase tracking-wider">Verified</span>
                 </div>
-                <p className="text-[#888] font-medium text-lg uppercase tracking-wide text-xs">{creator.role} • {creator.location}</p>
+                <p className="text-[#888] font-medium text-lg uppercase tracking-wide text-xs">{creator.role} • {creator.location || 'Remote'}</p>
               </div>
 
               <div className="flex gap-3 mb-10">
@@ -168,7 +168,7 @@ export default function CreatorProfilePage() {
                 <div>
                   <h3 className="text-[11px] font-bold text-[#BBB] uppercase tracking-[0.2em] mb-4">Qualification</h3>
                   <ul className="space-y-3">
-                    {creator.qualifications.map((q, i) => (
+                    {(creator.qualifications || ['Professional Creator']).map((q, i) => (
                       <li key={i} className="flex items-center gap-3 text-sm text-zinc-600">
                         <span className="h-1.5 w-1.5 bg-black rounded-none" />
                         {q}
@@ -180,7 +180,7 @@ export default function CreatorProfilePage() {
                 <div className="pt-6 border-t border-zinc-100">
                   <h3 className="text-[11px] font-bold text-[#BBB] uppercase tracking-[0.2em] mb-4">Past Work</h3>
                   <div className="flex flex-wrap gap-2">
-                    {creator.pastWork.map((pw, i) => (
+                    {(creator.past_work || creator.pastWork || ['New Member']).map((pw, i) => (
                       <span key={i} className="bg-zinc-100 text-zinc-600 px-3 py-1.5 rounded-none text-[10px] font-bold uppercase">
                         {pw}
                       </span>
@@ -199,7 +199,7 @@ export default function CreatorProfilePage() {
             >
                <h3 className="text-[11px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-6">Trusted By</h3>
                <div className="grid grid-cols-2 gap-4">
-                  {creator.brandDeals.map((brand, i) => (
+                  {(creator.brandDeals || ['Community Partner']).map((brand, i) => (
                     <div key={i} className="bg-zinc-800/50 rounded-none p-4 flex items-center justify-center text-sm font-bold text-zinc-400 hover:text-white transition-colors border border-zinc-800">
                       {brand}
                     </div>
@@ -218,7 +218,12 @@ export default function CreatorProfilePage() {
                 <span className="h-[1px] flex-1 bg-zinc-200" />
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {creator.workflow.map((item, i) => (
+                {(creator.workflow || [
+                  { step: 'Strategy', description: 'Aligning vision with brand goals.' },
+                  { step: 'Production', description: 'High-end content creation.' },
+                  { step: 'Review', description: 'Collaborative feedback loop.' },
+                  { step: 'Delivery', description: 'Final assets in all formats.' }
+                ]).map((item, i) => (
                   <motion.div 
                     key={i}
                     whileHover={{ y: -5 }}
@@ -261,7 +266,7 @@ export default function CreatorProfilePage() {
                     className="break-inside-avoid relative group cursor-pointer overflow-hidden rounded-none bg-zinc-100"
                   >
                     <img 
-                      src={item.img} 
+                      src={item.media_url || item.img || creator.avatar_url} 
                       alt={item.title} 
                       className="w-full grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" 
                     />
@@ -301,10 +306,10 @@ export default function CreatorProfilePage() {
               >
                 ✕
               </button>
-              <img src={selectedMedia.img} alt={selectedMedia.title} className="w-full h-full object-cover" />
+              <img src={selectedMedia.media_url || selectedMedia.img || creator.avatar_url} alt={selectedMedia.title} className="w-full h-full object-cover" />
               <div className="absolute bottom-0 left-0 right-0 p-12 bg-gradient-to-t from-black via-transparent to-transparent">
                   <h2 className="text-4xl font-bold text-white mb-2">{selectedMedia.title}</h2>
-                  <p className="text-white/60 uppercase tracking-widest text-sm">{selectedMedia.type}</p>
+                  <p className="text-white/60 uppercase tracking-widest text-sm">{selectedMedia.media_type || selectedMedia.type}</p>
               </div>
             </motion.div>
           </motion.div>
