@@ -12,10 +12,9 @@ import ScrollToTop from './components/ScrollToTop';
 
 // Pages
 import LandingPage from './pages/LandingPage';
-<<<<<<< HEAD
+
 import DriplensLanding from './pages/DriplensLanding';
-=======
->>>>>>> fbbfbd31b69cdaf19c4346af1bf5341da2b5b28b
+
 import AuthPage from './pages/AuthPage';
 import OnboardingPage from './pages/OnboardingPage';
 import CreatorsPage from './pages/CreatorsPage';
@@ -26,13 +25,11 @@ import ExplorePage from './pages/ExplorePage';
 import UploadPage from './pages/UploadPage';
 import CreatorDashboard from './pages/CreatorDashboard';
 import BrandDashboard from './pages/BrandDashboard';
-import MessagingPage from './pages/MessagingPage';
-<<<<<<< HEAD
+
 import DirectMessagePage from './pages/DirectMessagePage';
 import CheckoutPage from './pages/CheckoutPage';
 import ProjectProgressPage from './pages/ProjectProgressPage';
-=======
->>>>>>> fbbfbd31b69cdaf19c4346af1bf5341da2b5b28b
+
 import EditProfilePage from './pages/EditProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -56,17 +53,14 @@ import ContactPage from './pages/ContactPage';
 // Legal
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
-<<<<<<< HEAD
 
 const AppLayout = () => {
   const location = useLocation();
   const isDriplens = location.pathname.startsWith('/driplens');
   const isDM = location.pathname.startsWith('/dm');
-  const isLanding = location.pathname === '/';
 
   return (
-    <div className={isDriplens ? "bg-[#050508] min-h-screen text-white" : "min-h-screen flex flex-col bg-white text-[var(--color-brand-body)]"}>
-
+    <div className={isDriplens ? "bg-[#050508] min-h-screen text-white" : "min-h-screen flex flex-col bg-[var(--color-brand-bg)] text-[var(--color-brand-body)]"}>
       {!isDriplens && <Navbar />}
       <main className="flex-grow">
         <Routes>
@@ -136,8 +130,6 @@ const AppLayout = () => {
     </div>
   );
 };
-=======
->>>>>>> fbbfbd31b69cdaf19c4346af1bf5341da2b5b28b
 
 function App() {
   return (
@@ -148,9 +140,6 @@ function App() {
             <ScrollToTop />
             <OnboardingProvider>
               <ClickSpark sparkColor="var(--color-brand-accent)" sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
-<<<<<<< HEAD
-                <AppLayout />
-=======
                 <div className="min-h-screen flex flex-col bg-[var(--color-brand-bg)] text-[var(--color-brand-body)]">
                   <Navbar />
                   <main className="flex-grow">
@@ -213,7 +202,7 @@ function App() {
                   </main>
                   <Footer />
                 </div>
->>>>>>> fbbfbd31b69cdaf19c4346af1bf5341da2b5b28b
+
               </ClickSpark>
             </OnboardingProvider>
           </Router>
