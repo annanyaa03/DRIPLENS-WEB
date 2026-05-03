@@ -11,14 +11,14 @@ router.post('/', requireAuth, requireRole('brand'), validate(createHiringSchema)
   try {
     const request = await hiringService.createRequest({ brandId: req.user.id, ...req.body });
     res.status(201).json({ success: true, data: { request } });
-  } catch (err) { next(err); }
+  } catch (err) { console.error(err); next(err); }
 });
 
 router.get('/', requireAuth, apiLimiter, async (req, res, next) => {
   try {
     const requests = await hiringService.listRequests(req.user.id);
     res.json({ success: true, data: { requests } });
-  } catch (err) { next(err); }
+  } catch (err) { console.error(err); next(err); }
 });
 
 router.patch('/:id/status', requireAuth, validate(updateStatusSchema), async (req, res, next) => {
@@ -27,7 +27,7 @@ router.patch('/:id/status', requireAuth, validate(updateStatusSchema), async (re
       req.params.id, req.user.id, req.user.role, req.body.status
     );
     res.json({ success: true, data: { request } });
-  } catch (err) { next(err); }
+  } catch (err) { console.error(err); next(err); }
 });
 
 export default router;

@@ -11,21 +11,21 @@ router.get('/', apiLimiter, validate(listCreatorsSchema, 'query'), async (req, r
   try {
     const result = await creatorService.listCreators(req.query);
     res.json({ success: true, data: result });
-  } catch (err) { next(err); }
+  } catch (err) { console.error(err); next(err); }
 });
 
 router.get('/:id', apiLimiter, async (req, res, next) => {
   try {
     const creator = await creatorService.getCreator(req.params.id);
     res.json({ success: true, data: { creator } });
-  } catch (err) { next(err); }
+  } catch (err) { console.error(err); next(err); }
 });
 
 router.patch('/profile', requireAuth, validate(updateProfileSchema), async (req, res, next) => {
   try {
     const profile = await creatorService.updateProfile(req.user.id, req.body);
     res.json({ success: true, data: { profile } });
-  } catch (err) { next(err); }
+  } catch (err) { console.error(err); next(err); }
 });
 
 export default router;

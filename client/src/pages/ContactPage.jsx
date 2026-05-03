@@ -110,7 +110,7 @@ export default function ContactPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] selection:bg-black selection:text-white">
+    <div className="min-h-screen bg-white selection:bg-black selection:text-white">
       <Helmet>
         <title>Contact Us | Driplens</title>
         <meta name="description" content="Get in touch with the Driplens team. We're here to help you with creator support, brand partnerships, and general inquiries." />

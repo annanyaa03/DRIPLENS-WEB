@@ -4,9 +4,9 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[var(--color-brand-bg)] py-12 px-4 sm:px-6 lg:px-8">
+    <footer className="!bg-white py-12 px-4 sm:px-6 lg:px-8 relative z-[100]">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-[var(--color-brand-bg)] border-t border-[var(--color-brand-border)]/20 pt-24 pb-12">
+        <div className="!bg-white border-t border-[var(--color-brand-border)]/20 pt-24 pb-12">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
             {/* Brand Section */}
             <div className="md:col-span-5">
