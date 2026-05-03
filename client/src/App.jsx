@@ -12,7 +12,10 @@ import ScrollToTop from './components/ScrollToTop';
 
 // Pages
 import LandingPage from './pages/LandingPage';
+<<<<<<< HEAD
 import DriplensLanding from './pages/DriplensLanding';
+=======
+>>>>>>> fbbfbd31b69cdaf19c4346af1bf5341da2b5b28b
 import AuthPage from './pages/AuthPage';
 import OnboardingPage from './pages/OnboardingPage';
 import CreatorsPage from './pages/CreatorsPage';
@@ -24,9 +27,12 @@ import UploadPage from './pages/UploadPage';
 import CreatorDashboard from './pages/CreatorDashboard';
 import BrandDashboard from './pages/BrandDashboard';
 import MessagingPage from './pages/MessagingPage';
+<<<<<<< HEAD
 import DirectMessagePage from './pages/DirectMessagePage';
 import CheckoutPage from './pages/CheckoutPage';
 import ProjectProgressPage from './pages/ProjectProgressPage';
+=======
+>>>>>>> fbbfbd31b69cdaf19c4346af1bf5341da2b5b28b
 import EditProfilePage from './pages/EditProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -50,6 +56,7 @@ import ContactPage from './pages/ContactPage';
 // Legal
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
+<<<<<<< HEAD
 
 const AppLayout = () => {
   const location = useLocation();
@@ -129,6 +136,8 @@ const AppLayout = () => {
     </div>
   );
 };
+=======
+>>>>>>> fbbfbd31b69cdaf19c4346af1bf5341da2b5b28b
 
 function App() {
   return (
@@ -139,7 +148,72 @@ function App() {
             <ScrollToTop />
             <OnboardingProvider>
               <ClickSpark sparkColor="var(--color-brand-accent)" sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
+<<<<<<< HEAD
                 <AppLayout />
+=======
+                <div className="min-h-screen flex flex-col bg-[var(--color-brand-bg)] text-[var(--color-brand-body)]">
+                  <Navbar />
+                  <main className="flex-grow">
+                    <Routes>
+                      {/* Public */}
+                      <Route path="/" element={<LandingPage />} />
+                      <Route path="/auth" element={<AuthPage />} />
+                      <Route path="/onboarding/step-1" element={
+                        <ProtectedRoute requiredRole="creator"><OnboardingPage /></ProtectedRoute>
+                      } />
+                      <Route path="/creators" element={<CreatorsPage />} />
+                      <Route path="/brands" element={<BrandsPage />} />
+                      <Route path="/explore" element={<ExplorePage />} />
+                      <Route path="/profile/:id" element={<CreatorProfilePage />} />
+                      <Route path="/brand/:id" element={<BrandProfilePage />} />
+
+                      {/* Footer Pages - Product */}
+                      <Route path="/features" element={<FeaturesPage />} />
+                      <Route path="/pricing" element={<PricingPage />} />
+                      <Route path="/integrations" element={<IntegrationsPage />} />
+                      <Route path="/changelog" element={<ChangelogPage />} />
+
+                      {/* Footer Pages - Resources */}
+                      <Route path="/documentation" element={<DocumentationPage />} />
+                      <Route path="/tutorials" element={<TutorialsPage />} />
+                      <Route path="/blog" element={<BlogPage />} />
+                      <Route path="/support" element={<SupportPage />} />
+
+                      {/* Footer Pages - Company */}
+                      <Route path="/about" element={<AboutPage />} />
+                      <Route path="/careers" element={<CareersPage />} />
+                      <Route path="/contact" element={<ContactPage />} />
+
+                      {/* Legal */}
+                      <Route path="/privacy" element={<PrivacyPage />} />
+                      <Route path="/terms" element={<TermsPage />} />
+
+                      {/* Protected — any logged-in user */}
+                      <Route path="/messages" element={
+                        <ProtectedRoute><MessagingPage /></ProtectedRoute>
+                      } />
+                      <Route path="/profile/edit" element={
+                        <ProtectedRoute><EditProfilePage /></ProtectedRoute>
+                      } />
+
+                      {/* Protected — role-specific */}
+                      <Route path="/upload" element={
+                        <ProtectedRoute requiredRole="creator"><UploadPage /></ProtectedRoute>
+                      } />
+                      <Route path="/dashboard/creator" element={
+                        <ProtectedRoute requiredRole="creator"><CreatorDashboard /></ProtectedRoute>
+                      } />
+                      <Route path="/dashboard/brand" element={
+                        <ProtectedRoute requiredRole="brand"><BrandDashboard /></ProtectedRoute>
+                      } />
+
+                      {/* 404 catch-all */}
+                      <Route path="*" element={<NotFoundPage />} />
+                    </Routes>
+                  </main>
+                  <Footer />
+                </div>
+>>>>>>> fbbfbd31b69cdaf19c4346af1bf5341da2b5b28b
               </ClickSpark>
             </OnboardingProvider>
           </Router>
